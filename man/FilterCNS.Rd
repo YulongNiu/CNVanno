@@ -8,7 +8,7 @@ FilterCNS(cns, cngain = 2, cnloss = 2, log2value = 0.5,
   depth = 0.01, sexchrom = TRUE)
 }
 \arguments{
-\item{cns}{The standard CNV format.}
+\item{cns}{The standard \code{CNVkit} output.}
 
 \item{cngain}{A \code{numeric} value as the gain copy number threshold, and the default value is 2.}
 

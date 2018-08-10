@@ -2,20 +2,26 @@
 % Please edit documentation in R/rw.R
 \name{read.cnvkit}
 \alias{read.cnvkit}
+\alias{read.cnvnator}
 \alias{write.cnvkit}
 \title{Standard read and write multiple CNV files}
 \usage{
 read.cnvkit(cnvpath)
 
-write.cnvkit(cnv, cnspath)
+read.cnvnator(cnvpath)
+
+write.cnvkit(cnv, savepath)
 }
 \arguments{
 \item{cnvpath}{The path of cnv file.}
 
-\item{cns}{The standard CNV format.}
+\item{cnv}{The standard CNV format.}
+
+\item{savepath}{Save path of output CNV files.}
 }
 \value{
 \itemize{
+  \item \code{read.cnvkit()}: A \code{data.frame}.
   \item \code{read.cnvkit()}: A \code{data.frame}.
   \item \code{write.cnvkit()}: A table separated \code{txt} format file.
 }
@@ -27,13 +33,17 @@ Read and write cnvkit CNV file
 \itemize{
   \item \code{read.cnvkit()}: Read in CNV generated from \code{CNVkit} as a \code{data.frame}.
   \item \code{write.cnvkit()}: Write standard CNV format file as table.
+  \item \code{read.cnvnator()}: Read in CNV generated from \code{CNVnator} (version 0.3.3) as a \code{data.frame}.
 }
 }
 \examples{
 require('magrittr')
 
-cnsFile <- system.file('extdata', 'example.cnvkit', package = 'CNVanno')
-cnsMat <- cnsFile \%>\% read.cnvkit
+cns <- system.file('extdata', 'example.cnvkit', package = 'CNVanno')
+cnsMat <- cns \%>\% read.cnvkit
+
+nator <- system.file('extdata', 'example.cnvnator', package = 'CNVanno')
+natorMat <- nator \%>\% read.cnvnator
 \dontrun{
 ## write CNV file
 write.cnvkit(cnsMat, 'cnsMat.txt')

@@ -7,7 +7,7 @@
 SunCNVTable(cns, cyto, sampleType = "proband", n = 2)
 }
 \arguments{
-\item{cns}{The standard CNV format.}
+\item{cns}{The standard \code{CNVkit} output.}
 
 \item{cyto}{A standard cytoband file.}
 

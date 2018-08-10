@@ -13,7 +13,7 @@
 ##' @param log2value A \code{numeric} value as the absolute log2value threshold, and the default value is absolute 0.5.
 ##' @param depth A \code{numeric} value as the sequence depth, and the default value is 0.01
 ##' @param sexchrom A \code{logic} value whether filter sex chromosomes (X and Y), the default value is \code{TRUE}.
-##' @inheritParams write.cnvkit
+##' @param cns The standard \code{CNVkit} output.
 ##' @return A filtered cns format
 ##' @examples
 ##' require('magrittr')
@@ -26,14 +26,14 @@
 ##'
 FilterCNS <- function(cns, cngain = 2, cnloss = 2, log2value = 0.5, depth = 0.01, sexchrom = TRUE) {
 
-  ## filter gain and loss cnv
-  cnsMat <- cns[(cns[, 'cn'] > cngain) | (cns[, 'cn'] < cnloss), , drop = FALSE]
+  ## filter logic
+  ## step1: filter gain and loss cnv
+  ## step2: filter low depth
+  fLogic <- ((cns[, 'cn'] > cngain) | (cns[, 'cn'] < cnloss)) &
+    abs(cns[, 'log2']) >= log2value &
+    cns[, 'depth'] > depth
 
-  ## filter log2
-  cnsMat <- cnsMat[abs(cnsMat[, 'log2']) >= log2value, , drop = FALSE]
-
-  ## filter low depth
-  cnsMat <- cnsMat[cnsMat[, 'depth'] > depth, , drop = FALSE]
+  cnsMat <- cns[fLogic, , drop = FALSE]
 
   ## filter sex chromosomes
   if (sexchrom) {

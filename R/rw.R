@@ -3,6 +3,7 @@
 ##' \itemize{
 ##'   \item \code{read.cnvkit()}: Read in CNV generated from \code{CNVkit} as a \code{data.frame}.
 ##'   \item \code{write.cnvkit()}: Write standard CNV format file as table.
+##'   \item \code{read.cnvnator()}: Read in CNV generated from \code{CNVnator} (version 0.3.3) as a \code{data.frame}.
 ##' }
 ##'
 ##' @title Standard read and write multiple CNV files
@@ -10,14 +11,18 @@
 ##' @return
 ##' \itemize{
 ##'   \item \code{read.cnvkit()}: A \code{data.frame}.
+##'   \item \code{read.cnvkit()}: A \code{data.frame}.
 ##'   \item \code{write.cnvkit()}: A table separated \code{txt} format file.
 ##' }
 ##'
 ##' @examples
 ##' require('magrittr')
 ##'
-##' cnsFile <- system.file('extdata', 'example.cnvkit', package = 'CNVanno')
-##' cnsMat <- cnsFile %>% read.cnvkit
+##' cns <- system.file('extdata', 'example.cnvkit', package = 'CNVanno')
+##' cnsMat <- cns %>% read.cnvkit
+##'
+##' nator <- system.file('extdata', 'example.cnvnator', package = 'CNVanno')
+##' natorMat <- nator %>% read.cnvnator
 ##' \dontrun{
 ##' ## write CNV file
 ##' write.cnvkit(cnsMat, 'cnsMat.txt')
@@ -37,15 +42,55 @@ read.cnvkit <- function(cnvpath) {
   return(cnsin)
 }
 
+
 ##' @rdname rwcnv
-##' @param cns The standard CNV format.
+##' @inheritParams read.cnvkit
+##' @importFrom magrittr  %>%
+##' @importFrom stringr str_extract str_sub
+##' @export
+##'
+read.cnvnator <- function(cnvpath) {
+  cnsin <- read.table(cnvpath,
+                      header = FALSE,
+                      sep = '\t',
+                      stringsAsFactors = FALSE)
+
+  ## separate cnv
+  chr <- cnsin[, 2] %>%
+    str_extract('^.*:') %>%
+    str_sub(1, -2)
+
+  start <- cnsin[, 2] %>%
+    str_extract(':\\d+') %>%
+    str_sub(2, -1) %>%
+    as.numeric
+
+  end <- cnsin[, 2] %>%
+    str_extract('-\\d+') %>%
+    str_sub(2, -1) %>%
+    as.numeric
+
+  natorRes <- data.frame(chromosome = chr,
+                         start = start,
+                         end = end)
+
+  natorRes %<>% cbind.data.frame(cnsin[, c(1, 4:9)])
+  colnames(natorRes)[-1:-3] <- c('type', 'normalized_RD', 'e-val1', 'e-val2', 'e-val3', 'e-val4', 'q0')
+
+  return(natorRes)
+}
+
+
+##' @rdname rwcnv
+##' @param cnv The standard CNV format.
+##' @param savepath Save path of output CNV files.
 ##' @inheritParams read.cnvkit
 ##' @importFrom utils write.table
 ##' @export
 ##'
-write.cnvkit <- function(cnv, cnspath) {
+write.cnvkit <- function(cnv, savepath) {
   write.table(cnv,
-              cnspath,
+              savepath,
               sep = '\t',
               row.names = FALSE)
 }

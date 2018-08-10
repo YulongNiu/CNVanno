@@ -12,7 +12,7 @@
 ##' }
 ##'
 ##' @title Sun's summary CNV table
-##' @inheritParams write.cnvkit
+##' @inheritParams FilterCNS
 ##' @inheritParams FindCyto
 ##' @param sampleType The sample type, like "proband", "mother", "father".
 ##' @importFrom foreach foreach %do%
@@ -381,7 +381,7 @@ CrossRegionGeneTable <- function(regionTable, geneTable) {
 ##' cnsFile <- system.file('extdata', 'example.cnvkit', package = 'CNVanno')
 ##' cns <- cnsFile %>% read.cnvkit %>% FilterCNS
 ##'
-##' cnRsefGene <- AnnoCNVBatch(cns, AnnoCNVGeneCore, CNVdb$RefGeneGRCh37)
+##' cnsRefGene <- AnnoCNVBatch(cns, AnnoCNVGeneCore, CNVdb$RefGeneGRCh37)
 ##' cnsOMIM <- AnnoCNVGeneRefGene2OMIM(cnsRefGene[[1]], CNVdb$OMIMGRCh38)
 ##' @author Yulong Niu \email{yulong.niu@@hotmail.com}
 ##' @export

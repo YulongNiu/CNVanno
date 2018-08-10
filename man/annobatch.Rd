@@ -10,7 +10,7 @@ AnnoCNVBatch(cns, FUN, ..., n = 2)
 MergeAnno(annoList)
 }
 \arguments{
-\item{cns}{The standard CNV format.}
+\item{cns}{The standard \code{CNVkit} output.}
 
 \item{FUN}{\code{AnnoCNVClinCore()}, \code{AnnoCNVPopuCore()}, and \code{ANnoCNVGeneCore()}.}
 
