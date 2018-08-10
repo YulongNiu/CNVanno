@@ -7,8 +7,6 @@
 FindCyto(cns, cyto, n = 2)
 }
 \arguments{
-\item{cns}{The standard cns format.}
-
 \item{cyto}{A standard cytoband file.}
 
 \item{n}{The number of threads for parallel computation.}
@@ -21,10 +19,10 @@ Find cytoband of given cns.
 }
 \examples{
 require('magrittr')
-data(hg38cyto)
+data(hg19cyto)
 
 cnsFile <- system.file('extdata', 'example.cnvkit', package = 'CNVanno')
-cnsFilteredCyto <- cnsFile \%>\% read.cns \%>\% FilterCNS \%>\% FindCyto(hg38cyto)
+cnsFilteredCyto <- cnsFile \%>\% read.cnvkit \%>\% FilterCNS \%>\% FindCyto(hg38cyto)
 
 }
 \author{

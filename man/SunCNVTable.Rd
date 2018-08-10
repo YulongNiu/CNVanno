@@ -7,8 +7,6 @@
 SunCNVTable(cns, cyto, sampleType = "proband", n = 2)
 }
 \arguments{
-\item{cns}{The standard cns format.}
-
 \item{cyto}{A standard cytoband file.}
 
 \item{sampleType}{The sample type, like "proband", "mother", "father".}
@@ -38,7 +36,7 @@ require('magrittr')
 data(hg38cyto)
 
 cnsFile <- system.file('extdata', 'example.cnvkit', package = 'CNVanno')
-cnsSummarySun <- cnsFile \%>\% read.cns \%>\% FilterCNS \%>\% SunCNVTable(hg38cyto)
+cnsSummarySun <- cnsFile \%>\% read.cnvkit \%>\% FilterCNS \%>\% SunCNVTable(hg38cyto)
 }
 \author{
 Yulong Niu \email{yulong.niu@hotmail.com}

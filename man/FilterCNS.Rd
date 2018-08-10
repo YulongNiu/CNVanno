@@ -8,8 +8,6 @@ FilterCNS(cns, cngain = 2, cnloss = 2, log2value = 0.5,
   depth = 0.01, sexchrom = TRUE)
 }
 \arguments{
-\item{cns}{The standard cns format.}
-
 \item{cngain}{A \code{numeric} value as the gain copy number threshold, and the default value is 2.}
 
 \item{cnloss}{A \code{numeric} value as the loss copy number threshold, and the default value is 2.}
@@ -38,7 +36,7 @@ Filter the cns file generated from \code{CNVkit}
 require('magrittr')
 
 cnsFile <- system.file('extdata', 'example.cnvkit', package = 'CNVanno')
-cnsFiltered <- cnsFile \%>\% read.cns \%>\% FilterCNS
+cnsFiltered <- cnsFile \%>\% read.cnvkit \%>\% FilterCNS
 
 }
 \author{
