@@ -1,0 +1,24 @@
+Package: CNVanno
+Title: CNVanno: an R package for filtering and anntation of copynumber variation 
+Description: Filter the CNVkit results.
+Version: 0.1.6
+Authors@R: person("Yulong", "Niu", email = "yulong.niu@hotmail.com", role = c("aut", "cre"))
+Maintainer: Yulong Niu <yulong.niu@hotmail.com>
+Depends:
+    R (>= 3.5.0)
+Imports:
+    magrittr,
+    foreach,
+    iterators,
+    doParallel,
+    stringr
+Suggests:
+    testthat,
+    BiocStyle,
+    knitr,
+    rmarkdown
+ByteCompile: true
+License: GPL
+LazyData: true
+RoxygenNote: 6.1.0
+VignetteBuilder: knitr

@@ -1,0 +1,10 @@
+# The ignore files when I am writing an R package.
+*~
+.Rhistory
+.Rproj.user/
+.directory
+
+# object and shared objects
+*.o
+*.so
+*.dll
