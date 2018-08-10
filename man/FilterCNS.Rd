@@ -37,7 +37,7 @@ Filter the cns file generated from \code{CNVkit}
 \examples{
 require('magrittr')
 
-cnsFile <- system.file('extdata', 'example.filter.cns', package = 'CNVanno')
+cnsFile <- system.file('extdata', 'example.cnvkit', package = 'CNVanno')
 cnsFiltered <- cnsFile \%>\% read.cns \%>\% FilterCNS
 
 }

@@ -37,7 +37,7 @@ The CNV summary table from Sun.
 require('magrittr')
 data(hg38cyto)
 
-cnsFile <- system.file('extdata', 'example.filter.cns', package = 'CNVanno')
+cnsFile <- system.file('extdata', 'example.cnvkit', package = 'CNVanno')
 cnsSummarySun <- cnsFile \%>\% read.cns \%>\% FilterCNS \%>\% SunCNVTable(hg38cyto)
 }
 \author{

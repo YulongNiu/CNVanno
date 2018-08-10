@@ -16,7 +16,7 @@
 ##' @examples
 ##' require('magrittr')
 ##'
-##' cnsFile <- system.file('extdata', 'example.filter.cns', package = 'CNVanno')
+##' cnsFile <- system.file('extdata', 'example.cnvkit', package = 'CNVanno')
 ##' cnsMat <- cnsFile %>% read.cns
 ##' \dontrun{
 ##' ## write cns file
@@ -50,4 +50,4 @@ write.cns <- function(cns, cnspath) {
               row.names = FALSE)
 }
 
-## cnsFile <- '/home/Yulong/RESEARCH/ciphergene/CNVscript/CNVanno/inst/extdata/example.filter.cns'
+## cnsFile <- '/home/Yulong/RESEARCH/ciphergene/CNVscript/CNVanno/inst/extdata/example.cnvkit'

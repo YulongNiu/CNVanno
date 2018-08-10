@@ -22,7 +22,7 @@
 ##' require('magrittr')
 ##' data(hg38cyto)
 ##'
-##' cnsFile <- system.file('extdata', 'example.filter.cns', package = 'CNVanno')
+##' cnsFile <- system.file('extdata', 'example.cnvkit', package = 'CNVanno')
 ##' cnsSummarySun <- cnsFile %>% read.cns %>% FilterCNS %>% SunCNVTable(hg38cyto)
 ##' @author Yulong Niu \email{yulong.niu@@hotmail.com}
 ##' @export
@@ -116,7 +116,7 @@ SunCNVTable <- function(cns, cyto, sampleType = 'proband', n = 2) {
 ##' data(CNVdb)
 ##' data(hg38cyto)
 ##'
-##' cnsFile <- system.file('extdata', 'example.filter.cns', package = 'CNVanno')
+##' cnsFile <- system.file('extdata', 'example.cnvkit', package = 'CNVanno')
 ##' cns <- cnsFile %>% read.cns %>% FilterCNS
 ##'
 ##' gdbList <- list()
@@ -378,7 +378,7 @@ CrossRegionGeneTable <- function(regionTable, geneTable) {
 ##' data(CNVdb)
 ##' data(hg38cyto)
 ##'
-##' cnsFile <- system.file('extdata', 'example.filter.cns', package = 'CNVanno')
+##' cnsFile <- system.file('extdata', 'example.cnvkit', package = 'CNVanno')
 ##' cns <- cnsFile %>% read.cns %>% FilterCNS
 ##'
 ##' cnsRefGene <- AnnoCNVBatch(cns, AnnoCNVGeneCore, CNVdb$RefGeneGRCh37)
@@ -421,7 +421,7 @@ AnnoCNVGeneRefGene2OMIM <- function(refgeneTable, OMIMdb) {
 ##' data(CNVdb)
 ##' data(hg38cyto)
 ##'
-##' cnsFile <- system.file('extdata', 'example.filter.cns', package = 'CNVanno')
+##' cnsFile <- system.file('extdata', 'example.cnvkit', package = 'CNVanno')
 ##' cns <- cnsFile %>% read.cns %>% FilterCNS
 ##'
 ##' cnsRefGene <- AnnoCNVBatch(cns, AnnoCNVGeneCore, CNVdb$RefGeneGRCh37)

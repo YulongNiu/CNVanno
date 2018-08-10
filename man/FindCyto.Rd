@@ -23,7 +23,7 @@ Find cytoband of given cns.
 require('magrittr')
 data(hg38cyto)
 
-cnsFile <- system.file('extdata', 'example.filter.cns', package = 'CNVanno')
+cnsFile <- system.file('extdata', 'example.cnvkit', package = 'CNVanno')
 cnsFilteredCyto <- cnsFile \%>\% read.cns \%>\% FilterCNS \%>\% FindCyto(hg38cyto)
 
 }

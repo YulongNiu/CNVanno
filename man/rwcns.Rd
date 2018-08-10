@@ -32,7 +32,7 @@ Read and write cns file
 \examples{
 require('magrittr')
 
-cnsFile <- system.file('extdata', 'example.filter.cns', package = 'CNVanno')
+cnsFile <- system.file('extdata', 'example.cnvkit', package = 'CNVanno')
 cnsMat <- cnsFile \%>\% read.cns
 \dontrun{
 ## write cns file

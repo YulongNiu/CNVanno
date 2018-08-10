@@ -16,7 +16,7 @@
 ##' require('magrittr')
 ##' data(CNVdb)
 ##'
-##' cnsFile <- system.file('extdata', 'example.filter.cns', package = 'CNVanno')
+##' cnsFile <- system.file('extdata', 'example.cnvkit', package = 'CNVanno')
 ##' cns <- cnsFile %>% read.cns %>% FilterCNS
 ##'
 ##' ## ClinGenGRCh38

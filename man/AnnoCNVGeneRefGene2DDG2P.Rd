@@ -27,7 +27,7 @@ require('magrittr')
 data(CNVdb)
 data(hg38cyto)
 
-cnsFile <- system.file('extdata', 'example.filter.cns', package = 'CNVanno')
+cnsFile <- system.file('extdata', 'example.cnvkit', package = 'CNVanno')
 cns <- cnsFile \%>\% read.cns \%>\% FilterCNS
 
 cnsRefGene <- AnnoCNVBatch(cns, AnnoCNVGeneCore, CNVdb$RefGeneGRCh37)
