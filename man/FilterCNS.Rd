@@ -8,6 +8,8 @@ FilterCNS(cns, cngain = 2, cnloss = 2, log2value = 0.5,
   depth = 0.01, sexchrom = TRUE)
 }
 \arguments{
+\item{cns}{The standard CNV format.}
+
 \item{cngain}{A \code{numeric} value as the gain copy number threshold, and the default value is 2.}
 
 \item{cnloss}{A \code{numeric} value as the loss copy number threshold, and the default value is 2.}
@@ -22,7 +24,7 @@ FilterCNS(cns, cngain = 2, cnloss = 2, log2value = 0.5,
 A filtered cns format
 }
 \description{
-Filter the cns file generated from \code{CNVkit}
+Filter the CNV file generated from \code{CNVkit}
 }
 \details{
 \itemize{

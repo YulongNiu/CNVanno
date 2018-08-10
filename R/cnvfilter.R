@@ -1,4 +1,4 @@
-##' Filter the cns file generated from \code{CNVkit}
+##' Filter the CNV file generated from \code{CNVkit}
 ##'
 ##' \itemize{
 ##'   \item 1. filter the cns with cn number is 2 (no variance).
@@ -13,7 +13,7 @@
 ##' @param log2value A \code{numeric} value as the absolute log2value threshold, and the default value is absolute 0.5.
 ##' @param depth A \code{numeric} value as the sequence depth, and the default value is 0.01
 ##' @param sexchrom A \code{logic} value whether filter sex chromosomes (X and Y), the default value is \code{TRUE}.
-##' @inheritParams write.cns
+##' @inheritParams write.cnvkit
 ##' @return A filtered cns format
 ##' @examples
 ##' require('magrittr')

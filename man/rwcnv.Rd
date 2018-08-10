@@ -2,17 +2,17 @@
 % Please edit documentation in R/rw.R
 \name{read.cnvkit}
 \alias{read.cnvkit}
-\alias{write.cnv}
-\title{Standard read and write multiple cnv files}
+\alias{write.cnvkit}
+\title{Standard read and write multiple CNV files}
 \usage{
 read.cnvkit(cnvpath)
 
-write.cnv(cnv, cnspath)
+write.cnvkit(cnv, cnspath)
 }
 \arguments{
 \item{cnvpath}{The path of cnv file.}
 
-\item{cns}{The standard cns format.}
+\item{cns}{The standard CNV format.}
 }
 \value{
 \itemize{
@@ -21,12 +21,12 @@ write.cnv(cnv, cnspath)
 }
 }
 \description{
-Read and write cnvkit cns file
+Read and write cnvkit CNV file
 }
 \details{
 \itemize{
-  \item \code{read.cnvkit()}: Read in cns file generated from \code{CNVkit} as a \code{data.frame}.
-  \item \code{write.cnvkit()}: Write standard cnv format file as table.
+  \item \code{read.cnvkit()}: Read in CNV generated from \code{CNVkit} as a \code{data.frame}.
+  \item \code{write.cnvkit()}: Write standard CNV format file as table.
 }
 }
 \examples{
@@ -35,7 +35,7 @@ require('magrittr')
 cnsFile <- system.file('extdata', 'example.cnvkit', package = 'CNVanno')
 cnsMat <- cnsFile \%>\% read.cnvkit
 \dontrun{
-## write cns file
+## write CNV file
 write.cnvkit(cnsMat, 'cnsMat.txt')
 }
 

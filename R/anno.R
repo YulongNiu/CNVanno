@@ -3,7 +3,7 @@
 ##' @title Find cytoband
 ##' @param cyto A standard cytoband file.
 ##' @param n The number of threads for parallel computation.
-##' @inheritParams write.cns
+##' @inheritParams write.cnvkit
 ##' @inheritParams OverlapRegion
 ##' @importFrom doParallel registerDoParallel stopImplicitCluster
 ##' @importFrom foreach foreach %dopar%

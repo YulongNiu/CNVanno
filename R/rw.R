@@ -1,11 +1,11 @@
-##' Read and write cnvkit cns file
+##' Read and write cnvkit CNV file
 ##'
 ##' \itemize{
-##'   \item \code{read.cnvkit()}: Read in cns file generated from \code{CNVkit} as a \code{data.frame}.
-##'   \item \code{write.cnvkit()}: Write standard cnv format file as table.
+##'   \item \code{read.cnvkit()}: Read in CNV generated from \code{CNVkit} as a \code{data.frame}.
+##'   \item \code{write.cnvkit()}: Write standard CNV format file as table.
 ##' }
 ##'
-##' @title Standard read and write multiple cnv files
+##' @title Standard read and write multiple CNV files
 ##' @param cnvpath The path of cnv file.
 ##' @return
 ##' \itemize{
@@ -19,7 +19,7 @@
 ##' cnsFile <- system.file('extdata', 'example.cnvkit', package = 'CNVanno')
 ##' cnsMat <- cnsFile %>% read.cnvkit
 ##' \dontrun{
-##' ## write cns file
+##' ## write CNV file
 ##' write.cnvkit(cnsMat, 'cnsMat.txt')
 ##' }
 ##'
@@ -38,12 +38,12 @@ read.cnvkit <- function(cnvpath) {
 }
 
 ##' @rdname rwcnv
-##' @param cns The standard cns format.
+##' @param cns The standard CNV format.
 ##' @inheritParams read.cnvkit
 ##' @importFrom utils write.table
 ##' @export
 ##'
-write.cnv <- function(cnv, cnspath) {
+write.cnvkit <- function(cnv, cnspath) {
   write.table(cnv,
               cnspath,
               sep = '\t',

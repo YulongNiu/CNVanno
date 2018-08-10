@@ -12,7 +12,7 @@
 ##' }
 ##'
 ##' @title Sun's summary CNV table
-##' @inheritParams write.cns
+##' @inheritParams write.cnvkit
 ##' @inheritParams FindCyto
 ##' @param sampleType The sample type, like "proband", "mother", "father".
 ##' @importFrom foreach foreach %do%

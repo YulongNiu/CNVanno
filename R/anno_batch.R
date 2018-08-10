@@ -3,7 +3,7 @@
 ##' \code{AnnoCNVBatch()}: Annotation of multiple CNVs to ClinVar/CliGen, population, and gene databases.
 ##'
 ##' @title The CNV batch annotation
-##' @inheritParams write.cns
+##' @inheritParams write.cnvkit
 ##' @inheritParams FindCyto
 ##' @param FUN \code{AnnoCNVClinCore()}, \code{AnnoCNVPopuCore()}, and \code{ANnoCNVGeneCore()}.
 ##' @param ... Parameters from the \code{FUN} functions

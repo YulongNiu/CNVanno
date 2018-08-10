@@ -7,6 +7,8 @@
 FindCyto(cns, cyto, n = 2)
 }
 \arguments{
+\item{cns}{The standard CNV format.}
+
 \item{cyto}{A standard cytoband file.}
 
 \item{n}{The number of threads for parallel computation.}
