@@ -37,7 +37,7 @@ require('magrittr')
 data(CNVdb)
 
 cnsFile <- system.file('extdata', 'example.cnvkit', package = 'CNVanno')
-cns <- cnsFile \%>\% read.cnvkit \%>\% FilterCNS
+cns <- cnsFile \%>\% read.cnvkit \%>\% filter.cnvkit
 
 ##OMIM
 AnnoCNVGeneCore(cns[1, ], CNVdb$OMIMGRCh38)

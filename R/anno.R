@@ -3,8 +3,7 @@
 ##' @title Find cytoband
 ##' @param cyto A standard cytoband file.
 ##' @param n The number of threads for parallel computation.
-##' @inheritParams FilterCNS
-##' @inheritParams OverlapRegion
+##' @param cnvcore A \code{data.frame} represent the CNV core data structure. 1st column is the chromosome like \code{chr1}, \code{chrX}, and \code{chrM}. 2nd and 3rd columns are start and end positions, respectively.
 ##' @importFrom doParallel registerDoParallel stopImplicitCluster
 ##' @importFrom foreach foreach %dopar%
 ##' @importFrom iterators iter
@@ -14,16 +13,16 @@
 ##' data(hg19cyto)
 ##'
 ##' cnsFile <- system.file('extdata', 'example.cnvkit', package = 'CNVanno')
-##' cnsFilteredCyto <- cnsFile %>% read.cnvkit %>% FilterCNS %>% FindCyto(hg38cyto)
+##' cnsFilteredCyto <- cnsFile %>% read.cnvkit %>% filter.cnvkit %>% FindCyto(hg19cyto)
 ##'
 ##' @author Yulong Niu \email{yulong.niu@@hotmail.com}
 ##' @export
 ##'
-FindCyto <- function(cns, cyto, n = 2) {
+FindCyto <- function(cnvcore, cyto, n = 2) {
 
   registerDoParallel(cores = n)
 
-  itx <- iter(cns, by = 'row')
+  itx <- iter(cnvcore, by = 'row')
 
   cnvCyto <- foreach(i = itx, .combine = c) %dopar% {
     eachCyto <- cyto[cyto[, 1] %in% i[1], , drop = FALSE]
@@ -37,9 +36,5 @@ FindCyto <- function(cns, cyto, n = 2) {
 
   return(cnvCyto)
 }
-
-
-
-
 
 

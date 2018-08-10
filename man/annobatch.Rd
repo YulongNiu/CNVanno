@@ -10,8 +10,6 @@ AnnoCNVBatch(cns, FUN, ..., n = 2)
 MergeAnno(annoList)
 }
 \arguments{
-\item{cns}{The standard \code{CNVkit} output.}
-
 \item{FUN}{\code{AnnoCNVClinCore()}, \code{AnnoCNVPopuCore()}, and \code{ANnoCNVGeneCore()}.}
 
 \item{...}{Parameters from the \code{FUN} functions}
@@ -34,7 +32,7 @@ require('magrittr')
 data(CNVdb)
 
 cnsFile <- system.file('extdata', 'example.cnvkit', package = 'CNVanno')
-cns <- cnsFile \%>\% read.cnvkit \%>\% FilterCNS
+cns <- cnsFile \%>\% read.cnvkit \%>\% filter.cnvkit
 
 ## ClinGenGRCh38
 AnnoCNVBatch(cns, AnnoCNVClinCore, CNVdb$ClinGenGRCh38)

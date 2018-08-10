@@ -38,7 +38,7 @@ require('magrittr')
 data(hg38cyto)
 
 cnsFile <- system.file('extdata', 'example.cnvkit', package = 'CNVanno')
-cnsSummarySun <- cnsFile \%>\% read.cnvkit \%>\% FilterCNS \%>\% SunCNVTable(hg38cyto)
+cnsSummarySun <- cnsFile \%>\% read.cnvkit \%>\% filter.cnvkit \%>\% SunCNVTable(hg38cyto)
 }
 \author{
 Yulong Niu \email{yulong.niu@hotmail.com}

@@ -94,7 +94,7 @@ data(CNVdb)
 data(hg38cyto)
 
 cnsFile <- system.file('extdata', 'example.cnvkit', package = 'CNVanno')
-cns <- cnsFile \%>\% read.cnvkit \%>\% FilterCNS
+cns <- cnsFile \%>\% read.cnvkit \%>\% filter.cnvkit
 
 gdbList <- list()
 gdbList[[1]] <- AnnoCNVBatch(cns, AnnoCNVGeneCore, CNVdb$OMIMGRCh38)[[1]]

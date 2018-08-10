@@ -17,7 +17,7 @@
 ##' data(CNVdb)
 ##'
 ##' cnsFile <- system.file('extdata', 'example.cnvkit', package = 'CNVanno')
-##' cns <- cnsFile %>% read.cnvkit %>% FilterCNS
+##' cns <- cnsFile %>% read.cnvkit %>% filter.cnvkit
 ##'
 ##' ## DECIPHER_POPULATION
 ##' AnnoCNVPopuCore(cns[1, ], CNVdb$DECIPHER_POPULATION)

@@ -1,10 +1,16 @@
-##' Filter the CNV file generated from \code{CNVkit}
+##' Filter the CNV file generated from \code{CNVkit} and \code{CNVnator}
 ##'
+##' For the \code{CNVkit}
 ##' \itemize{
 ##'   \item 1. filter the cns with cn number is 2 (no variance).
 ##'   \item 2. filter log2 value, and the default threshold is absolute 0.5.
 ##'   \item 3. filter low sequence depth.
 ##'   \item 4. filter X/Y chromosomes
+##' }
+##'
+##' For the \code{CNVnator}
+##' \itemize{
+##'   \item 1. 
 ##' }
 ##'
 ##' @title CNS filter
@@ -19,12 +25,12 @@
 ##' require('magrittr')
 ##'
 ##' cnsFile <- system.file('extdata', 'example.cnvkit', package = 'CNVanno')
-##' cnsFiltered <- cnsFile %>% read.cnvkit %>% FilterCNS
+##' cnsFiltered <- cnsFile %>% read.cnvkit %>% filter.cnvkit
 ##'
 ##' @author Yulong Niu \email{yulong.niu@@hotmail.com}
 ##' @export
 ##'
-FilterCNS <- function(cns, cngain = 2, cnloss = 2, log2value = 0.5, depth = 0.01, sexchrom = TRUE) {
+filter.cnvkit <- function(cns, cngain = 2, cnloss = 2, log2value = 0.5, depth = 0.01, sexchrom = TRUE) {
 
   ## filter logic
   ## step1: filter gain and loss cnv
@@ -45,3 +51,7 @@ FilterCNS <- function(cns, cngain = 2, cnloss = 2, log2value = 0.5, depth = 0.01
 }
 
 
+
+## FilterCore <- function(cnvcore, filter) {
+
+## }

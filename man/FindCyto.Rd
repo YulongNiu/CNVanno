@@ -4,10 +4,10 @@
 \alias{FindCyto}
 \title{Find cytoband}
 \usage{
-FindCyto(cns, cyto, n = 2)
+FindCyto(cnvcore, cyto, n = 2)
 }
 \arguments{
-\item{cns}{The standard \code{CNVkit} output.}
+\item{cnvcore}{A \code{data.frame} represent the CNV core data structure. 1st column is the chromosome like \code{chr1}, \code{chrX}, and \code{chrM}. 2nd and 3rd columns are start and end positions, respectively.}
 
 \item{cyto}{A standard cytoband file.}
 
@@ -24,7 +24,7 @@ require('magrittr')
 data(hg19cyto)
 
 cnsFile <- system.file('extdata', 'example.cnvkit', package = 'CNVanno')
-cnsFilteredCyto <- cnsFile \%>\% read.cnvkit \%>\% FilterCNS \%>\% FindCyto(hg38cyto)
+cnsFilteredCyto <- cnsFile \%>\% read.cnvkit \%>\% filter.cnvkit \%>\% FindCyto(hg19cyto)
 
 }
 \author{

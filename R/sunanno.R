@@ -12,7 +12,7 @@
 ##' }
 ##'
 ##' @title Sun's summary CNV table
-##' @inheritParams FilterCNS
+##' @inheritParams filter.cnvkit
 ##' @inheritParams FindCyto
 ##' @param sampleType The sample type, like "proband", "mother", "father".
 ##' @importFrom foreach foreach %do%
@@ -23,7 +23,7 @@
 ##' data(hg38cyto)
 ##'
 ##' cnsFile <- system.file('extdata', 'example.cnvkit', package = 'CNVanno')
-##' cnsSummarySun <- cnsFile %>% read.cnvkit %>% FilterCNS %>% SunCNVTable(hg38cyto)
+##' cnsSummarySun <- cnsFile %>% read.cnvkit %>% filter.cnvkit %>% SunCNVTable(hg38cyto)
 ##' @author Yulong Niu \email{yulong.niu@@hotmail.com}
 ##' @export
 ##'
@@ -117,7 +117,7 @@ SunCNVTable <- function(cns, cyto, sampleType = 'proband', n = 2) {
 ##' data(hg38cyto)
 ##'
 ##' cnsFile <- system.file('extdata', 'example.cnvkit', package = 'CNVanno')
-##' cns <- cnsFile %>% read.cnvkit %>% FilterCNS
+##' cns <- cnsFile %>% read.cnvkit %>% filter.cnvkit
 ##'
 ##' gdbList <- list()
 ##' gdbList[[1]] <- AnnoCNVBatch(cns, AnnoCNVGeneCore, CNVdb$OMIMGRCh38)[[1]]
@@ -379,7 +379,7 @@ CrossRegionGeneTable <- function(regionTable, geneTable) {
 ##' data(hg38cyto)
 ##'
 ##' cnsFile <- system.file('extdata', 'example.cnvkit', package = 'CNVanno')
-##' cns <- cnsFile %>% read.cnvkit %>% FilterCNS
+##' cns <- cnsFile %>% read.cnvkit %>% filter.cnvkit
 ##'
 ##' cnsRefGene <- AnnoCNVBatch(cns, AnnoCNVGeneCore, CNVdb$RefGeneGRCh37)
 ##' cnsOMIM <- AnnoCNVGeneRefGene2OMIM(cnsRefGene[[1]], CNVdb$OMIMGRCh38)
@@ -422,7 +422,7 @@ AnnoCNVGeneRefGene2OMIM <- function(refgeneTable, OMIMdb) {
 ##' data(hg38cyto)
 ##'
 ##' cnsFile <- system.file('extdata', 'example.cnvkit', package = 'CNVanno')
-##' cns <- cnsFile %>% read.cnvkit %>% FilterCNS
+##' cns <- cnsFile %>% read.cnvkit %>% filter.cnvkit
 ##'
 ##' cnsRefGene <- AnnoCNVBatch(cns, AnnoCNVGeneCore, CNVdb$RefGeneGRCh37)
 ##' cnsDDG2P <- AnnoCNVGeneRefGene2DDG2P(cnsRefGene[[1]], CNVdb$DECIPHER_DDG2P)

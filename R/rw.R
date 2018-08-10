@@ -72,9 +72,11 @@ read.cnvnator <- function(cnvpath) {
 
   natorRes <- data.frame(chromosome = chr,
                          start = start,
-                         end = end)
+                         end = end,
+                         stringsAsFactors = FALSE)
 
-  natorRes %<>% cbind.data.frame(cnsin[, c(1, 4:9)])
+  natorRes %<>% cbind.data.frame(cnsin[, c(1, 4:9)],
+                                 stringsAsFactors = FALSE)
   colnames(natorRes)[-1:-3] <- c('type', 'normalized_RD', 'e-val1', 'e-val2', 'e-val3', 'e-val4', 'q0')
 
   return(natorRes)
