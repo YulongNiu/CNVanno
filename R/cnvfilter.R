@@ -19,7 +19,7 @@
 ##' require('magrittr')
 ##'
 ##' cnsFile <- system.file('extdata', 'example.cnvkit', package = 'CNVanno')
-##' cnsFiltered <- cnsFile %>% read.cns %>% FilterCNS
+##' cnsFiltered <- cnsFile %>% read.cnvkit %>% FilterCNS
 ##'
 ##' @author Yulong Niu \email{yulong.niu@@hotmail.com}
 ##' @export

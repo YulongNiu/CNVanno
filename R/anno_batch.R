@@ -17,7 +17,7 @@
 ##' data(CNVdb)
 ##'
 ##' cnsFile <- system.file('extdata', 'example.cnvkit', package = 'CNVanno')
-##' cns <- cnsFile %>% read.cns %>% FilterCNS
+##' cns <- cnsFile %>% read.cnvkit %>% FilterCNS
 ##'
 ##' ## ClinGenGRCh38
 ##' AnnoCNVBatch(cns, AnnoCNVClinCore, CNVdb$ClinGenGRCh38)

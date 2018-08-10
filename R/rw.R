@@ -1,35 +1,35 @@
-##' Read and write cns file
+##' Read and write cnvkit cns file
 ##'
 ##' \itemize{
-##'   \item \code{read.cns()}: Read in cns file generated from \code{CNVkit} as a \code{data.frame}.
-##'   \item \code{write.cns()}: Write standard cns format file as table.
+##'   \item \code{read.cnvkit()}: Read in cns file generated from \code{CNVkit} as a \code{data.frame}.
+##'   \item \code{write.cnvkit()}: Write standard cnv format file as table.
 ##' }
 ##'
-##' @title Standard read in cns file
-##' @param cnspath The path of cns file.
+##' @title Standard read and write multiple cnv files
+##' @param cnvpath The path of cnv file.
 ##' @return
 ##' \itemize{
-##'   \item \code{read.cns()}: A \code{data.frame}.
-##'   \item \code{write.cns()}: A table separated \code{txt} format file.
+##'   \item \code{read.cnvkit()}: A \code{data.frame}.
+##'   \item \code{write.cnvkit()}: A table separated \code{txt} format file.
 ##' }
 ##'
 ##' @examples
 ##' require('magrittr')
 ##'
 ##' cnsFile <- system.file('extdata', 'example.cnvkit', package = 'CNVanno')
-##' cnsMat <- cnsFile %>% read.cns
+##' cnsMat <- cnsFile %>% read.cnvkit
 ##' \dontrun{
 ##' ## write cns file
-##' write.cns(cnsMat, 'cnsMat.txt')
+##' write.cnvkit(cnsMat, 'cnsMat.txt')
 ##' }
 ##'
 ##' @author Yulong Niu \email{yulong.niu@@hotmail.com}
 ##' @importFrom utils read.table
-##' @rdname rwcns
+##' @rdname rwcnv
 ##' @export
 ##'
-read.cns <- function(cnspath) {
-  cnsin <- read.table(cnspath,
+read.cnvkit <- function(cnvpath) {
+  cnsin <- read.table(cnvpath,
                       header = TRUE,
                       sep = '\t',
                       stringsAsFactors = FALSE)
@@ -37,14 +37,14 @@ read.cns <- function(cnspath) {
   return(cnsin)
 }
 
-##' @rdname rwcns
+##' @rdname rwcnv
 ##' @param cns The standard cns format.
-##' @inheritParams read.cns
+##' @inheritParams read.cnvkit
 ##' @importFrom utils write.table
 ##' @export
 ##'
-write.cns <- function(cns, cnspath) {
-  write.table(cns,
+write.cnv <- function(cnv, cnspath) {
+  write.table(cnv,
               cnspath,
               sep = '\t',
               row.names = FALSE)

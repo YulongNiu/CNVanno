@@ -11,10 +11,10 @@
 ##' @return A \code{character} vector.
 ##' @examples
 ##' require('magrittr')
-##' data(hg38cyto)
+##' data(hg19cyto)
 ##'
 ##' cnsFile <- system.file('extdata', 'example.cnvkit', package = 'CNVanno')
-##' cnsFilteredCyto <- cnsFile %>% read.cns %>% FilterCNS %>% FindCyto(hg38cyto)
+##' cnsFilteredCyto <- cnsFile %>% read.cnvkit %>% FilterCNS %>% FindCyto(hg38cyto)
 ##'
 ##' @author Yulong Niu \email{yulong.niu@@hotmail.com}
 ##' @export
