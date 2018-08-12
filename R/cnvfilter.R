@@ -8,10 +8,6 @@
 ##'   \item 4. filter X/Y chromosomes
 ##' }
 ##'
-##' For the \code{CNVnator}
-##' \itemize{
-##'   \item 1. 
-##' }
 ##'
 ##' @title CNS filter
 ##' @param cngain A \code{numeric} value as the gain copy number threshold, and the default value is 2.
