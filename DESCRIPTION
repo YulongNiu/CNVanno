@@ -25,3 +25,17 @@ License: GPL
 LazyData: true
 RoxygenNote: 6.1.0
 VignetteBuilder: knitr
+Collate: 
+    'AllClasses.R'
+    'anno.R'
+    'anno_batch.R'
+    'anno_clin.R'
+    'anno_gene.R'
+    'anno_population.R'
+    'anno_utilities.R'
+    'dataDef.R'
+    'filter.R'
+    'gloableChkVar.R'
+    'region.R'
+    'rw.R'
+    'sunanno.R'
