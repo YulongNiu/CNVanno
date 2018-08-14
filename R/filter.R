@@ -43,7 +43,7 @@ filter_cnvkit <- function(RawCNVkit, cngain = 2, cnloss = 2, dep = 0.01, sexchro
     lsex <- RawCNVkit@rawCNV %>%
       transmute(chromosome != 'chrX' & chromosome != 'chrY') %>%
       unlist
-    l %<>% `|`(lsex)
+    l %<>% `&`(lsex)
   } else {}
 
   cnvkitf <- new('RawCNV',
@@ -55,8 +55,3 @@ filter_cnvkit <- function(RawCNVkit, cngain = 2, cnloss = 2, dep = 0.01, sexchro
 
 }
 
-
-
-## FilterCore <- function(cnvcore, filter) {
-
-## }
