@@ -27,6 +27,7 @@ RoxygenNote: 6.1.0
 VignetteBuilder: knitr
 Collate: 
     'AllClasses.R'
+    'AllGenerics.R'
     'anno.R'
     'anno_batch.R'
     'anno_clin.R'
@@ -38,4 +39,5 @@ Collate:
     'gloableChkVar.R'
     'region.R'
     'rw.R'
+    'segment.R'
     'sunanno.R'

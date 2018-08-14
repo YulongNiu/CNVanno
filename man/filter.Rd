@@ -5,13 +5,13 @@
 \alias{filter_cnvnator}
 \title{CNV filter}
 \usage{
-filter_cnvkit(RawCNVkit, cngain = 2, cnloss = 2, dep = 0.01,
+filter_cnvkit(rawkit, cngain = 2, cnloss = 2, dep = 0.01,
   sexchrom = TRUE)
 
-filter_cnvnator(RawCNVnator, sexchrom = TRUE)
+filter_cnvnator(rawnator, sexchrom = TRUE)
 }
 \arguments{
-\item{RawCNVkit}{The standard \code{CNVkit} output as an \code{RawCNV} object.}
+\item{rawkit}{The standard \code{CNVkit} output as an \code{RawCNV} object.}
 
 \item{cngain}{A \code{numeric} value as the gain copy number threshold, and the default value is 2.}
 
@@ -21,7 +21,7 @@ filter_cnvnator(RawCNVnator, sexchrom = TRUE)
 
 \item{sexchrom}{A \code{logic} value whether filter sex chromosomes (X and Y), the default value is \code{TRUE}.}
 
-\item{RawCNVnator}{The standard \code{CNVnator} output as an \code{RawCNV} object.}
+\item{rawnator}{The standard \code{CNVnator} output as an \code{RawCNV} object.}
 }
 \value{
 A filtered \code{RawCNV} object.

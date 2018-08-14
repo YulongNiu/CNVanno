@@ -21,7 +21,7 @@ NULL
 ##' @param cnloss A \code{numeric} value as the loss copy number threshold, and the default value is 2.
 ##' @param dep A \code{numeric} value as the sequence depth, and the default value is 0.01
 ##' @param sexchrom A \code{logic} value whether filter sex chromosomes (X and Y), the default value is \code{TRUE}.
-##' @param RawCNVkit The standard \code{CNVkit} output as an \code{RawCNV} object.
+##' @param rawkit The standard \code{CNVkit} output as an \code{RawCNV} object.
 ##' @return A filtered \code{RawCNV} object.
 ##' @examples
 ##' require('magrittr')
@@ -35,53 +35,53 @@ NULL
 ##' @rdname filter
 ##' @export
 ##'
-filter_cnvkit <- function(RawCNVkit, cngain = 2, cnloss = 2, dep = 0.01, sexchrom = TRUE) {
+filter_cnvkit <- function(rawkit, cngain = 2, cnloss = 2, dep = 0.01, sexchrom = TRUE) {
 
   ## step1: filter gain and loss cnv
   ## step2: filter low depth
 
-  l <- RawCNVkit@params %>%
+  l <- rawkit@params %>%
     transmute((cn > cngain | cn < cnloss) & depth > dep) %>%
     unlist
 
   ## step3: filter sex chromosomes
   if (sexchrom) {
-    lsex <- RawCNVkit@rawCNV %>%
+    lsex <- rawkit@rawCNV %>%
       transmute(chromosome != 'chrX' & chromosome != 'chrY') %>%
       unlist
     l %<>% `&`(lsex)
   } else {}
 
   cnvkitf <- new('RawCNV',
-                 rawCNV = filter(RawCNVkit@rawCNV, l),
-                 params = filter(RawCNVkit@params, l),
-                 method = RawCNVkit@method)
+                 rawCNV = filter(rawkit@rawCNV, l),
+                 params = filter(rawkit@params, l),
+                 method = rawkit@method)
 
   return(cnvkitf)
 
 }
 
 
-##' @param RawCNVnator The standard \code{CNVnator} output as an \code{RawCNV} object.
+##' @param rawnator The standard \code{CNVnator} output as an \code{RawCNV} object.
 ##' @inheritParams filter_cnvkit
 ##' @importFrom magrittr  %>%
 ##' @importFrom dplyr select mutate
 ##' @rdname filter
 ##' @export
 ##'
-filter_cnvnator <- function(RawCNVnator, sexchrom = TRUE) {
+filter_cnvnator <- function(rawnator, sexchrom = TRUE) {
 
   ## step1: filter sex chromosomes
   if (sexchrom) {
-    l <- RawCNVnator@rawCNV %>%
+    l <- rawnator@rawCNV %>%
       transmute(chromosome != 'chrX' & chromosome != 'chrY') %>%
       unlist
   } else {}
 
   cnvnatorf <- new('RawCNV',
-                   rawCNV = filter(RawCNVnator@rawCNV, l),
-                   params = filter(RawCNVnator@params, l),
-                   method = RawCNVkit@method)
+                   rawCNV = filter(rawnator@rawCNV, l),
+                   params = filter(rawnator@params, l),
+                   method = rawnator@method)
 
   return(cnvnatorf)
 }
