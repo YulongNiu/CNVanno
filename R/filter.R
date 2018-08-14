@@ -2,7 +2,7 @@
 NULL
 
 
-##' Filter the CNV file generated from \code{CNVkit}
+##' Filter the CNV file generated from \code{CNVkit} and \code{CNVnator}
 ##'
 ##' For the \code{CNVkit}
 ##' \itemize{
@@ -11,6 +11,10 @@ NULL
 ##'   \item 3. filter X/Y chromosomes
 ##' }
 ##'
+##' For the \code{CNVnator}
+##' \itemize{
+##'   \item 1. filter X/Y chromosomes
+##' }
 ##'
 ##' @title CNV filter
 ##' @param cngain A \code{numeric} value as the gain copy number threshold, and the default value is 2.
@@ -24,9 +28,11 @@ NULL
 ##'
 ##' kitf <- system.file('extdata', 'example.cnvkit', package = 'CNVanno') %>% read_cnvkit %>% filter_cnvkit
 ##'
+##' natorf <- system.file('extdata', 'example.cnvnator', package = 'CNVanno') %>% read_cnvnator %>% filter_cnvnator
 ##' @author Yulong Niu \email{yulong.niu@@hotmail.com}
 ##' @importFrom dplyr transmute filter
 ##' @importFrom magrittr %>% %<>%
+##' @rdname filter
 ##' @export
 ##'
 filter_cnvkit <- function(RawCNVkit, cngain = 2, cnloss = 2, dep = 0.01, sexchrom = TRUE) {
@@ -55,3 +61,27 @@ filter_cnvkit <- function(RawCNVkit, cngain = 2, cnloss = 2, dep = 0.01, sexchro
 
 }
 
+
+##' @param RawCNVnator The standard \code{CNVnator} output as an \code{RawCNV} object.
+##' @inheritParams filter_cnvkit
+##' @importFrom magrittr  %>%
+##' @importFrom dplyr select mutate
+##' @rdname filter
+##' @export
+##'
+filter_cnvnator <- function(RawCNVnator, sexchrom = TRUE) {
+
+  ## step1: filter sex chromosomes
+  if (sexchrom) {
+    l <- RawCNVnator@rawCNV %>%
+      transmute(chromosome != 'chrX' & chromosome != 'chrY') %>%
+      unlist
+  } else {}
+
+  cnvnatorf <- new('RawCNV',
+                   rawCNV = filter(RawCNVnator@rawCNV, l),
+                   params = filter(RawCNVnator@params, l),
+                   method = RawCNVkit@method)
+
+  return(cnvnatorf)
+}

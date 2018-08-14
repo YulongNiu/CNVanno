@@ -2,10 +2,13 @@
 % Please edit documentation in R/filter.R
 \name{filter_cnvkit}
 \alias{filter_cnvkit}
+\alias{filter_cnvnator}
 \title{CNV filter}
 \usage{
 filter_cnvkit(RawCNVkit, cngain = 2, cnloss = 2, dep = 0.01,
   sexchrom = TRUE)
+
+filter_cnvnator(RawCNVnator, sexchrom = TRUE)
 }
 \arguments{
 \item{RawCNVkit}{The standard \code{CNVkit} output as an \code{RawCNV} object.}
@@ -17,12 +20,14 @@ filter_cnvkit(RawCNVkit, cngain = 2, cnloss = 2, dep = 0.01,
 \item{dep}{A \code{numeric} value as the sequence depth, and the default value is 0.01}
 
 \item{sexchrom}{A \code{logic} value whether filter sex chromosomes (X and Y), the default value is \code{TRUE}.}
+
+\item{RawCNVnator}{The standard \code{CNVnator} output as an \code{RawCNV} object.}
 }
 \value{
 A filtered \code{RawCNV} object.
 }
 \description{
-Filter the CNV file generated from \code{CNVkit}
+Filter the CNV file generated from \code{CNVkit} and \code{CNVnator}
 }
 \details{
 For the \code{CNVkit}
@@ -31,12 +36,18 @@ For the \code{CNVkit}
   \item 2. filter low sequence depth.
   \item 3. filter X/Y chromosomes
 }
+
+For the \code{CNVnator}
+\itemize{
+  \item 1. filter X/Y chromosomes
+}
 }
 \examples{
 require('magrittr')
 
 kitf <- system.file('extdata', 'example.cnvkit', package = 'CNVanno') \%>\% read_cnvkit \%>\% filter_cnvkit
 
+natorf <- system.file('extdata', 'example.cnvnator', package = 'CNVanno') \%>\% read_cnvnator \%>\% filter_cnvnator
 }
 \author{
 Yulong Niu \email{yulong.niu@hotmail.com}
