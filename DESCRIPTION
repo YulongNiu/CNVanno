@@ -28,12 +28,12 @@ VignetteBuilder: knitr
 Collate: 
     'AllClasses.R'
     'AllGenerics.R'
-    'anno.R'
     'anno_batch.R'
     'anno_clin.R'
     'anno_gene.R'
     'anno_population.R'
     'anno_utilities.R'
+    'cyto.R'
     'dataDef.R'
     'filter.R'
     'gloableChkVar.R'

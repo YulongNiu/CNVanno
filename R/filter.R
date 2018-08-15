@@ -1,4 +1,4 @@
-##' @include AllClasses.R
+##' @include AllClasses.R AllGenerics.R
 NULL
 
 
@@ -32,7 +32,7 @@ NULL
 ##' @author Yulong Niu \email{yulong.niu@@hotmail.com}
 ##' @importFrom dplyr transmute filter
 ##' @importFrom magrittr %>% %<>%
-##' @rdname filter
+##' @rdname filterraw
 ##' @export
 ##'
 filter_cnvkit <- function(rawkit, cngain = 2, cnloss = 2, dep = 0.01, sexchrom = TRUE) {
@@ -66,7 +66,7 @@ filter_cnvkit <- function(rawkit, cngain = 2, cnloss = 2, dep = 0.01, sexchrom =
 ##' @inheritParams filter_cnvkit
 ##' @importFrom magrittr  %>%
 ##' @importFrom dplyr select mutate
-##' @rdname filter
+##' @rdname filterraw
 ##' @export
 ##'
 filter_cnvnator <- function(rawnator, sexchrom = TRUE) {
@@ -85,3 +85,34 @@ filter_cnvnator <- function(rawnator, sexchrom = TRUE) {
 
   return(cnvnatorf)
 }
+
+
+
+##' Filtering \code{CoreCNV}.
+##'
+##' Filer the \code{CoreCNV} according black lists.
+##'
+##' @title Filter \code{CoreCNV}
+##' @inheritParams Filter
+##' @return A \code{CoreCNV} object.
+##' @examples
+##' library('magrittr')
+##'
+##' nator <- system.file('extdata', 'exampleseg.cnvnator', package = 'CNVanno') %>%
+##'   read_natorkit %>%
+##'   filter_natorkit %>%
+##'   Segment(natorf, interlen = 10L)
+##'
+##' natorf <- Filter(kitf, **, overlaprate = 0.5)
+##' @author Yulong Niu \email{yulong.niu@@hotmail.com}
+##' @importFrom magrittr %>%
+##' @importFrom dplyr mutate
+##' @rdname Filter-methods
+##' @exportMethod Filter
+##'
+setMethod(f = 'Filter',
+          signature = c(core = 'CoreCNV', blacklist = 'tbl_df', overlaprate = 'double'),
+          definition = function(core, blacklist, overlaprate = 0.5, ...) {
+
+          })
+

@@ -1,9 +1,8 @@
-##' Find cytoband of given cns.
+##' Find cytoband of given CNVs.
+##'
+##' Map the cytoband of given CNVs.
 ##'
 ##' @title Find cytoband
-##' @param cyto A standard cytoband file.
-##' @param n The number of threads for parallel computation.
-##' @param cnvcore A \code{data.frame} represent the CNV core data structure. 1st column is the chromosome like \code{chr1}, \code{chrX}, and \code{chrM}. 2nd and 3rd columns are start and end positions, respectively.
 ##' @importFrom doParallel registerDoParallel stopImplicitCluster
 ##' @importFrom foreach foreach %dopar%
 ##' @importFrom iterators iter
@@ -12,13 +11,15 @@
 ##' require('magrittr')
 ##' data(hg19cyto)
 ##'
-##' cnsFile <- system.file('extdata', 'example.cnvkit', package = 'CNVanno')
+##' kit <- system.file('extdata', 'exampleseg.cnvkit', package = 'CNVanno') %>% read_cnvkit %>% filter_cnvkit %>% Segment(interlen = 10L)
+##'
 ##' cnsFilteredCyto <- cnsFile %>% read.cnvkit %>% filter.cnvkit %>% FindCyto(hg19cyto)
 ##'
 ##' @author Yulong Niu \email{yulong.niu@@hotmail.com}
-##' @export
+##' @rdname Cytoband-methods
+##' @exportMethod Cytoband
 ##'
-FindCyto <- function(cnvcore, cyto, n = 2) {
+Cytoband <- function(cnvcore, cyto, n = 2) {
 
   registerDoParallel(cores = n)
 

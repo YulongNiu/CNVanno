@@ -8,12 +8,12 @@ NULL
 ##'
 ##' @title Segmentation
 ##' @inheritParams Segment
-##' @return A \code{numeric matrix} object.
+##' @return A \code{CoreCNV} object.
 ##' @examples
 ##' library('magrittr')
 ##'
-##' kitf <- system.file('extdata', 'exampleseg.cnvkit', package = 'CNVanno') %>% read_cnvkit %>% filter_cnvkit
-##' kitfseg <- Segment(kitf, interlen = 10L)
+##' kit <- system.file('extdata', 'exampleseg.cnvkit', package = 'CNVanno') %>% read_cnvkit %>% filter_cnvkit
+##' kitseg <- Segment(kit, interlen = 10L)
 ##' @author Yulong Niu \email{yulong.niu@@hotmail.com}
 ##' @importFrom magrittr %>%
 ##' @importFrom dplyr mutate
@@ -30,8 +30,6 @@ setMethod(f = 'Segment',
 
             return(cnvSeg)
           })
-
-
 
 
 ##' Segmentation internal functions.
@@ -145,3 +143,4 @@ segMerge_ <- function(cnv, interlen) {
 
   return(cnvSeg)
 }
+

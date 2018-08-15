@@ -7,7 +7,7 @@
 ##' }
 ##' @title Overlapped regions
 ##' @param regionf A \code{numeric} vector with length two, and the value of 1st position is smaller/equal to that of 2nd position.
-##' @param regionMat A \code{numeric} matrix with 2 columns. In the \code{OverlapRegionRate()} function, the rows should have overlap with the input \code{reginf}. The 1st column should be equal or smaller than the 2nd column, otherwise use the \code{SortMat()} sort the \code{regionMat} at first.
+##' @param regionMat A \code{tbl_df} with 2 columns. In the \code{OverlapRegionRate()} function, the rows should have overlap with the input \code{reginf}. The 1st column should be equal or smaller than the 2nd column, otherwise use the \code{SortMat()} sort the \code{regionMat} at first.
 ##' @return
 ##' \itemize{
 ##'   \item \code{OverlapRegionRate()}: A \code{logic} value.
@@ -17,7 +17,7 @@
 ##' @examples
 ##' require('magrittr')
 ##'
-##' tMat <- matrix(c(1, 101, 103, 112, 111, 1000, 8, 149, 10, 86), ncol = 2, byrow = TRUE)
+##' tMat <- tibble(from = c(1, 103, 111, 8, 10), to = c(101, 112, 1000, 49, 86))
 ##' tReg <- c(100, 110)
 ##'
 ##' ## overlapped regions
@@ -51,22 +51,24 @@ OverlapRegionRate <- function(regionf, regionMat) {
 
 ##' @inheritParams OverlapRegionRate
 ##' @param extend A \code{numeric} value indicates the extended length in both direction.
-##' @importFrom magrittr %<>%
+##' @importFrom dplyr mutate transmute
+##' @importFrom magrittr %<>% %>%
 ##' @rdname overlapregion
 ##' @export
 ##'
 OverlapRegion <- function(regionf, regionMat, extend = 100) {
 
-  regionMat[, 1] %<>% `-`(extend)
-  regionMat[, 2] %<>% `+`(extend)
+  regionMat %<>%
+    mutate(from = if_else(from - extend > 0, from - extend, 0)) %>%
+    mutate(to = to + extend)
 
-  ## 1st is min, 2nd is max
-  olLogic <- !((max(regionf) < regionMat[, 1]) |
-               (min(regionf) > regionMat[, 2]))
+  olLogic <- regionMat %>%
+    transmute(from > max(regionf) | to < min(regionf)) %>%
+    unlist %>%
+    unname
 
-  return(olLogic)
+  return(!olLogic)
 }
-
 
 ##' @inheritParams OverlapRegionRate
 ##' @rdname overlapregion
