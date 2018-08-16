@@ -97,23 +97,25 @@ filter_cnvnator <- function(rawnator, sexchrom = TRUE) {
 ##' @return A \code{CoreCNV} object.
 ##' @examples
 ##' library('magrittr')
+##' data(hg19cyto)
 ##'
 ##' nator <- system.file('extdata', 'exampleseg.cnvnator', package = 'CNVanno') %>%
 ##'   read_natorkit %>%
 ##'   filter_natorkit %>%
 ##'   Segment(natorf, interlen = 10L)
 ##'
-##' natorf <- Filter(kitf, **, overlaprate = 0.5)
+##' natorf <- Filter(kitf, bl_cytoband(hg19cyto), overlaprate = 0.5)
 ##' @author Yulong Niu \email{yulong.niu@@hotmail.com}
 ##' @importFrom magrittr %>%
 ##' @importFrom dplyr mutate
+##' @references \href{http://penncnv.openbioinformatics.org/en/latest/user-guide/annotation/#filtering-cnv-calls-by-user-specified-criteria}{cytoband extend}
 ##' @rdname Filter-methods
 ##' @exportMethod Filter
 ##'
 setMethod(f = 'Filter',
-          signature = c(core = 'CoreCNV', blacklist = 'tbl_df', overlaprate = 'double'),
+          signature = c(core = 'CoreCNV', blacklist = 'tbl_df', overlaprate = 'numeric'),
           definition = function(core, blacklist, overlaprate, ...) {
-
+            return(core@coreCNV)
           })
 
 

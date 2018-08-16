@@ -4,7 +4,7 @@
 ##'
 ##' @docType data
 ##' @name hg38cyto
-##' @format A \code{data.frame}
+##' @format A \code{tbl_df}
 ##' @references \href{http://hgdownload.cse.ucsc.edu/goldenpath/hg38/database/}{UCSC goldenpath}
 ##' @author Yulong Niu \email{yulong.niu@@hotmail.com}
 ##'
@@ -17,8 +17,35 @@ NULL
 ##'
 ##' @docType data
 ##' @name hg19cyto
-##' @format A \code{data.frame}
+##' @format A \code{tbl_df}
 ##' @references \href{http://hgdownload.cse.ucsc.edu/goldenpath/hg19/database/}{UCSC goldenpath}
+##' @author Yulong Niu \email{yulong.niu@@hotmail.com}
+##'
+NULL
+
+
+##' Blacklist of hg19 genome.
+##'
+##' Combination of low mapbility regions and blacklist from the 10X genome.
+##'
+##' @docType data
+##' @name hg19bl
+##' @format A \code{tbl_df}
+##' @references \href{ftp://hgdownload.soe.ucsc.edu/goldenPath/hg19/encodeDCC/wgEncodeMapability/wgEncodeDacMapabilityConsensusExcludable.bed.gz}{mapbility_concensus}
+##' @references \href{ftp://hgdownload.soe.ucsc.edu/goldenPath/hg19/encodeDCC/wgEncodeMapability/wgEncodeDukeMapabilityRegionsExcludable.bed.gz}{mapbility_region}
+##' @references \href{http://cf.10xgenomics.com/supp/genome/hg19/sv_blacklist.bed}{10X genome blacklist}
+##' @author Yulong Niu \email{yulong.niu@@hotmail.com}
+##'
+NULL
+
+##' Blacklist of hg38 genome.
+##'
+##' Combination of low mapbility regions and blacklist from the 10X genome.
+##'
+##' @docType data
+##' @name hg38bl
+##' @format A \code{tbl_df}
+##' @references \href{http://cf.10xgenomics.com/supp/genome/hg38/sv_blacklist.bed}{10X genome blacklist}
 ##' @author Yulong Niu \email{yulong.niu@@hotmail.com}
 ##'
 NULL

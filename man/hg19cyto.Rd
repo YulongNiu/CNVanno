@@ -4,7 +4,7 @@
 \name{hg19cyto}
 \alias{hg19cyto}
 \title{Cytobands of hg19 genome from the UCSC goldenpath}
-\format{A \code{data.frame}}
+\format{A \code{tbl_df}}
 \description{
 The default hg19 cytobands.
 }

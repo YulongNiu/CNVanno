@@ -18,7 +18,7 @@ setClass(Class = 'RawCNV',
 ##'
 ##' @slot .Data An \code{tbl_df} from the \code{tibble} package. It contains five columns: 1st is the chromosome, 2nd is the CNV start position, 3rd is the CNV end position, 4th is the CNV type ("gain", "loss", "normal"), 5th is the CNV calling method.
 ##' @author Yulong Niu \email{yulong.niu@@hotmail.com}
-##' @exportClass RawCNV
+##' @exportClass CoreCNV
 ##'
 setClass(Class = 'CoreCNV',
          slots = c(coreCNV = 'tbl_df'))

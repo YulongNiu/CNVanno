@@ -48,11 +48,10 @@ setMethod(f = 'Cytoband',
               return(eachCyto)
             }
 
-            return(cnvCyto)
-
             ## stop multiple cores
             stopImplicitCluster()
 
+            return(cnvCyto)
           })
 
 
