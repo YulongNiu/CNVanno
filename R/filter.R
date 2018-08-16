@@ -110,9 +110,9 @@ filter_cnvnator <- function(rawnator, sexchrom = TRUE) {
 ##' @rdname Filter-methods
 ##' @exportMethod Filter
 ##'
-setMethod(f = 'Filter',
-          signature = c(core = 'CoreCNV', blacklist = 'tbl_df', overlaprate = 'double'),
-          definition = function(core, blacklist, overlaprate = 0.5, ...) {
+## setMethod(f = 'Filter',
+##           signature = c(core = 'CoreCNV', blacklist = 'tbl_df', overlaprate = 'double'),
+##           definition = function(core, blacklist, overlaprate = 0.5, ...) {
 
-          })
+##           })
 

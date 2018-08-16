@@ -1,11 +1,12 @@
+##' @include AllClasses.R AllGenerics.R
+NULL
+
+
 ##' Find cytoband of given CNVs.
 ##'
 ##' Map the cytoband of given CNVs.
 ##'
 ##' @title Find cytoband
-##' @importFrom doParallel registerDoParallel stopImplicitCluster
-##' @importFrom foreach foreach %dopar%
-##' @importFrom iterators iter
 ##' @return A \code{character} vector.
 ##' @examples
 ##' require('magrittr')
@@ -13,29 +14,45 @@
 ##'
 ##' kit <- system.file('extdata', 'exampleseg.cnvkit', package = 'CNVanno') %>% read_cnvkit %>% filter_cnvkit %>% Segment(interlen = 10L)
 ##'
-##' cnsFilteredCyto <- cnsFile %>% read.cnvkit %>% filter.cnvkit %>% FindCyto(hg19cyto)
+##' kitcyto <- Cytoband(kit, hg19cyto, n = 2)
 ##'
 ##' @author Yulong Niu \email{yulong.niu@@hotmail.com}
+##' @importFrom doParallel registerDoParallel stopImplicitCluster
+##' @importFrom foreach foreach %dopar%
+##' @importFrom iterators iter
+##' @importFrom dplyr filter select
+##' @importFrom magrittr %<>% %>%
 ##' @rdname Cytoband-methods
 ##' @exportMethod Cytoband
 ##'
-Cytoband <- function(cnvcore, cyto, n = 2) {
+setMethod(f = 'Cytoband',
+          signature = c(core = 'CoreCNV', cyto = 'tbl_df'),
+          definition = function(core, cyto, n, ...) {
 
-  registerDoParallel(cores = n)
+            core  <- core@coreCNV
 
-  itx <- iter(cnvcore, by = 'row')
+            registerDoParallel(cores = n)
 
-  cnvCyto <- foreach(i = itx, .combine = c) %dopar% {
-    eachCyto <- cyto[cyto[, 1] %in% i[1], , drop = FALSE]
-    eachLogic <- OverlapRegion(i[2:3], eachCyto[, 2:3, drop = FALSE])
-    eachCyto <- paste(eachCyto[eachLogic, 4], collapse = ';')
-    return(eachCyto)
-  }
+            itx <- iter(core, by = 'row')
 
-  ## stop multiple cores
-  stopImplicitCluster()
+            cnvCyto <- foreach(i = itx, .combine = c) %dopar% {
 
-  return(cnvCyto)
-}
+              eachCyto <- filter(cyto, chromosome == as.character(i[1]))
+              eachLogic <- eachCyto %>% OverlapRegion(i[2:3], .)
+              eachCyto %<>%
+                filter(eachLogic) %>%
+                select(cytoband) %>%
+                unlist %>%
+                paste(collapse = ';')
+
+              return(eachCyto)
+            }
+
+            return(cnvCyto)
+
+            ## stop multiple cores
+            stopImplicitCluster()
+
+          })
 
 

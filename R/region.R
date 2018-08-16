@@ -81,7 +81,7 @@ OverlapRegion <- function(regionf, regionMat, extend = 100) {
 ##' @inheritParams OverlapRegionRate
 ##' @rdname overlapregion
 ##' @importFrom magrittr %<>% %>%
-##' @importFrom mutate transmute if_else bind_cols
+##' @importFrom dplyr transmute if_else bind_cols
 ##' @export
 ##'
 SortRegion <- function(regionMat) {
@@ -96,5 +96,3 @@ SortRegion <- function(regionMat) {
 
   return(reg)
 }
-
-

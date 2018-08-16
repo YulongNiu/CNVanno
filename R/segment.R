@@ -28,7 +28,9 @@ setMethod(f = 'Segment',
               segMerge_(interlen = interlen) %>%
               mutate(method = raw@method)
 
-            return(cnvSeg)
+            res <- new('CoreCNV', coreCNV = cnvSeg)
+
+            return(res)
           })
 
 

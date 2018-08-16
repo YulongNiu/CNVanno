@@ -21,5 +21,5 @@ setClass(Class = 'RawCNV',
 ##' @exportClass RawCNV
 ##'
 setClass(Class = 'CoreCNV',
-         contains = 'tbl_df')
+         slots = c(coreCNV = 'tbl_df'))
 

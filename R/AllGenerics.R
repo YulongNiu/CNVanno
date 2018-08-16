@@ -21,7 +21,6 @@ setGeneric(name = 'Filter',
 
 
 
-
 ##' @param core A \code{CoreCNV} object.
 ##' @param cyto A \code{tbl_df} represents the cytoband.  A code{tbl_df} with at least three columns. 1st column is chromosome in the same format with \code{core}. 2nd and 3rd columns are start and end positions. 4th column is the cytoband. Other columns can be included but will not be used.
 ##' @param n The number of threads for parallel computation.
