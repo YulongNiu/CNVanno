@@ -110,9 +110,37 @@ filter_cnvnator <- function(rawnator, sexchrom = TRUE) {
 ##' @rdname Filter-methods
 ##' @exportMethod Filter
 ##'
-## setMethod(f = 'Filter',
-##           signature = c(core = 'CoreCNV', blacklist = 'tbl_df', overlaprate = 'double'),
-##           definition = function(core, blacklist, overlaprate = 0.5, ...) {
+setMethod(f = 'Filter',
+          signature = c(core = 'CoreCNV', blacklist = 'tbl_df', overlaprate = 'double'),
+          definition = function(core, blacklist, overlaprate, ...) {
 
-##           })
+          })
 
+
+
+
+##' Filter the cytoband.
+##'
+##' Construct the blacklist of cytoband. The \code{extend} can be set as 100,000 500,000 or 1000,000. The "acen", "gvar", and "stalk" will be kept in the black list.
+##'
+##' @title Blacklist of cytoband
+##' @inheritParams Cytoband
+##' @inheritParams OverlapRegion
+##' @return A \code{tbl_df} represents the black list of cytoband.
+##' @examples
+##' data(hg19cyto)
+##'
+##' bl_cytoband(hg19cyto)
+##' @author Yulong Niu \email{yulong.niu@@hotmail.com}
+##' @importFrom magrittr %<>% %>%
+##' @importFrom dplyr filter mutate
+##' @export
+##'
+bl_cytoband <- function(cyto, extend = 5e5) {
+
+  cyto %<>% filter(color %in% c('acen', 'gvar', 'stalk')) %>%
+    mutate(start = if_else(start > extend, start - extend, 0)) %>%
+    mutate(end = end + extend)
+
+  return(cyto)
+}
