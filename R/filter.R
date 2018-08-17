@@ -92,8 +92,8 @@ filter_cnvnator <- function(rawnator, sexchrom = TRUE) {
 ##'
 ##' Filer the \code{CoreCNV} according black lists.
 ##'
-##' @title Filter \code{CoreCNV}
-##' @inheritParams Filter
+##' @title Filter \code{CoreCNV} according to a give blacklist
+##' @inheritParams FilterBlacklist
 ##' @return A \code{CoreCNV} object.
 ##' @examples
 ##' library('magrittr')
@@ -104,7 +104,7 @@ filter_cnvnator <- function(rawnator, sexchrom = TRUE) {
 ##'   filter_cnvnator %>%
 ##'   Segment(natorf, interlen = 10L)
 ##'
-##' natorf <- Filter(kitf, bl_cytoband(hg19cyto), overlaprate = 0.5, n = 2)
+##' natorf <- FilterBlacklist(kitf, bl_cytoband(hg19cyto), overlaprate = 0.5, n = 2)
 ##' @author Yulong Niu \email{yulong.niu@@hotmail.com}
 ##' @importFrom doParallel registerDoParallel stopImplicitCluster
 ##' @importFrom foreach foreach %dopar%
@@ -112,10 +112,10 @@ filter_cnvnator <- function(rawnator, sexchrom = TRUE) {
 ##' @importFrom magrittr %>%
 ##' @importFrom dplyr bind_rows
 ##' @references \href{http://penncnv.openbioinformatics.org/en/latest/user-guide/annotation/#filtering-cnv-calls-by-user-specified-criteria}{cytoband extend}
-##' @rdname Filter-methods
-##' @exportMethod Filter
+##' @rdname FilterBlacklist-methods
+##' @exportMethod FilterBlacklist
 ##'
-setMethod(f = 'Filter',
+setMethod(f = 'FilterBlacklist',
           signature = c(core = 'CoreCNV', blacklist = 'tbl_df', overlaprate = 'numeric'),
           definition = function(core, blacklist, overlaprate, n, ...) {
             core <- core@coreCNV

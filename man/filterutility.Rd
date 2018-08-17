@@ -19,10 +19,6 @@ filterRow_(corerow, blacklist, overlaprate)
 \item{type}{A \code{string} either "gain" or "loss".}
 
 \item{corerow}{A row of the CNV in a \code{tbl_df} form.}
-
-\item{blacklist}{A code{tbl_df} with at least three columns. 1st column is chromosome in the same format with \code{core}. 2nd and 3rd columns are start and end positions. Other columns can be included but will not be used.}
-
-\item{overlaprate}{The threshold of overlap rate (overlaplen/CNVlen).}
 }
 \value{
 A \code{tbl_df} of filtered fragments.

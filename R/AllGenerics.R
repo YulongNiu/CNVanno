@@ -14,11 +14,11 @@ setGeneric(name = 'Segment',
 ##' @param overlaprate The threshold of overlap rate (overlaplen/CNVlen).
 ##' @inheritParams Cytoband
 ##' @param ... Additional parameters.
-##' @rdname Filter-methods
+##' @rdname FilterBlacklist-methods
 ##' @keywords internal
 ##'
-setGeneric(name = 'Filter',
-           def = function(core, blacklist, overlaprate, n, ...){standardGeneric('Filter')})
+setGeneric(name = 'FilterBlacklist',
+           def = function(core, blacklist, overlaprate, n, ...){standardGeneric('FilterBlacklist')})
 
 
 
