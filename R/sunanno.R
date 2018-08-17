@@ -13,7 +13,7 @@
 ##'
 ##' @title Sun's summary CNV table
 ##' @inheritParams filter.cnvkit
-##' @inheritParams FindCyto
+##' @inheritParams Cytoband
 ##' @param sampleType The sample type, like "proband", "mother", "father".
 ##' @importFrom foreach foreach %do%
 ##' @importFrom iterators iter

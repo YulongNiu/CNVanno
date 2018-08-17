@@ -104,7 +104,7 @@ filter_cnvnator <- function(rawnator, sexchrom = TRUE) {
 ##'   filter_cnvnator %>%
 ##'   Segment(natorf, interlen = 10L)
 ##'
-##' natorf <- FilterBlacklist(kitf, bl_cytoband(hg19cyto), overlaprate = 0.5, n = 2)
+##' natorf <- FilterBlacklist(nator, bl_cytoband(hg19cyto), overlaprate = 0.5, n = 2)
 ##' @author Yulong Niu \email{yulong.niu@@hotmail.com}
 ##' @importFrom doParallel registerDoParallel stopImplicitCluster
 ##' @importFrom foreach foreach %dopar%
@@ -241,7 +241,7 @@ filterRow_ <- function(corerow, blacklist, overlaprate) {
     ## case 2: has overlap region with > overlaprate
     return(filter(corerow, FALSE))
   }
-  else if (all(is.equal(frate, 0))) {
+  else if (all(frate == 0)) {
     ## case 3: 0 overlap regions
     return(corerow)
   }

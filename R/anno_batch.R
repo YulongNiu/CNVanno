@@ -4,7 +4,7 @@
 ##'
 ##' @title The CNV batch annotation
 ##' @inheritParams write.cnvkit
-##' @inheritParams FindCyto
+##' @inheritParams Cytoband
 ##' @param FUN \code{AnnoCNVClinCore()}, \code{AnnoCNVPopuCore()}, and \code{ANnoCNVGeneCore()}.
 ##' @param ... Parameters from the \code{FUN} functions
 ##' @importFrom doParallel registerDoParallel stopImplicitCluster

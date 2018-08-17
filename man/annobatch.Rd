@@ -14,6 +14,8 @@ MergeAnno(annoList)
 
 \item{...}{Parameters from the \code{FUN} functions}
 
+\item{n}{The number of threads for parallel computation.}
+
 \item{annoList}{A \code{list} containing ClinGen annotation for each called CNV. The 1st element is a \code{data.frame} or \code{NULL}. The 2nd element and the rest are \code{character} vectors.}
 }
 \value{

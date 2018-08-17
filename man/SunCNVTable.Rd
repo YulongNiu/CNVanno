@@ -7,7 +7,11 @@
 SunCNVTable(cns, cyto, sampleType = "proband", n = 2)
 }
 \arguments{
+\item{cyto}{A \code{tbl_df} represents the cytoband.  A code{tbl_df} with at least three columns. 1st column is chromosome in the same format with \code{core}. 2nd and 3rd columns are start and end positions. 4th column is the cytoband. Other columns can be included but will not be used.}
+
 \item{sampleType}{The sample type, like "proband", "mother", "father".}
+
+\item{n}{The number of threads for parallel computation.}
 }
 \value{
 A \code{data.frame} of Sun's cns format.
