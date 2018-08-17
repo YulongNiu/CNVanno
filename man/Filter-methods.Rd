@@ -6,9 +6,9 @@
 \alias{Filter,CoreCNV,tbl_df,numeric-method}
 \title{Filter \code{CoreCNV}}
 \usage{
-Filter(core, blacklist, overlaprate, ...)
+Filter(core, blacklist, overlaprate, n, ...)
 
-\S4method{Filter}{CoreCNV,tbl_df,numeric}(core, blacklist, overlaprate,
+\S4method{Filter}{CoreCNV,tbl_df,numeric}(core, blacklist, overlaprate, n,
   ...)
 }
 \arguments{
@@ -17,6 +17,8 @@ Filter(core, blacklist, overlaprate, ...)
 \item{blacklist}{A code{tbl_df} with at least three columns. 1st column is chromosome in the same format with \code{core}. 2nd and 3rd columns are start and end positions. Other columns can be included but will not be used.}
 
 \item{overlaprate}{The threshold of overlap rate (overlaplen/CNVlen).}
+
+\item{n}{The number of threads for parallel computation.}
 
 \item{...}{Additional parameters.}
 }
@@ -33,12 +35,12 @@ Filer the \code{CoreCNV} according black lists.
 library('magrittr')
 data(hg19cyto)
 
-nator <- system.file('extdata', 'exampleseg.cnvnator', package = 'CNVanno') \%>\%
-  read_natorkit \%>\%
-  filter_natorkit \%>\%
+nator <- system.file('extdata', 'example.cnvnator', package = 'CNVanno') \%>\%
+  read_cnvnator \%>\%
+  filter_cnvnator \%>\%
   Segment(natorf, interlen = 10L)
 
-natorf <- Filter(kitf, bl_cytoband(hg19cyto), overlaprate = 0.5)
+natorf <- Filter(kitf, bl_cytoband(hg19cyto), overlaprate = 0.5, n = 2)
 }
 \references{
 \href{http://penncnv.openbioinformatics.org/en/latest/user-guide/annotation/#filtering-cnv-calls-by-user-specified-criteria}{cytoband extend}

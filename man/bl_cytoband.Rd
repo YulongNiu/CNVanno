@@ -4,12 +4,12 @@
 \alias{bl_cytoband}
 \title{Blacklist of cytoband}
 \usage{
-bl_cytoband(cyto, extend = 5e+05)
+bl_cytoband(cyto, extend = 500000L)
 }
 \arguments{
 \item{cyto}{A \code{tbl_df} represents the cytoband.  A code{tbl_df} with at least three columns. 1st column is chromosome in the same format with \code{core}. 2nd and 3rd columns are start and end positions. 4th column is the cytoband. Other columns can be included but will not be used.}
 
-\item{extend}{A \code{numeric} value indicates the extended length in both direction.}
+\item{extend}{A \code{integer} value indicates the extended length in both direction.}
 }
 \value{
 A \code{tbl_df} represents the black list of cytoband.
@@ -23,7 +23,7 @@ Construct the blacklist of cytoband. The \code{extend} can be set as 100,000 500
 \examples{
 data(hg19cyto)
 
-bl_cytoband(hg19cyto)
+bl_cytoband(hg19cyto, extend = 5e3L)
 }
 \author{
 Yulong Niu \email{yulong.niu@hotmail.com}

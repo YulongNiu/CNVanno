@@ -22,7 +22,7 @@ NULL
 ##'
 setMethod(f = 'Segment',
           signature = c(raw = 'RawCNV', interlen = 'integer'),
-          definition = function(raw, interlen = 100L, ...) {
+          definition = function(raw, interlen, ...) {
 
             cnvSeg <- raw@rawCNV %>%
               segMerge_(interlen = interlen) %>%

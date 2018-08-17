@@ -17,11 +17,11 @@
 ##' @examples
 ##' require('magrittr')
 ##'
-##' tMat <- tibble(start = c(1, 103, 111, 49, 10), end = c(101, 112, 1000, 8, 86)) %>% SortRegion
-##' tReg <- c(100, 110)
+##' tMat <- tibble(start = c(1L, 103L, 111L, 49L, 10L), end = c(101L, 112L, 1000L, 8L, 86L)) %>% SortRegion
+##' tReg <- c(100L, 110L)
 ##'
 ##' ## overlapped regions
-##' OverlapRegion(tReg, tMat, extend = 0)
+##' OverlapRegion(tReg, tMat, extend = 0L)
 ##'
 ##' ## overlap rate
 ##' OverlapRegionRate(tReg, tMat)
@@ -38,11 +38,11 @@ OverlapRegionRate <- function(regionf, regionMat) {
 
   ## step1: calculate inter length
   regionMat %<>%
-    mutate(fLen = max(regionf) - min(regionf)) %>%
-    mutate(tLen = end - start) %>%
+    mutate(fLen = max(regionf) - min(regionf) + 1) %>%
+    mutate(tLen = end - start + 1) %>%
     mutate(maxstart = if_else(start > min(regionf), start, min(regionf))) %>%
     mutate(minend = if_else(end < max(regionf), end, max(regionf))) %>%
-    mutate(interLen = minend - maxstart) %>%
+    mutate(interLen = minend - maxstart + 1) %>%
     mutate(interLen = if_else(interLen < 0, 0, interLen))
 
   ## step2: calculate rate
@@ -56,13 +56,13 @@ OverlapRegionRate <- function(regionf, regionMat) {
 
 
 ##' @inheritParams OverlapRegionRate
-##' @param extend A \code{numeric} value indicates the extended length in both direction.
+##' @param extend A \code{integer} value indicates the extended length in both direction.
 ##' @importFrom dplyr mutate transmute
 ##' @importFrom magrittr %<>% %>%
 ##' @rdname overlapregion
 ##' @export
 ##'
-OverlapRegion <- function(regionf, regionMat, extend = 100) {
+OverlapRegion <- function(regionf, regionMat, extend = 100L) {
 
   regionMat %<>%
     mutate(start = if_else(start > extend, start - extend, 0)) %>%

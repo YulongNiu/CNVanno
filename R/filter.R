@@ -99,25 +99,161 @@ filter_cnvnator <- function(rawnator, sexchrom = TRUE) {
 ##' library('magrittr')
 ##' data(hg19cyto)
 ##'
-##' nator <- system.file('extdata', 'exampleseg.cnvnator', package = 'CNVanno') %>%
-##'   read_natorkit %>%
-##'   filter_natorkit %>%
+##' nator <- system.file('extdata', 'example.cnvnator', package = 'CNVanno') %>%
+##'   read_cnvnator %>%
+##'   filter_cnvnator %>%
 ##'   Segment(natorf, interlen = 10L)
 ##'
-##' natorf <- Filter(kitf, bl_cytoband(hg19cyto), overlaprate = 0.5)
+##' natorf <- Filter(kitf, bl_cytoband(hg19cyto), overlaprate = 0.5, n = 2)
 ##' @author Yulong Niu \email{yulong.niu@@hotmail.com}
+##' @importFrom doParallel registerDoParallel stopImplicitCluster
+##' @importFrom foreach foreach %dopar%
+##' @importFrom iterators iter
 ##' @importFrom magrittr %>%
-##' @importFrom dplyr mutate
+##' @importFrom dplyr bind_rows
 ##' @references \href{http://penncnv.openbioinformatics.org/en/latest/user-guide/annotation/#filtering-cnv-calls-by-user-specified-criteria}{cytoband extend}
 ##' @rdname Filter-methods
 ##' @exportMethod Filter
 ##'
 setMethod(f = 'Filter',
           signature = c(core = 'CoreCNV', blacklist = 'tbl_df', overlaprate = 'numeric'),
-          definition = function(core, blacklist, overlaprate, ...) {
-            return(core@coreCNV)
+          definition = function(core, blacklist, overlaprate, n, ...) {
+            core <- core@coreCNV
+
+            registerDoParallel(cores = n)
+            itx <- iter(core, by = 'row')
+
+            coreFilter <- foreach(i = itx) %dopar% {
+              eachCore <- filterRow_(i,
+                                     blacklist = blacklist,
+                                     overlaprate = overlaprate)
+              return(eachCore)
+            }
+
+            ## stop multiple cores
+            stopImplicitCluster()
+
+            coreFilter %<>%
+              bind_rows %>%
+              new('CoreCNV', coreCNV = .)
+
+            return(coreFilter)
           })
 
+
+
+##' Filtering internal functions.
+##'
+##' \itemize{
+##'   \item \code{filterSeg_()}: For the blacklist (<= `overlaprate`) in the same chromosome, segment the regions of input `regionf`. If the `regionf` wrap up the `bl` (====~~~~===), `regionf` is cut into two segments. The minimum left and right regions are kept.
+##'   \item \code{filterRow_()}: Filter input one cnv (one row).
+##' }
+##'
+##' @title Internal functions for filtering
+##' @inheritParams OverlapRegionRate
+##' @inheritParams segMergeType_
+##' @inheritParams segMergeChr_
+##' @param rateMat The output of \code{OverlapRegionRate()} in this package.
+##' @return A \code{tbl_df} of filtered fragments.
+##' @author Yulong Niu \email{yulong.niu@@hotmail.com}
+##' @importFrom magrittr %<>% %>%
+##' @importFrom dplyr filter mutate distinct bind_rows rename everything
+##' @rdname filterutility
+##' @keywords internal
+##'
+filterSeg_ <- function(regionf, rateMat, chr, type) {
+  # Example:
+  ## rM <- tibble(start = c(9L, 2L, 6L, 8L, 3L, 1L, 15L), end = c(15L, 6L, 7L, 9L, 20L, 4L, 32L))
+  ## rf <- c(5L, 10L)
+  ## rMf <- OverlapRegionRate(rf, rM) %>% filter(fRate > 0 & fRate <= 0.5)
+  ## filterSeg_(rf, rMf)
+
+  ## step1: split regions
+  minf <- min(regionf)
+  maxf <- max(regionf)
+  ## intersect =====~~~~~ or ~~~~=====
+  rateMatInter <- rateMat %>%
+    filter(tRate < 1) %>%
+    mutate(segstart = if_else(minf < maxstart, minf, minend)) %>%
+    mutate(segend = if_else(maxf > minend, maxf, maxstart))
+
+  ## in ====~~~~===
+  rateMatCoverTemp  <- rateMat %>%
+    filter(tRate == 1)
+
+  rateMatCoverLeft <- rateMatCoverTemp %>%
+    mutate(segstart = minf) %>%
+    mutate(segend = maxstart)
+
+  rateMatCoverRight <- rateMatCoverTemp %>%
+    mutate(segstart = minend) %>%
+    mutate(segend = maxf)
+
+  seg <- bind_rows(list(rateMatInter,
+                        rateMatCoverLeft,
+                        rateMatCoverRight)) %>%
+    select(segstart, segend)
+
+  ## step2: select min regions on left and right, respectively
+  leftSeg <- seg %>%
+    filter(segstart == minf) %>%
+    distinct() %>%
+    filter(segend == min(segend))
+
+  rightSeg <- seg %>%
+    filter(segend == maxf) %>%
+    distinct() %>%
+    filter(segstart == max(segstart))
+
+  seg <- bind_rows(list(leftSeg, rightSeg)) %>%
+    mutate(chromosome = chr, type = type) %>%
+    rename(start = segstart, end = segend) %>%
+    select(chromosome, everything())
+
+  return(seg)
+
+}
+
+
+##' @inheritParams Filter
+##' @param corerow A row of the CNV in a \code{tbl_df} form.
+##' @importFrom magrittr %<>% %>%
+##' @importFrom dplyr select filter
+##' @rdname filterutility
+##' @keywords internal
+##'
+filterRow_ <- function(corerow, blacklist, overlaprate) {
+
+  blacklist %<>%
+    filter(chromosome == corerow$chromosome)
+
+  if (nrow(blacklist) == 0) {
+    ## case 1: no same chromosomes in blacklist
+    return(corerow)
+  } else {}
+
+  rateMat <- blacklist %<>%
+    select(start, end) %>%
+    OverlapRegionRate(corerow %>% select(start, end), .)
+
+  frate <- rateMat$fRate
+  if (sum(frate > overlaprate) > 0) {
+    ## case 2: has overlap region with > overlaprate
+    return(filter(corerow, FALSE))
+  }
+  else if (all(is.equal(frate, 0))) {
+    ## case 3: 0 overlap regions
+    return(corerow)
+  }
+  else {
+    ## case 4: has > 0 & < overlaprate overlap regions
+    seg <- rateMat %>%
+      filter(fRate > 0) %>%
+      filterSeg_(corerow, ., corerow$chromosome, corerow$method)
+    return(seg)
+  }
+
+}
 
 
 
@@ -132,16 +268,16 @@ setMethod(f = 'Filter',
 ##' @examples
 ##' data(hg19cyto)
 ##'
-##' bl_cytoband(hg19cyto)
+##' bl_cytoband(hg19cyto, extend = 5e3L)
 ##' @author Yulong Niu \email{yulong.niu@@hotmail.com}
 ##' @importFrom magrittr %<>% %>%
 ##' @importFrom dplyr filter mutate
 ##' @export
 ##'
-bl_cytoband <- function(cyto, extend = 5e5) {
+bl_cytoband <- function(cyto, extend = 5e5L) {
 
   cyto %<>% filter(color %in% c('acen', 'gvar', 'stalk')) %>%
-    mutate(start = if_else(start > extend, start - extend, 0)) %>%
+    mutate(start = if_else(start > extend, start - extend, 0L)) %>%
     mutate(end = end + extend)
 
   return(cyto)

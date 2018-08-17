@@ -8,7 +8,7 @@
 \usage{
 OverlapRegionRate(regionf, regionMat)
 
-OverlapRegion(regionf, regionMat, extend = 100)
+OverlapRegion(regionf, regionMat, extend = 100L)
 
 SortRegion(regionMat)
 }
@@ -17,7 +17,7 @@ SortRegion(regionMat)
 
 \item{regionMat}{A \code{tbl_df} with 2 columns. In the \code{OverlapRegionRate()} function. The 1st column should be equal or smaller than the 2nd column, otherwise use the \code{SortRegion()} sort the \code{regionMat} at first.}
 
-\item{extend}{A \code{numeric} value indicates the extended length in both direction.}
+\item{extend}{A \code{integer} value indicates the extended length in both direction.}
 }
 \value{
 \itemize{
@@ -39,11 +39,11 @@ Find regions have intersections
 \examples{
 require('magrittr')
 
-tMat <- tibble(start = c(1, 103, 111, 49, 10), end = c(101, 112, 1000, 8, 86)) \%>\% SortRegion
-tReg <- c(100, 110)
+tMat <- tibble(start = c(1L, 103L, 111L, 49L, 10L), end = c(101L, 112L, 1000L, 8L, 86L)) \%>\% SortRegion
+tReg <- c(100L, 110L)
 
 ## overlapped regions
-OverlapRegion(tReg, tMat, extend = 0)
+OverlapRegion(tReg, tMat, extend = 0L)
 
 ## overlap rate
 OverlapRegionRate(tReg, tMat)

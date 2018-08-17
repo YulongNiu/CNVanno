@@ -12,12 +12,13 @@ setGeneric(name = 'Segment',
 ##' @param core a \code{CoreCNV} object.
 ##' @param blacklist A code{tbl_df} with at least three columns. 1st column is chromosome in the same format with \code{core}. 2nd and 3rd columns are start and end positions. Other columns can be included but will not be used.
 ##' @param overlaprate The threshold of overlap rate (overlaplen/CNVlen).
+##' @inheritParams Cytoband
 ##' @param ... Additional parameters.
 ##' @rdname Filter-methods
 ##' @keywords internal
 ##'
 setGeneric(name = 'Filter',
-           def = function(core, blacklist, overlaprate, ...){standardGeneric('Filter')})
+           def = function(core, blacklist, overlaprate, n, ...){standardGeneric('Filter')})
 
 
 
@@ -29,4 +30,5 @@ setGeneric(name = 'Filter',
 ##'
 setGeneric(name = 'Cytoband',
            def = function(core, cyto, n, ...){standardGeneric('Cytoband')})
+
 

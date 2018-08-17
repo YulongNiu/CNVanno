@@ -8,7 +8,7 @@
 \usage{
 Segment(raw, interlen, ...)
 
-\S4method{Segment}{RawCNV,integer}(raw, interlen = 100L, ...)
+\S4method{Segment}{RawCNV,integer}(raw, interlen, ...)
 }
 \arguments{
 \item{raw}{a \code{RawCNV} object.}
