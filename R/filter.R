@@ -273,32 +273,19 @@ filterRow_ <- function(corerow, blacklist, overlaprate) {
 ##'
 ##' bl_cytoband(hg19cyto, extend = 5e5L)
 ##' @author Yulong Niu \email{yulong.niu@@hotmail.com}
-##' @importFrom magrittr %<>% %>%
+##' @importFrom magrittr %>%
 ##' @importFrom dplyr filter mutate
 ##' @export
 ##'
 bl_cytoband <- function(cyto, extend = 5e5L) {
 
   ## step1: extend bl regions
-  cyto %<>%
+  cytobl <- cyto %>%
     filter(color %in% c('acen', 'gvar', 'stalk')) %>% ## filter
     mutate(start = if_else(start > extend, start - extend, 0L)) %>%
     mutate(end = end + extend) %>% ## extend
     SortRegionChr %>% ## sort cyto
-    select(chromosome:end)
-
-  ## step2: reduce regions
-  cytoList <- split(cyto, cyto$chromosome)
-  chrs <- names(cytoList)
-
-  for (i in seq_along(cytoList)) {
-    cytoList[[i]] %<>%
-      ReduceRegion(gap = 0L) %>%
-      mutate(chromosome = chrs[i]) %>%
-      select(chromosome, everything())
-  }
-
-  cytobl <- bind_rows(cytoList)
+    ReduceRegionChr(gap = 0L) ## reduce regions
 
   return(cytobl)
 }
