@@ -30,6 +30,7 @@ NULL
 ##' @author Yulong Niu \email{yulong.niu@@hotmail.com}
 ##' @importFrom readr read_tsv
 ##' @importFrom dplyr select mutate case_when
+##' @importFrom methods new
 ##' @rdname rwcnv
 ##' @export
 ##'
@@ -60,6 +61,7 @@ read_cnvkit <- function(cnvpath) {
 ##' @importFrom stringr str_extract str_sub
 ##' @importFrom readr read_tsv
 ##' @importFrom dplyr select mutate
+##' @importFrom methods new
 ##' @rdname rwcnv
 ##' @export
 ##'

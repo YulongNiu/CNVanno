@@ -30,7 +30,10 @@ Map the cytoband of given CNVs.
 require('magrittr')
 data(hg19cyto)
 
-kit <- system.file('extdata', 'exampleseg.cnvkit', package = 'CNVanno') \%>\% read_cnvkit \%>\% filter_cnvkit \%>\% Segment(interlen = 10L)
+kit <- system.file('extdata', 'exampleseg.cnvkit', package = 'CNVanno') \%>\%
+  read_cnvkit \%>\%
+  filter_cnvkit \%>\%
+  Segment(gap = 10L)
 
 kitcyto <- Cytoband(kit, hg19cyto, n = 2)
 

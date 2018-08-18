@@ -10,7 +10,7 @@ This class represents the CNV structure used for further analysis.
 \section{Slots}{
 
 \describe{
-\item{\code{.Data}}{An \code{tbl_df} from the \code{tibble} package. It contains five columns: 1st is the chromosome, 2nd is the CNV start position, 3rd is the CNV end position, 4th is the CNV type ("gain", "loss", "normal"), 5th is the CNV calling method.}
+\item{\code{coreCNV}}{An \code{tbl_df} from the \code{tibble} package. It contains five columns: 1st is the chromosome, 2nd is the CNV start position, 3rd is the CNV end position, 4th is the CNV type ("gain", "loss", "normal"), 5th is the CNV calling method.}
 }}
 
 \author{

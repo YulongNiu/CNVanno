@@ -1,4 +1,4 @@
-##' @include AllClasses.R AllGenerics.R
+##' @include AllClasses.R AllGenerics.R region.R
 NULL
 
 
@@ -12,11 +12,14 @@ NULL
 ##' @examples
 ##' library('magrittr')
 ##'
-##' kit <- system.file('extdata', 'exampleseg.cnvkit', package = 'CNVanno') %>% read_cnvkit %>% filter_cnvkit
+##' kit <- system.file('extdata', 'exampleseg.cnvkit', package = 'CNVanno') %>%
+##'   read_cnvkit %>%
+##'   filter_cnvkit
 ##' kitseg <- Segment(kit, gap = 10L)
 ##' @author Yulong Niu \email{yulong.niu@@hotmail.com}
 ##' @importFrom magrittr %>%
 ##' @importFrom dplyr mutate
+##' @importFrom methods new
 ##' @rdname Segment-methods
 ##' @exportMethod Segment
 ##'

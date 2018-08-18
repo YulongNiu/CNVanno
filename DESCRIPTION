@@ -7,6 +7,7 @@ Maintainer: Yulong Niu <yulong.niu@hotmail.com>
 Depends:
     R (>= 3.5.0)
 Imports:
+    methods,
     magrittr,
     foreach,
     iterators,
@@ -28,16 +29,10 @@ VignetteBuilder: knitr
 Collate: 
     'AllClasses.R'
     'AllGenerics.R'
-    'anno_batch.R'
-    'anno_clin.R'
-    'anno_gene.R'
-    'anno_population.R'
-    'anno_utilities.R'
+    'region.R'
     'cyto.R'
     'dataDef.R'
     'filter.R'
     'gloableChkVar.R'
-    'region.R'
     'rw.R'
     'segment.R'
-    'sunanno.R'

@@ -1,4 +1,4 @@
-##' @include AllClasses.R AllGenerics.R
+##' @include AllClasses.R AllGenerics.R region.R
 NULL
 
 
@@ -12,7 +12,10 @@ NULL
 ##' require('magrittr')
 ##' data(hg19cyto)
 ##'
-##' kit <- system.file('extdata', 'exampleseg.cnvkit', package = 'CNVanno') %>% read_cnvkit %>% filter_cnvkit %>% Segment(interlen = 10L)
+##' kit <- system.file('extdata', 'exampleseg.cnvkit', package = 'CNVanno') %>%
+##'   read_cnvkit %>%
+##'   filter_cnvkit %>%
+##'   Segment(gap = 10L)
 ##'
 ##' kitcyto <- Cytoband(kit, hg19cyto, n = 2)
 ##'
@@ -37,8 +40,9 @@ setMethod(f = 'Cytoband',
 
             cnvCyto <- foreach(i = itx, .combine = c) %dopar% {
 
-              eachCyto <- filter(cyto, chromosome == as.character(i[1]))
-              eachLogic <- eachCyto %>% OverlapRegion(i[2:3], .)
+              eachCyto <- filter(cyto, chromosome == i$chromosome)
+              eachLogic <- eachCyto %>%
+                OverlapRegion(select(i, start:end), ., 0L)
               eachCyto %<>%
                 filter(eachLogic) %>%
                 select(cytoband) %>%

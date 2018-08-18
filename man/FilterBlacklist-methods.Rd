@@ -14,7 +14,7 @@ FilterBlacklist(core, blacklist, overlaprate, n, ...)
 \arguments{
 \item{core}{a \code{CoreCNV} object.}
 
-\item{blacklist}{A code{tbl_df} with at least three columns. 1st column is chromosome in the same format with \code{core}. 2nd and 3rd columns are start and end positions. Other columns can be included but will not be used.}
+\item{blacklist}{A code{tbl_df} with at least three columns. 1st column is chromosome in the same format with \code{core}. 2nd and 3rd columns are start and end positions. Other columns can be included but will not be used. The blacklist must be reduced (use \code{ReduceRegionChr()}) and sorted (use \code{SortRegionChr()}).}
 
 \item{overlaprate}{The threshold of overlap rate (overlaplen/CNVlen).}
 
@@ -40,7 +40,7 @@ nator <- system.file('extdata', 'example.cnvnator', package = 'CNVanno') \%>\%
   filter_cnvnator \%>\%
   Segment(gap = 10L)
 
-natorf <- FilterBlacklist(nator, bl_cytoband(hg19cyto), overlaprate = 0.5, n = 1)
+## natorf <- FilterBlacklist(nator, bl_cytoband(hg19cyto), overlaprate = 0.5, n = 1)
 }
 \references{
 \href{http://penncnv.openbioinformatics.org/en/latest/user-guide/annotation/#filtering-cnv-calls-by-user-specified-criteria}{cytoband extend}

@@ -45,9 +45,13 @@ For the \code{CNVnator}
 \examples{
 require('magrittr')
 
-kitf <- system.file('extdata', 'example.cnvkit', package = 'CNVanno') \%>\% read_cnvkit \%>\% filter_cnvkit
+kitf <- system.file('extdata', 'example.cnvkit', package = 'CNVanno') \%>\%
+  read_cnvkit \%>\%
+  filter_cnvkit
 
-natorf <- system.file('extdata', 'example.cnvnator', package = 'CNVanno') \%>\% read_cnvnator \%>\% filter_cnvnator
+natorf <- system.file('extdata', 'example.cnvnator', package = 'CNVanno') \%>\%
+  read_cnvnator \%>\%
+  filter_cnvnator
 }
 \author{
 Yulong Niu \email{yulong.niu@hotmail.com}

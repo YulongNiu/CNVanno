@@ -58,7 +58,9 @@ Find regions have intersections
 \examples{
 require('magrittr')
 
-tMat <- tibble(start = c(1L, 103L, 111L, 49L, 10L), end = c(101L, 112L, 1000L, 8L, 86L)) \%>\% SortRegion
+tMat <- tibble(start = c(1L, 103L, 111L, 49L, 10L),
+               end = c(101L, 112L, 1000L, 8L, 86L)) \%>\%
+  SortRegion
 tReg <- c(100L, 110L)
 
 ## overlapped regions
@@ -68,7 +70,9 @@ OverlapRegion(tReg, tMat, extend = 0L)
 OverlapRegionRate(tReg, tMat)
 
 ## reduce region
-rMat <- tibble(start = c(1, 8, 14, 15, 19, 34, 40), end = c(12, 13, 19, 29, 24, 35, 46)) \%>\% SortRegion
+rMat <- tibble(start = c(1, 8, 14, 15, 19, 34, 40),
+               end = c(12, 13, 19, 29, 24, 35, 46)) \%>\%
+  SortRegion
 ReduceRegion(rMat, gap = 0L)
 }
 \author{

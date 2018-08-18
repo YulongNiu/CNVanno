@@ -1,4 +1,4 @@
-##' @include AllClasses.R AllGenerics.R
+##' @include AllClasses.R AllGenerics.R region.R
 NULL
 
 
@@ -26,9 +26,13 @@ NULL
 ##' @examples
 ##' require('magrittr')
 ##'
-##' kitf <- system.file('extdata', 'example.cnvkit', package = 'CNVanno') %>% read_cnvkit %>% filter_cnvkit
+##' kitf <- system.file('extdata', 'example.cnvkit', package = 'CNVanno') %>%
+##'   read_cnvkit %>%
+##'   filter_cnvkit
 ##'
-##' natorf <- system.file('extdata', 'example.cnvnator', package = 'CNVanno') %>% read_cnvnator %>% filter_cnvnator
+##' natorf <- system.file('extdata', 'example.cnvnator', package = 'CNVanno') %>%
+##'   read_cnvnator %>%
+##'   filter_cnvnator
 ##' @author Yulong Niu \email{yulong.niu@@hotmail.com}
 ##' @importFrom dplyr transmute filter
 ##' @importFrom magrittr %>% %<>%
@@ -104,13 +108,14 @@ filter_cnvnator <- function(rawnator, sexchrom = TRUE) {
 ##'   filter_cnvnator %>%
 ##'   Segment(gap = 10L)
 ##'
-##' natorf <- FilterBlacklist(nator, bl_cytoband(hg19cyto), overlaprate = 0.5, n = 1)
+##' ## natorf <- FilterBlacklist(nator, bl_cytoband(hg19cyto), overlaprate = 0.5, n = 1)
 ##' @author Yulong Niu \email{yulong.niu@@hotmail.com}
 ##' @importFrom doParallel registerDoParallel stopImplicitCluster
 ##' @importFrom foreach foreach %dopar%
 ##' @importFrom iterators iter
 ##' @importFrom magrittr %>%
 ##' @importFrom dplyr bind_rows
+##' @importFrom methods new
 ##' @references \href{http://penncnv.openbioinformatics.org/en/latest/user-guide/annotation/#filtering-cnv-calls-by-user-specified-criteria}{cytoband extend}
 ##' @rdname FilterBlacklist-methods
 ##' @exportMethod FilterBlacklist
@@ -152,7 +157,6 @@ setMethod(f = 'FilterBlacklist',
 ##' @title Internal functions for filtering
 ##' @inheritParams OverlapRegionRate
 ##' @inheritParams segMergeType_
-##' @inheritParams segMergeChr_
 ##' @param rateMat The output of \code{OverlapRegionRate()} in this package.
 ##' @return A \code{tbl_df} of filtered fragments.
 ##' @author Yulong Niu \email{yulong.niu@@hotmail.com}
@@ -163,17 +167,17 @@ setMethod(f = 'FilterBlacklist',
 ##'
 filterSeg_ <- function(regionf, rateMat, chr, type) {
   # Example:
-  ## rM <- tibble(start = c(9L, 2L, 6L, 8L, 3L, 1L, 15L), end = c(15L, 6L, 7L, 9L, 20L, 4L, 32L))
-  ## rf <- c(5L, 10L)
+  ## rM <- tibble(start = c(9L, 2L, 5L, 8L, 3L, 1L, 15L), end = c(15L, 6L, 6L, 9L, 20L, 4L, 32L))
+  ## rf <- c(4L, 10L)
   ## rMf <- OverlapRegionRate(rf, rM) %>% filter(fRate > 0 & fRate <= 0.5)
-  ## filterSeg_(rf, rMf)
+  ## filterSeg_(rf, rMf, chr = 'chr6', type = 'gain')
 
   ## step1: split regions
   minf <- min(regionf)
   maxf <- max(regionf)
   ## intersect =====~~~~~ or ~~~~=====
   rateMatInter <- rateMat %>%
-    filter(tRate < 1) %>%
+    filter(tRate < 1) %>% ## select intersect regions
     mutate(segstart = if_else(minf < maxstart, minf, minend)) %>%
     mutate(segend = if_else(maxf > minend, maxf, maxstart))
 
@@ -215,7 +219,7 @@ filterSeg_ <- function(regionf, rateMat, chr, type) {
 }
 
 
-##' @inheritParams Filter
+##' @inheritParams FilterBlacklist
 ##' @param corerow A row of the CNV in a \code{tbl_df} form.
 ##' @importFrom magrittr %<>% %>%
 ##' @importFrom dplyr select filter
@@ -285,7 +289,8 @@ bl_cytoband <- function(cyto, extend = 5e5L) {
     mutate(start = if_else(start > extend, start - extend, 0L)) %>%
     mutate(end = end + extend) %>% ## extend
     SortRegionChr %>% ## sort cyto
-    ReduceRegionChr(gap = 0L) ## reduce regions
+    ReduceRegionChr(gap = 0L) %>% ## reduce regions
+    SortRegionChr ## sort again
 
   return(cytobl)
 }

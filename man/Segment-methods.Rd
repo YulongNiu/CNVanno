@@ -29,7 +29,9 @@ Merge the concatenated CNV at the same chromosome with the same type (gain and l
 \examples{
 library('magrittr')
 
-kit <- system.file('extdata', 'exampleseg.cnvkit', package = 'CNVanno') \%>\% read_cnvkit \%>\% filter_cnvkit
+kit <- system.file('extdata', 'exampleseg.cnvkit', package = 'CNVanno') \%>\%
+  read_cnvkit \%>\%
+  filter_cnvkit
 kitseg <- Segment(kit, gap = 10L)
 }
 \author{
