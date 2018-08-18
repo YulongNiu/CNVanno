@@ -22,6 +22,7 @@
 ##' }
 ##' @examples
 ##' require('magrittr')
+##' require('tibble')
 ##'
 ##' tMat <- tibble(start = c(1L, 103L, 111L, 49L, 10L),
 ##'                end = c(101L, 112L, 1000L, 8L, 86L)) %>%
