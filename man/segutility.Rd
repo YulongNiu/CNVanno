@@ -11,7 +11,7 @@ segPrepare_(cnv, chr)
 
 segMergeType_(cnv, gap, chr, type)
 
-segMergeChr_(cnv, chr, gap)
+segMergeChr_(cnv, gap, chr)
 
 segMerge_(cnv, gap)
 }

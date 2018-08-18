@@ -75,24 +75,21 @@ segPrepare_ <- function(cnv, chr) {
 ##' @inheritParams segPrepare_
 ##' @inheritParams Segment
 ##' @param type A \code{string} either "gain" or "loss".
-##' @importFrom dplyr bind_cols select
+##' @importFrom dplyr bind_cols select mutate everything
 ##' @importFrom magrittr %>%
 ##' @rdname segutility
 ##' @keywords internal
 ##'
 segMergeType_ <- function(cnv, gap, chr, type) {
 
-  region  <- cnv %>%
+  cnv %<>%
     select(start, end) %>%
-    ReduceRegion(gap = gap)
+    ReduceRegion(gap = gap) %>%
+    mutate(chromosome = chr) %>%
+    mutate(type = type) %>%
+    select(chromosome, everything())
 
-  cnvSeg <- list(chromosome = chr,
-                 start = region$start,
-                 end = region$end,
-                 type = type) %>%
-    bind_cols
-
-  return(cnvSeg)
+  return(cnv)
 }
 
 
@@ -103,7 +100,7 @@ segMergeType_ <- function(cnv, gap, chr, type) {
 ##' @rdname segutility
 ##' @keywords internal
 ##'
-segMergeChr_ <- function(cnv, chr, gap) {
+segMergeChr_ <- function(cnv, gap, chr) {
 
   cnvList <- split(cnv, cnv$type)
   types <- names(cnvList)
@@ -136,8 +133,8 @@ segMerge_ <- function(cnv, gap) {
   for (i in seq_along(cnvList)) {
     cnvList[[i]] %<>%
       segPrepare_(chrs[i]) %>%
-      segMergeChr_(chr = chrs[i],
-                   gap = gap)
+      segMergeChr_(gap = gap,
+                   chr = chrs[i])
   }
 
   cnvSeg <- bind_rows(cnvList) %>%

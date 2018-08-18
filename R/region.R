@@ -107,7 +107,7 @@ SortRegion <- function(regionMat) {
 ##' @inheritParams Segment
 ##' @rdname overlapregion
 ##' @importFrom magrittr %>%
-##' @importFrom dply bind_cols
+##' @importFrom dplyr bind_cols
 ##' @export
 ##'
 ReduceRegion <- function(regionMat, gap) {
