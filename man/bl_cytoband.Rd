@@ -23,7 +23,7 @@ Construct the blacklist of cytoband. The \code{extend} can be set as 100,000 500
 \examples{
 data(hg19cyto)
 
-bl_cytoband(hg19cyto, extend = 5e3L)
+bl_cytoband(hg19cyto, extend = 5e5L)
 }
 \author{
 Yulong Niu \email{yulong.niu@hotmail.com}

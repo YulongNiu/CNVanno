@@ -38,7 +38,7 @@ data(hg19cyto)
 nator <- system.file('extdata', 'example.cnvnator', package = 'CNVanno') \%>\%
   read_cnvnator \%>\%
   filter_cnvnator \%>\%
-  Segment(natorf, interlen = 10L)
+  Segment(gap = 10L)
 
 natorf <- FilterBlacklist(nator, bl_cytoband(hg19cyto), overlaprate = 0.5, n = 1)
 }

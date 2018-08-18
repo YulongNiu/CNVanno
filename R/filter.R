@@ -102,7 +102,7 @@ filter_cnvnator <- function(rawnator, sexchrom = TRUE) {
 ##' nator <- system.file('extdata', 'example.cnvnator', package = 'CNVanno') %>%
 ##'   read_cnvnator %>%
 ##'   filter_cnvnator %>%
-##'   Segment(natorf, interlen = 10L)
+##'   Segment(gap = 10L)
 ##'
 ##' natorf <- FilterBlacklist(nator, bl_cytoband(hg19cyto), overlaprate = 0.5, n = 1)
 ##' @author Yulong Niu \email{yulong.niu@@hotmail.com}
@@ -271,7 +271,7 @@ filterRow_ <- function(corerow, blacklist, overlaprate) {
 ##' @examples
 ##' data(hg19cyto)
 ##'
-##' bl_cytoband(hg19cyto, extend = 5e3L)
+##' bl_cytoband(hg19cyto, extend = 5e5L)
 ##' @author Yulong Niu \email{yulong.niu@@hotmail.com}
 ##' @importFrom magrittr %<>% %>%
 ##' @importFrom dplyr filter mutate
@@ -279,9 +279,24 @@ filterRow_ <- function(corerow, blacklist, overlaprate) {
 ##'
 bl_cytoband <- function(cyto, extend = 5e5L) {
 
+  ## step1: extend bl regions
   cyto %<>% filter(color %in% c('acen', 'gvar', 'stalk')) %>%
     mutate(start = if_else(start > extend, start - extend, 0L)) %>%
-    mutate(end = end + extend)
+    mutate(end = end + extend) %>%
+    select(chromosome:end)
 
-  return(cyto)
+  ## step2: reduce regions
+  cytoList <- split(cyto, cyto$chromosome)
+  chrs <- names(cytoList)
+
+  for (i in seq_along(cytoList)) {
+    cytoList[[i]] %<>%
+      ReduceRegion(gap = 0L) %>%
+      mutate(chromosome = chrs[i]) %>%
+      select(chromosome, everything())
+  }
+
+  cytobl <- bind_rows(cytoList)
+
+  return(cytobl)
 }

@@ -85,8 +85,7 @@ segMergeType_ <- function(cnv, gap, chr, type) {
   cnv %<>%
     select(start, end) %>%
     ReduceRegion(gap = gap) %>%
-    mutate(chromosome = chr) %>%
-    mutate(type = type) %>%
+    mutate(chromosome = chr, type = type) %>%
     select(chromosome, everything())
 
   return(cnv)
