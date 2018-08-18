@@ -3,18 +3,20 @@
 ##' \itemize{
 ##'   \item \code{OverlapRegionRate()}: Check if extended regions have intersections with overlap rates.
 ##'   \item \code{OverlapRegion()}: Check regions have interactions
-##'   \item \code{SortRegion()}: Sort the 1st and 2nd columns resulting in 1st column is less than or equal to that of 2nd column.
+##'   \item \code{SortRegion()}: Sort the "start" and "end" columns resulting in the "start" column is less than or equal to that of the "end" column. At last, the "start" column is also sorted.
+##'   \item \code{SortRegionChr()}: Sort the input which is split by the "chromosome" columns.
 ##'   \item \code{ReduceRegion()}: Merge concatenated regions.
 ##' }
 ##' @title Overlapped regions
 ##' @param regionf A \code{numeric} vector with length two, and the value of 1st position is smaller/equal to that of 2nd position.
-##' @param regionMat A \code{tbl_df} with 2 columns. In the \code{OverlapRegionRate()} function. The 1st column should be equal or smaller than the 2nd column, otherwise use the \code{SortRegion()} sort the \code{regionMat} at first.
+##' @param regionMat A \code{tbl_df} with at least 2 columns named "start" and "end". In the \code{OverlapRegionRate()} and \code{ReduceRegion()} function, use the \code{SortRegion()} to sort the \code{regionMat} at first.
 ##' @return
 ##' \itemize{
 ##'   \item \code{OverlapRegionRate()}: A \code{logic} value.
 ##'   \item \code{OverlapRegion()}: A \code{numeric} matrix with four columns. 1st column is the overlap rate of `regionf`, 2nd column is the overlap rate of `regionMat`, 3rd and 4th columns are intersection start and end regions.
-##'   \item \code{SortRegion()}: The same object as the input \code{regionMat}.
-##'   \item \code{ReduceRegion()}: The same object as the input \code{regionMat}.
+##'   \item \code{SortRegion()}: The same object as the input.
+##'   \item \code{SortRegionChr()}: The same object as the input.
+##'   \item \code{ReduceRegion()}: The same object as the input.
 ##' }
 ##' @examples
 ##' require('magrittr')
@@ -85,22 +87,43 @@ OverlapRegion <- function(regionf, regionMat, extend = 100L) {
 ##' @inheritParams OverlapRegionRate
 ##' @rdname overlapregion
 ##' @importFrom magrittr %<>% %>%
-##' @importFrom dplyr transmute if_else bind_cols
+##' @importFrom dplyr transmute if_else arrange
 ##' @export
 ##'
 SortRegion <- function(regionMat) {
 
-  start <- regionMat %>%
-    transmute(start = if_else(start < end, start, end))
+  startr <- regionMat %>%
+    transmute(start = if_else(start < end, start, end)) %>%
+    unlist
 
-  end <- regionMat %>%
-    transmute(end = if_else(end > start, end, start))
+  endr <- regionMat %>%
+    transmute(end = if_else(end > start, end, start)) %>%
+    unlist
 
-  reg <- bind_cols(start, end)
+  ## replace start and end
+  regionMat$start <- startr
+  regionMat$end <- endr
 
-  return(reg)
+  regionMat %<>% arrange(start)
+
+  return(regionMat)
 }
 
+
+##' @param regionMatChr A \code{tbl_df} with at least columns named "chromosome", "start", and "end".
+##' @importFrom magrittr %<>% %>%
+##' @importFrom dplyr bind_rows
+##' @export
+##'
+SortRegionChr <- function(regionMatChr) {
+
+  regionMatChr %<>%
+    split(., .$chromosome) %>%
+    lapply(SortRegion) %>%
+    bind_rows
+
+  return(regionMatChr)
+}
 
 
 ##' @inheritParams OverlapRegionRate

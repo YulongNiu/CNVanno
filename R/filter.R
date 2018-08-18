@@ -280,9 +280,11 @@ filterRow_ <- function(corerow, blacklist, overlaprate) {
 bl_cytoband <- function(cyto, extend = 5e5L) {
 
   ## step1: extend bl regions
-  cyto %<>% filter(color %in% c('acen', 'gvar', 'stalk')) %>%
+  cyto %<>%
+    filter(color %in% c('acen', 'gvar', 'stalk')) %>% ## filter
     mutate(start = if_else(start > extend, start - extend, 0L)) %>%
-    mutate(end = end + extend) %>%
+    mutate(end = end + extend) %>% ## extend
+    SortRegionChr %>% ## sort cyto
     select(chromosome:end)
 
   ## step2: reduce regions
