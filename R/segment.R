@@ -25,8 +25,10 @@ setMethod(f = 'Segment',
           definition = function(raw, gap, ...) {
 
             cnvSeg <- raw@rawCNV %>%
-              segMerge_(gap = gap) %>%
-              mutate(method = raw@method)
+              SortRegionChr %>% ## sort
+              segMerge_(gap = gap) %>% ## segment
+              mutate(method = raw@method) %>%
+              SortRegionChr ## sort again
 
             res <- new('CoreCNV', coreCNV = cnvSeg)
 
@@ -37,46 +39,19 @@ setMethod(f = 'Segment',
 ##' Segmentation internal functions.
 ##'
 ##' \itemize{
-##'   \item \code{segPrepare_()}: Separate chromosome and order the star and end.
 ##'   \item \code{segMergeType_()}: Merege CNVs in the same chromosome in the same type.
 ##'   \item \code{segMergeChr_()}: Merege CNVs in the same chromosome.
 ##'   \item \code{segMerge_()}: Merge CNVs.
 ##' }
 ##' @title Internal functions for segmentation
 ##' @param cnv A \code{tbl_df} from the \code{rawCNV} slot of a \code{RawCNV} object.
-##' @param chr A \code{character string} indicating the chromosome, like "chr1", "chr2".
+##' @param chr A \code{string} indicating the chromosome, like "chr1", "chr2".
+##' @param type A code{string} "gain", "loss", or "normal"
+##' @inheritParams Segment
 ##' @return A \code{tbl_df}
 ##' @author Yulong Niu \email{yulong.niu@@hotmail.com}
 ##' @importFrom dplyr filter arrange select everything bind_cols
 ##' @importFrom magrittr %<>% %>%
-##' @rdname segutility
-##' @keywords internal
-##'
-segPrepare_ <- function(cnv, chr) {
-
-  ## step1: sort rows
-  st <- cnv %>%
-    filter(chromosome == chr) %>%
-    select(start:end) %>%
-    SortRegion
-
-  ## step2: sort columns
-  cnv %<>%
-    select(-(start:end)) %>%
-    bind_cols(st, .) %>%
-    select(chromosome, everything()) %>%
-    arrange(start)
-
-  return(cnv)
-}
-
-
-
-##' @inheritParams segPrepare_
-##' @inheritParams Segment
-##' @param type A \code{string} either "gain" or "loss".
-##' @importFrom dplyr bind_cols select mutate everything
-##' @importFrom magrittr %>%
 ##' @rdname segutility
 ##' @keywords internal
 ##'
@@ -92,7 +67,7 @@ segMergeType_ <- function(cnv, gap, chr, type) {
 }
 
 
-##' @inheritParams segPrepare_
+##' @inheritParams segMergeType_
 ##' @inheritParams Segment
 ##' @importFrom magrittr %>% %<>%
 ##' @importFrom dplyr bind_rows arrange
@@ -110,13 +85,12 @@ segMergeChr_ <- function(cnv, gap, chr) {
                                     type = types[i])
   }
 
-  cnvSeg <- bind_rows(cnvList) %>%
-    arrange(start)
+  cnvSeg <- bind_rows(cnvList)
 
   return(cnvSeg)
 }
 
-
+##' @inheritParams segMergeType_
 ##' @inheritParams Segment
 ##' @importFrom magrittr %>% %<>%
 ##' @importFrom dplyr bind_rows arrange
@@ -131,7 +105,7 @@ segMerge_ <- function(cnv, gap) {
 
   for (i in seq_along(cnvList)) {
     cnvList[[i]] %<>%
-      segPrepare_(chrs[i]) %>%
+      filter(chromosome == chrs[i]) %>%
       segMergeChr_(gap = gap,
                    chr = chrs[i])
   }

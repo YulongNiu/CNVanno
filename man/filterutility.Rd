@@ -14,9 +14,9 @@ filterRow_(corerow, blacklist, overlaprate)
 
 \item{rateMat}{The output of \code{OverlapRegionRate()} in this package.}
 
-\item{chr}{A \code{character string} indicating the chromosome, like "chr1", "chr2".}
+\item{chr}{A \code{string} indicating the chromosome, like "chr1", "chr2".}
 
-\item{type}{A \code{string} either "gain" or "loss".}
+\item{type}{A code{string} "gain", "loss", or "normal"}
 
 \item{corerow}{A row of the CNV in a \code{tbl_df} form.}
 }
