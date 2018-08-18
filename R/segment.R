@@ -13,7 +13,7 @@ NULL
 ##' library('magrittr')
 ##'
 ##' kit <- system.file('extdata', 'exampleseg.cnvkit', package = 'CNVanno') %>% read_cnvkit %>% filter_cnvkit
-##' kitseg <- Segment(kit, interlen = 10L)
+##' kitseg <- Segment(kit, gap = 10L)
 ##' @author Yulong Niu \email{yulong.niu@@hotmail.com}
 ##' @importFrom magrittr %>%
 ##' @importFrom dplyr mutate
@@ -21,11 +21,11 @@ NULL
 ##' @exportMethod Segment
 ##'
 setMethod(f = 'Segment',
-          signature = c(raw = 'RawCNV', interlen = 'integer'),
-          definition = function(raw, interlen, ...) {
+          signature = c(raw = 'RawCNV', gap = 'integer'),
+          definition = function(raw, gap, ...) {
 
             cnvSeg <- raw@rawCNV %>%
-              segMerge_(interlen = interlen) %>%
+              segMerge_(gap = gap) %>%
               mutate(method = raw@method)
 
             res <- new('CoreCNV', coreCNV = cnvSeg)
@@ -47,14 +47,24 @@ setMethod(f = 'Segment',
 ##' @param chr A \code{character string} indicating the chromosome, like "chr1", "chr2".
 ##' @return A \code{tbl_df}
 ##' @author Yulong Niu \email{yulong.niu@@hotmail.com}
-##' @importFrom dplyr filter arrange
+##' @importFrom dplyr filter arrange select everything bind_cols
+##' @importFrom magrittr %<>% %>%
 ##' @rdname segutility
 ##' @keywords internal
 ##'
 segPrepare_ <- function(cnv, chr) {
 
-  cnv %<>%
+  ## step1: sort rows
+  st <- cnv %>%
     filter(chromosome == chr) %>%
+    select(start:end) %>%
+    SortRegion
+
+  ## step2: sort columns
+  cnv %<>%
+    select(-(start:end)) %>%
+    bind_cols(st, .) %>%
+    select(chromosome, everything()) %>%
     arrange(start)
 
   return(cnv)
@@ -65,28 +75,22 @@ segPrepare_ <- function(cnv, chr) {
 ##' @inheritParams segPrepare_
 ##' @inheritParams Segment
 ##' @param type A \code{string} either "gain" or "loss".
-##' @importFrom tibble tibble
+##' @importFrom dplyr bind_cols select
+##' @importFrom magrittr %>%
 ##' @rdname segutility
 ##' @keywords internal
 ##'
-segMergeType_ <- function(cnv, chr, interlen, type) {
+segMergeType_ <- function(cnv, gap, chr, type) {
 
-  ## step1: start and end vector
-  start <- cnv$start
-  end <- cnv$end
+  region  <- cnv %>%
+    select(start, end) %>%
+    ReduceRegion(gap = gap)
 
-  ## step2: select start end
-  inter <- c(FALSE, start[-1] - end[-length(end)] < interlen)
-  startIdx <- which(!inter)
-  endIdx <- c(startIdx[-1] - 1,
-              length(inter))
-
-  ## step3: new cnv
-  cnvSeg <- tibble(
-    chromosome = chr,
-    start = start[startIdx],
-    end = end[endIdx],
-    type = type)
+  cnvSeg <- list(chromosome = chr,
+                 start = region$start,
+                 end = region$end,
+                 type = type) %>%
+    bind_cols
 
   return(cnvSeg)
 }
@@ -99,14 +103,14 @@ segMergeType_ <- function(cnv, chr, interlen, type) {
 ##' @rdname segutility
 ##' @keywords internal
 ##'
-segMergeChr_ <- function(cnv, chr, interlen) {
+segMergeChr_ <- function(cnv, chr, gap) {
 
   cnvList <- split(cnv, cnv$type)
   types <- names(cnvList)
 
   for (i in seq_along(cnvList)) {
-    cnvList[[i]] %<>% segMergeType_(chr = chr,
-                                    interlen = interlen,
+    cnvList[[i]] %<>% segMergeType_(gap = gap,
+                                    chr = chr,
                                     type = types[i])
   }
 
@@ -124,7 +128,7 @@ segMergeChr_ <- function(cnv, chr, interlen) {
 ##' @rdname segutility
 ##' @keywords internal
 ##'
-segMerge_ <- function(cnv, interlen) {
+segMerge_ <- function(cnv, gap) {
 
   cnvList <- split(cnv, cnv$chromosome)
   chrs <- names(cnvList)
@@ -133,7 +137,7 @@ segMerge_ <- function(cnv, interlen) {
     cnvList[[i]] %<>%
       segPrepare_(chrs[i]) %>%
       segMergeChr_(chr = chrs[i],
-                  interlen = interlen)
+                   gap = gap)
   }
 
   cnvSeg <- bind_rows(cnvList) %>%

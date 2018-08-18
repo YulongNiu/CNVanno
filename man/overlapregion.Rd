@@ -4,6 +4,7 @@
 \alias{OverlapRegionRate}
 \alias{OverlapRegion}
 \alias{SortRegion}
+\alias{ReduceRegion}
 \title{Overlapped regions}
 \usage{
 OverlapRegionRate(regionf, regionMat)
@@ -11,6 +12,8 @@ OverlapRegionRate(regionf, regionMat)
 OverlapRegion(regionf, regionMat, extend = 100L)
 
 SortRegion(regionMat)
+
+ReduceRegion(regionMat, gap)
 }
 \arguments{
 \item{regionf}{A \code{numeric} vector with length two, and the value of 1st position is smaller/equal to that of 2nd position.}
@@ -18,12 +21,15 @@ SortRegion(regionMat)
 \item{regionMat}{A \code{tbl_df} with 2 columns. In the \code{OverlapRegionRate()} function. The 1st column should be equal or smaller than the 2nd column, otherwise use the \code{SortRegion()} sort the \code{regionMat} at first.}
 
 \item{extend}{A \code{integer} value indicates the extended length in both direction.}
+
+\item{gap}{An \code{integer} indicate the allowed length between two regions (at same chromosome with same type).}
 }
 \value{
 \itemize{
   \item \code{OverlapRegionRate()}: A \code{logic} value.
   \item \code{OverlapRegion()}: A \code{numeric} matrix with four columns. 1st column is the overlap rate of `regionf`, 2nd column is the overlap rate of `regionMat`, 3rd and 4th columns are intersection start and end regions.
-  \item \code{SortRegion()}: A same object as the input \code{regionMat}
+  \item \code{SortRegion()}: The same object as the input \code{regionMat}.
+  \item \code{ReduceRegion()}: The same object as the input \code{regionMat}.
 }
 }
 \description{
@@ -34,6 +40,7 @@ Find regions have intersections
   \item \code{OverlapRegionRate()}: Check if extended regions have intersections with overlap rates.
   \item \code{OverlapRegion()}: Check regions have interactions
   \item \code{SortRegion()}: Sort the 1st and 2nd columns resulting in 1st column is less than or equal to that of 2nd column.
+  \item \code{ReduceRegion()}: Merge concatenated regions.
 }
 }
 \examples{
@@ -48,8 +55,10 @@ OverlapRegion(tReg, tMat, extend = 0L)
 ## overlap rate
 OverlapRegionRate(tReg, tMat)
 
-## sort matrix at first
-
+## reduce region
+rMat <- tibble(start = c(1, 8, 14, 15, 19, 34, 40), end = c(12, 13, 19, 29, 24, 35, 46))
+rMat \%<>\% SortRegion \%>\% arrange(start)
+ReduceRegion(rMat, gap = 0L)
 }
 \author{
 Yulong Niu \email{yulong.niu@hotmail.com}

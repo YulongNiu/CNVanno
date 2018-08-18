@@ -9,18 +9,18 @@
 \usage{
 segPrepare_(cnv, chr)
 
-segMergeType_(cnv, chr, interlen, type)
+segMergeType_(cnv, gap, chr, type)
 
-segMergeChr_(cnv, chr, interlen)
+segMergeChr_(cnv, chr, gap)
 
-segMerge_(cnv, interlen)
+segMerge_(cnv, gap)
 }
 \arguments{
 \item{cnv}{A \code{tbl_df} from the \code{rawCNV} slot of a \code{RawCNV} object.}
 
 \item{chr}{A \code{character string} indicating the chromosome, like "chr1", "chr2".}
 
-\item{interlen}{An code{integer number} indicate the integer length between CNV (at same chromosome with same type).}
+\item{gap}{An \code{integer} indicate the allowed length between two regions (at same chromosome with same type).}
 
 \item{type}{A \code{string} either "gain" or "loss".}
 }

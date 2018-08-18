@@ -4,6 +4,7 @@
 ##'   \item \code{OverlapRegionRate()}: Check if extended regions have intersections with overlap rates.
 ##'   \item \code{OverlapRegion()}: Check regions have interactions
 ##'   \item \code{SortRegion()}: Sort the 1st and 2nd columns resulting in 1st column is less than or equal to that of 2nd column.
+##'   \item \code{ReduceRegion()}: Merge concatenated regions.
 ##' }
 ##' @title Overlapped regions
 ##' @param regionf A \code{numeric} vector with length two, and the value of 1st position is smaller/equal to that of 2nd position.
@@ -12,7 +13,8 @@
 ##' \itemize{
 ##'   \item \code{OverlapRegionRate()}: A \code{logic} value.
 ##'   \item \code{OverlapRegion()}: A \code{numeric} matrix with four columns. 1st column is the overlap rate of `regionf`, 2nd column is the overlap rate of `regionMat`, 3rd and 4th columns are intersection start and end regions.
-##'   \item \code{SortRegion()}: A same object as the input \code{regionMat}
+##'   \item \code{SortRegion()}: The same object as the input \code{regionMat}.
+##'   \item \code{ReduceRegion()}: The same object as the input \code{regionMat}.
 ##' }
 ##' @examples
 ##' require('magrittr')
@@ -26,8 +28,10 @@
 ##' ## overlap rate
 ##' OverlapRegionRate(tReg, tMat)
 ##'
-##' ## sort matrix at first
-##'
+##' ## reduce region
+##' rMat <- tibble(start = c(1, 8, 14, 15, 19, 34, 40), end = c(12, 13, 19, 29, 24, 35, 46))
+##' rMat %<>% SortRegion %>% arrange(start)
+##' ReduceRegion(rMat, gap = 0L)
 ##' @author Yulong Niu \email{yulong.niu@@hotmail.com}
 ##' @importFrom magrittr %>% %<>%
 ##' @importFrom dplyr mutate if_else select
@@ -95,4 +99,31 @@ SortRegion <- function(regionMat) {
   reg <- bind_cols(start, end)
 
   return(reg)
+}
+
+
+
+##' @inheritParams OverlapRegionRate
+##' @inheritParams Segment
+##' @rdname overlapregion
+##' @importFrom magrittr %>%
+##' @importFrom dply bind_cols
+##' @export
+##'
+ReduceRegion <- function(regionMat, gap) {
+
+  ## `regionMat` must be sorted by row and by column
+  start <- regionMat$start
+  end <- regionMat$end
+
+  inter <- c(FALSE, start[-1] - end[-length(end)] - 1 <= gap)
+  startIdx <- which(!inter)
+  endIdx <- c(startIdx[-1] - 1,
+              length(inter))
+
+  res <- list(start = start[startIdx],
+              end = end[endIdx]) %>%
+    bind_cols
+
+  return(res)
 }

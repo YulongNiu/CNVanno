@@ -6,14 +6,14 @@
 \alias{Segment,RawCNV,integer-method}
 \title{Segmentation}
 \usage{
-Segment(raw, interlen, ...)
+Segment(raw, gap, ...)
 
-\S4method{Segment}{RawCNV,integer}(raw, interlen, ...)
+\S4method{Segment}{RawCNV,integer}(raw, gap, ...)
 }
 \arguments{
 \item{raw}{a \code{RawCNV} object.}
 
-\item{interlen}{An code{integer number} indicate the integer length between CNV (at same chromosome with same type).}
+\item{gap}{An \code{integer} indicate the allowed length between two regions (at same chromosome with same type).}
 
 \item{...}{Additional parameters.}
 }
@@ -30,7 +30,7 @@ Merge the concatenated CNV at the same chromosome with the same type (gain and l
 library('magrittr')
 
 kit <- system.file('extdata', 'exampleseg.cnvkit', package = 'CNVanno') \%>\% read_cnvkit \%>\% filter_cnvkit
-kitseg <- Segment(kit, interlen = 10L)
+kitseg <- Segment(kit, gap = 10L)
 }
 \author{
 Yulong Niu \email{yulong.niu@hotmail.com}
