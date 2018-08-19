@@ -165,6 +165,7 @@ setMethod(f = 'FilterBlacklist',
 ##' @inheritParams segMergeType_
 ##' @inheritParams FilterBlacklist
 ##' @param rateMat The output of \code{OverlapRegionRate()} in this package.
+##' @param method A \code{string} indicating the CNV calling method.
 ##' @return A \code{tbl_df} of filtered fragments.
 ##' @author Yulong Niu \email{yulong.niu@@hotmail.com}
 ##' @importFrom magrittr %<>% %>%
@@ -172,7 +173,7 @@ setMethod(f = 'FilterBlacklist',
 ##' @rdname filterutility
 ##' @keywords internal
 ##'
-filterSeg_ <- function(regionf, rateMat, overlaprate, shortlen, chr, type) {
+filterSeg_ <- function(regionf, rateMat, overlaprate, shortlen, chr, type, method) {
   # Example:
   ## rM <- tibble(start = c(1L, 4L, 8L, 14L, 18L, 25L), end = c(2L, 6L, 10L, 16L, 27L, 30L))
   ## rf <- c(5L, 20L)
@@ -211,7 +212,7 @@ filterSeg_ <- function(regionf, rateMat, overlaprate, shortlen, chr, type) {
     filter(start != min(regionf) & end != max(regionf))
 
   seg <- bind_rows(list(leftSeg, rightSeg, midSeg)) %>%
-    mutate(chromosome = chr, type = type) %>%
+    mutate(chromosome = chr, type = type, method = method) %>%
     SortRegion %>%
     select(chromosome, everything())
 
@@ -231,8 +232,9 @@ filterSeg_ <- function(regionf, rateMat, overlaprate, shortlen, chr, type) {
 filterSegCover_ <- function(regionf, rateMat, overlaprate, shortlen) {
   ## step1: check the sum rate of intersection regions is larger than `overlaprate`
 
+  rateMat %<>% filter(tRate == 1)
+
   sumRate <- rateMat %>%
-    filter(tRate == 1) %>%
     select(fRate) %>%
     unlist %>%
     sum
@@ -249,11 +251,11 @@ filterSegCover_ <- function(regionf, rateMat, overlaprate, shortlen) {
     coverRegion <- list(start = start, end = end) %>%
       bind_cols %>%
       filter(end - start + 1 > shortlen) ## filter too short regions
+
+    return(coverRegion)
   } else {
     return(filter(regionf, FALSE))
   }
-
-  return(coverRegion)
 }
 
 
@@ -326,6 +328,7 @@ filterRow_ <- function(corerow, blacklist, overlaprate, shortlen) {
                       overlaprate = overlaprate,
                       shortlen = shortlen,
                       corerow$chromosome,
+                      corerow$type,
                       corerow$method)
     return(seg)
   }

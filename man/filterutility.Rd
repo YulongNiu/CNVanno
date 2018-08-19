@@ -7,7 +7,7 @@
 \alias{filterRow_}
 \title{Internal functions for filtering}
 \usage{
-filterSeg_(regionf, rateMat, overlaprate, shortlen, chr, type)
+filterSeg_(regionf, rateMat, overlaprate, shortlen, chr, type, method)
 
 filterSegCover_(regionf, rateMat, overlaprate, shortlen)
 
@@ -27,6 +27,8 @@ filterRow_(corerow, blacklist, overlaprate, shortlen)
 \item{chr}{A \code{string} indicating the chromosome, like "chr1", "chr2".}
 
 \item{type}{A code{string} "gain", "loss", or "normal"}
+
+\item{method}{A \code{string} indicating the CNV calling method.}
 
 \item{corerow}{A row of the CNV in a \code{tbl_df} form.}
 
