@@ -7,7 +7,7 @@
 \alias{filterRow_}
 \title{Internal functions for filtering}
 \usage{
-filterSeg_(regionf, rateMat, chr, type)
+filterSeg_(regionf, rateMat, overlaprate, shortlen, chr, type)
 
 filterSegCover_(regionf, rateMat, overlaprate, shortlen)
 
@@ -20,13 +20,13 @@ filterRow_(corerow, blacklist, overlaprate)
 
 \item{rateMat}{The output of \code{OverlapRegionRate()} in this package.}
 
-\item{chr}{A \code{string} indicating the chromosome, like "chr1", "chr2".}
-
-\item{type}{A code{string} "gain", "loss", or "normal"}
-
 \item{overlaprate}{The threshold of overlap rate (overlaplen/CNVlen). The CNVs with smaller than or equal to this rate will be filtered.}
 
 \item{shortlen}{A code{integer}. The CNVs with length shorter than or equal to this value will be filtered.}
+
+\item{chr}{A \code{string} indicating the chromosome, like "chr1", "chr2".}
+
+\item{type}{A code{string} "gain", "loss", or "normal"}
 
 \item{corerow}{A row of the CNV in a \code{tbl_df} form.}
 

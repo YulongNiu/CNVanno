@@ -157,6 +157,7 @@ setMethod(f = 'FilterBlacklist',
 ##' @title Internal functions for filtering
 ##' @inheritParams OverlapRegionRate
 ##' @inheritParams segMergeType_
+##' @inheritParams FilterBlacklist
 ##' @param rateMat The output of \code{OverlapRegionRate()} in this package.
 ##' @return A \code{tbl_df} of filtered fragments.
 ##' @author Yulong Niu \email{yulong.niu@@hotmail.com}
@@ -165,53 +166,47 @@ setMethod(f = 'FilterBlacklist',
 ##' @rdname filterutility
 ##' @keywords internal
 ##'
-filterSeg_ <- function(regionf, rateMat, chr, type) {
+filterSeg_ <- function(regionf, rateMat, overlaprate, shortlen, chr, type) {
   # Example:
-  ## rM <- tibble(start = c(9L, 2L, 5L, 8L, 3L, 1L, 15L, 10L), end = c(15L, 6L, 6L, 9L, 20L, 4L, 32L, 9L)) %>% SortRegion %>% ReduceRegion(gap = 0L)
-  ## rf <- c(4L, 10L)
+  ## rM <- tibble(start = c(1L, 4L, 8L, 14L, 18L, 25L), end = c(2L, 6L, 10L, 16L, 27L, 30L))
+  ## rf <- c(5L, 20L)
   ## rMf <- OverlapRegionRate(rf, rM) %>% filter(fRate > 0 & fRate <= 0.5)
-  ## filterSeg_(rf, rMf, chr = 'chr6', type = 'gain')
+  ## filterSegCover_(rf, rMf, 0.6, 1L)
+  ## filterSegInter_(rf, rMf, 0.6)
+  ## filterSeg_(rf, rMf, 0.6, 1L, chr = 'chr6', type = 'gain')
 
-  ## step1: split regions
-  minf <- min(regionf)
-  maxf <- max(regionf)
-  ## intersect =====~~~~~ or ~~~~=====
-  rateMatInter <- rateMat %>%
-    filter(tRate < 1) %>% ## select intersect regions
-    mutate(segstart = if_else(minf < maxstart, minf, minend)) %>%
-    mutate(segend = if_else(maxf > minend, maxf, maxstart))
+  ## step 1: split regions
+  ## case 1: intersect =====~~~~~ or ~~~~=====
+  interRegion <- filterSegInter_(regionf = regionf,
+                                 rateMat = rateMat,
+                                 shortlen = shortlen)
 
-  ## in ====~~~~===
-  rateMatCoverTemp  <- rateMat %>%
-    filter(tRate == 1)
+  ## case 2: in ====~~~~===
+  coverRegion <- filterSegCover_(regionf = regionf,
+                                 rateMat = rateMat,
+                                 overlaprate = overlaprate,
+                                 shortlen = shortlen)
 
-  rateMatCoverLeft <- rateMatCoverTemp %>%
-    mutate(segstart = minf) %>%
-    mutate(segend = maxstart)
-
-  rateMatCoverRight <- rateMatCoverTemp %>%
-    mutate(segstart = minend) %>%
-    mutate(segend = maxf)
-
-  seg <- bind_rows(list(rateMatInter,
-                        rateMatCoverLeft,
-                        rateMatCoverRight)) %>%
-    select(segstart, segend)
+  keepRegion <- list(interRegion, coverRegion) %>%
+    bind_rows
 
   ## step2: select min regions on left and right, respectively
-  leftSeg <- seg %>%
-    filter(segstart == minf) %>%
+  leftSeg <- keepRegion %>%
+    filter(start == min(regionf)) %>%
     distinct() %>%
-    filter(segend == min(segend))
+    filter(end == min(end))
 
-  rightSeg <- seg %>%
-    filter(segend == maxf) %>%
+  rightSeg <- keepRegion %>%
+    filter(end == max(regionf)) %>%
     distinct() %>%
-    filter(segstart == max(segstart))
+    filter(start == max(start))
 
-  seg <- bind_rows(list(leftSeg, rightSeg)) %>%
+  midSeg <- keepRegion %>%
+    filter(start != min(regionf) & end != max(regionf))
+
+  seg <- bind_rows(list(leftSeg, rightSeg, midSeg)) %>%
     mutate(chromosome = chr, type = type) %>%
-    rename(start = segstart, end = segend) %>%
+    SortRegion %>%
     select(chromosome, everything())
 
   return(seg)
@@ -246,7 +241,7 @@ filterSegCover_ <- function(regionf, rateMat, overlaprate, shortlen) {
 
     coverRegion <- list(start = start, end = end) %>%
       bind_cols %>%
-      filter(start - end + 1 > shortlen) ## filter too short regions
+      filter(end - start + 1 > shortlen) ## filter too short regions
   }
 
   return(coverRegion)
@@ -270,10 +265,10 @@ filterSegInter_ <- function(regionf, rateMat, shortlen) {
   ## no need to reduce
   interRegion <- rateMat %>%
     filter(tRate < 1) %>% ## select intersect regions
-    mutate(start = if_else(minf < maxstart, minf, minend)) %>%
-    mutate(end = if_else(maxf > minend, maxf, maxstart)) %>% ## start/end
-    select(star:end) %>%
-    filter(start - end + 1 > shortlen)
+    mutate(start = if_else(minf < maxstart, minf, minend + 1L)) %>%
+    mutate(end = if_else(maxf > minend, maxf, maxstart - 1L)) %>% ## start/end
+    select(start:end) %>%
+    filter(end - start + 1 > shortlen)
 
   return(interRegion)
 
