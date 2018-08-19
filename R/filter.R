@@ -102,13 +102,18 @@ filter_cnvnator <- function(rawnator, sexchrom = TRUE) {
 ##' @examples
 ##' library('magrittr')
 ##' data(hg19cyto)
+##' data(hg19bl)
 ##'
 ##' nator <- system.file('extdata', 'example.cnvnator', package = 'CNVanno') %>%
 ##'   read_cnvnator %>%
 ##'   filter_cnvnator %>%
 ##'   Segment(gap = 10L)
 ##'
-##' ## natorf <- FilterBlacklist(nator, bl_cytoband(hg19cyto), overlaprate = 0.5, shortlen = 10L, n = 2)
+##' ## filter based on cytoband blacklist
+##' natorf <- FilterBlacklist(nator, bl_cytoband(hg19cyto), overlaprate = 0.5, shortlen = 10L, n = 2)
+##'
+##' ## more filter based on pre-built blacklist
+##' natorf <- FilterBlacklist(natorf, hg19bl, overlaprate = 0.5, shortlen = 10L, n = 2)
 ##' @author Yulong Niu \email{yulong.niu@@hotmail.com}
 ##' @importFrom doParallel registerDoParallel stopImplicitCluster
 ##' @importFrom foreach foreach %dopar%
@@ -267,7 +272,7 @@ filterSegInter_ <- function(regionf, rateMat, shortlen) {
 
   ## intersect =====~~~~~ or ~~~~==== (only these tow cases)
   ## no need to reduce
-  rateMat %<>% filter(tRate < 1)
+  rateMat %<>% filter(tRate < 1 & tRate > 0)
   ## no tRate < 1 is filtered
   if (nrow(rateMat) == 0) {
     return(NULL)
@@ -316,14 +321,12 @@ filterRow_ <- function(corerow, blacklist, overlaprate, shortlen) {
   }
   else {
     ## case 4: has > 0 & < overlaprate overlap regions
-    seg <- rateMat %>%
-      filter(fRate > 0) %>%
-      filterSeg_(select(corerow, start, end),
-                 .,
-                 overlaprate = overlaprate,
-                 shortlen = shortlen,
-                 corerow$chromosome,
-                 corerow$method)
+    seg <- filterSeg_(select(corerow, start, end),
+                      rateMat,
+                      overlaprate = overlaprate,
+                      shortlen = shortlen,
+                      corerow$chromosome,
+                      corerow$method)
     return(seg)
   }
 

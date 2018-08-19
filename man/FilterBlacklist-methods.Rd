@@ -36,13 +36,18 @@ Filer the \code{CoreCNV} according black lists.
 \examples{
 library('magrittr')
 data(hg19cyto)
+data(hg19bl)
 
 nator <- system.file('extdata', 'example.cnvnator', package = 'CNVanno') \%>\%
   read_cnvnator \%>\%
   filter_cnvnator \%>\%
   Segment(gap = 10L)
 
-## natorf <- FilterBlacklist(nator, bl_cytoband(hg19cyto), overlaprate = 0.5, shortlen = 10L, n = 2)
+## filter based on cytoband blacklist
+natorf <- FilterBlacklist(nator, bl_cytoband(hg19cyto), overlaprate = 0.5, shortlen = 10L, n = 2)
+
+## more filter based on pre-built blacklist
+natorf <- FilterBlacklist(natorf, hg19bl, overlaprate = 0.5, shortlen = 10L, n = 2)
 }
 \references{
 \href{http://penncnv.openbioinformatics.org/en/latest/user-guide/annotation/#filtering-cnv-calls-by-user-specified-criteria}{cytoband extend}
