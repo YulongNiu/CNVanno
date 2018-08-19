@@ -94,7 +94,7 @@ filter_cnvnator <- function(rawnator, sexchrom = TRUE) {
 
 ##' Filtering \code{CoreCNV}.
 ##'
-##' Filer the \code{CoreCNV} according black lists.
+##' Filer the \code{CoreCNV} according black lists. Multiple black lists can be applied as the example show below. 
 ##'
 ##' @title Filter \code{CoreCNV} according to a give blacklist
 ##' @inheritParams FilterBlacklist
@@ -110,10 +110,10 @@ filter_cnvnator <- function(rawnator, sexchrom = TRUE) {
 ##'   Segment(gap = 10L)
 ##'
 ##' ## filter based on cytoband blacklist
-##' natorf <- FilterBlacklist(nator, bl_cytoband(hg19cyto), overlaprate = 0.5, shortlen = 10L, n = 2)
+##' natorf <- FilterBlacklist(nator, bl_cytoband(hg19cyto), overlaprate = 0.5, shortlen = 1000L, n = 2)
 ##'
 ##' ## more filter based on pre-built blacklist
-##' natorf <- FilterBlacklist(natorf, hg19bl, overlaprate = 0.5, shortlen = 10L, n = 2)
+##' natorf <- FilterBlacklist(natorf, hg19bl, overlaprate = 0.5, shortlen = 1000L, n = 2)
 ##' @author Yulong Niu \email{yulong.niu@@hotmail.com}
 ##' @importFrom doParallel registerDoParallel stopImplicitCluster
 ##' @importFrom foreach foreach %dopar%
@@ -146,6 +146,8 @@ setMethod(f = 'FilterBlacklist',
 
             coreFilter %<>%
               bind_rows %>%
+              SortRegionChr %>% ## sort
+              ReduceRegionChr(gap = 0L) %>% ## reduce again
               new('CoreCNV', coreCNV = .)
 
             return(coreFilter)
@@ -367,3 +369,34 @@ bl_cytoband <- function(cyto, extend = 5e5L) {
 
   return(cytobl)
 }
+
+
+
+
+##  nator <- system.file('extdata', 'example.cnvnator', package = 'CNVanno') %>%
+##    read_cnvnator %>%
+##    filter_cnvnator %>%
+##    Segment(gap = 10L)
+
+## FilterBlacklist(nator, bl_cytoband(hg19cyto), overlaprate = 0.5, shortlen = 1000L, n = 2) %>%
+##   FilterBlacklist(hg19bl, overlaprate = 0.5, shortlen = 1000L, n = 2) %>%
+##   slot('coreCNV') %>%
+##   write.csv('tmp1.csv')
+
+
+## FilterBlacklist(nator, hg19bl, overlaprate = 0.5, shortlen = 1000L, n = 2) %>%
+##   FilterBlacklist(bl_cytoband(hg19cyto), overlaprate = 0.5, shortlen = 1000L, n = 2) %>%
+##   slot('coreCNV') %>%
+##   write.csv('tmp2.csv')
+
+
+## CNVanno:::filterRow_(nator@coreCNV[92, ], hg19bl, 0.5, 1000L)[2, ] %>% CNVanno:::filterRow_(bl_cytoband(hg19cyto), 0.5, 1000L)
+## CNVanno:::filterRow_(nator@coreCNV[92, ], bl_cytoband(hg19cyto), 0.5, 1000L)
+
+
+## list(hg19bl,  bl_cytoband(hg19cyto)) %>%
+##   bind_rows %>%
+##   SortRegionChr %>%
+##   ReduceRegionChr(gap = 0L) %>%
+##   FilterBlacklist(nator, ., overlaprate = 0.5, shortlen = 1000L, n = 2)
+
