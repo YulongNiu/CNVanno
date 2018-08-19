@@ -121,8 +121,8 @@ filter_cnvnator <- function(rawnator, sexchrom = TRUE) {
 ##' @exportMethod FilterBlacklist
 ##'
 setMethod(f = 'FilterBlacklist',
-          signature = c(core = 'CoreCNV', blacklist = 'tbl_df', overlaprate = 'numeric'),
-          definition = function(core, blacklist, overlaprate, n, ...) {
+          signature = c(core = 'CoreCNV', blacklist = 'tbl_df', overlaprate = 'numeric', shortlen = 'integer'),
+          definition = function(core, blacklist, overlaprate, shortlen, n, ...) {
             core <- core@coreCNV
 
             registerDoParallel(cores = n)
@@ -131,7 +131,8 @@ setMethod(f = 'FilterBlacklist',
             coreFilter <- foreach(i = itx) %dopar% {
               eachCore <- filterRow_(i,
                                      blacklist = blacklist,
-                                     overlaprate = overlaprate)
+                                     overlaprate = overlaprate,
+                                     shortlen = shortlen)
               return(eachCore)
             }
 
@@ -282,7 +283,7 @@ filterSegInter_ <- function(regionf, rateMat, shortlen) {
 ##' @rdname filterutility
 ##' @keywords internal
 ##'
-filterRow_ <- function(corerow, blacklist, overlaprate) {
+filterRow_ <- function(corerow, blacklist, overlaprate, shortlen) {
 
   blacklist %<>%
     filter(chromosome == corerow$chromosome)
@@ -311,6 +312,8 @@ filterRow_ <- function(corerow, blacklist, overlaprate) {
       filter(fRate > 0) %>%
       filterSeg_(select(corerow, start, end),
                  .,
+                 overlaprate = overlaprate,
+                 shortlen = shortlen,
                  corerow$chromosome,
                  corerow$method)
     return(seg)

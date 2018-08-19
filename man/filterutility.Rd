@@ -13,7 +13,7 @@ filterSegCover_(regionf, rateMat, overlaprate, shortlen)
 
 filterSegInter_(regionf, rateMat, shortlen)
 
-filterRow_(corerow, blacklist, overlaprate)
+filterRow_(corerow, blacklist, overlaprate, shortlen)
 }
 \arguments{
 \item{regionf}{A \code{numeric} vector with length two, and the value of 1st position is smaller/equal to that of 2nd position.}

@@ -3,12 +3,12 @@
 \docType{methods}
 \name{FilterBlacklist}
 \alias{FilterBlacklist}
-\alias{FilterBlacklist,CoreCNV,tbl_df,numeric-method}
+\alias{FilterBlacklist,CoreCNV,tbl_df,numeric,integer-method}
 \title{Filter \code{CoreCNV} according to a give blacklist}
 \usage{
 FilterBlacklist(core, blacklist, overlaprate, shortlen, n, ...)
 
-\S4method{FilterBlacklist}{CoreCNV,tbl_df,numeric}(core, blacklist,
+\S4method{FilterBlacklist}{CoreCNV,tbl_df,numeric,integer}(core, blacklist,
   overlaprate, shortlen, n, ...)
 }
 \arguments{
