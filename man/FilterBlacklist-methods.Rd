@@ -31,7 +31,7 @@ A \code{CoreCNV} object.
 Filtering \code{CoreCNV}.
 }
 \details{
-Filer the \code{CoreCNV} according black lists. Multiple black lists can be applied as the example show below.
+Filer the \code{CoreCNV} according black lists. Multiple black lists can be applied as the example show below. q
 }
 \examples{
 library('magrittr')

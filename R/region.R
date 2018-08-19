@@ -198,22 +198,15 @@ ReduceRegion <- function(regionMat, gap) {
 ##' @inheritParams Segment
 ##' @rdname overlapregion
 ##' @importFrom magrittr %>%
-##' @importFrom dplyr bind_rows mutate select
+##' @importFrom dplyr group_by do
+##' @importFrom tibble tibble
 ##' @export
 ##'
 ReduceRegionChr <- function(regionMatChr, gap) {
 
-  regionList <- split(regionMatChr, regionMatChr$chromosome)
-  chrs <- names(regionList)
-
-  for (i in seq_along(regionList)) {
-    regionList[[i]] %<>%
-      ReduceRegion(gap = gap) %>%
-      mutate(chromosome = chrs[i]) %>%
-      select(chromosome, everything())
-  }
-
-  regionbl <- bind_rows(regionList)
+  regionbl <- regionMatChr %>%
+    group_by(chromosome) %>%
+    do(ReduceRegion(tibble(start = .$start, end = .$end), gap = gap))
 
   return(regionbl)
 }

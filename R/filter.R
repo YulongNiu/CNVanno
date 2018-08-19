@@ -94,7 +94,7 @@ filter_cnvnator <- function(rawnator, sexchrom = TRUE) {
 
 ##' Filtering \code{CoreCNV}.
 ##'
-##' Filer the \code{CoreCNV} according black lists. Multiple black lists can be applied as the example show below. 
+##' Filer the \code{CoreCNV} according black lists. Multiple black lists can be applied as the example show below. q
 ##'
 ##' @title Filter \code{CoreCNV} according to a give blacklist
 ##' @inheritParams FilterBlacklist
@@ -358,18 +358,17 @@ filterRow_ <- function(corerow, blacklist, overlaprate, shortlen) {
 ##'
 bl_cytoband <- function(cyto, extend = 5e5L) {
 
-  ## step1: extend bl regions
   cytobl <- cyto %>%
     filter(color %in% c('acen', 'gvar', 'stalk')) %>% ## filter
     mutate(start = if_else(start > extend, start - extend, 0L)) %>%
     mutate(end = end + extend) %>% ## extend
-    SortRegionChr %>% ## sort cyto
-    ReduceRegionChr(gap = 0L) %>% ## reduce regions
-    SortRegionChr ## sort again
+    group_by(chromosome) %>% ## sort reduce sort by chromosome
+    do(SortRegion(tibble(start = .$start, end = .$end))) %>%
+    do(ReduceRegion(tibble(start = .$start, end = .$end), gap = 0L)) %>%
+    do(SortRegion(tibble(start = .$start, end = .$end)))
 
   return(cytobl)
 }
-
 
 
 
@@ -394,9 +393,9 @@ bl_cytoband <- function(cyto, extend = 5e5L) {
 ## CNVanno:::filterRow_(nator@coreCNV[92, ], bl_cytoband(hg19cyto), 0.5, 1000L)
 
 
-## list(hg19bl,  bl_cytoband(hg19cyto)) %>%
-##   bind_rows %>%
-##   SortRegionChr %>%
-##   ReduceRegionChr(gap = 0L) %>%
-##   FilterBlacklist(nator, ., overlaprate = 0.5, shortlen = 1000L, n = 2)
+tmp1 <- list(hg19bl,  bl_cytoband(hg19cyto)) %>%
+  bind_rows %>%
+  SortRegionChr %>%
+  ReduceRegionChr(gap = 0L) %>%
+  FilterBlacklist(nator, ., overlaprate = 0.5, shortlen = 1000L, n = 2)
 
