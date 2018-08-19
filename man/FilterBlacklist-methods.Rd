@@ -42,7 +42,7 @@ nator <- system.file('extdata', 'example.cnvnator', package = 'CNVanno') \%>\%
   filter_cnvnator \%>\%
   Segment(gap = 10L)
 
-## natorf <- FilterBlacklist(nator, bl_cytoband(hg19cyto), overlaprate = 0.5, n = 1)
+## natorf <- FilterBlacklist(nator, bl_cytoband(hg19cyto), overlaprate = 0.5, shortlen = 10L, n = 2)
 }
 \references{
 \href{http://penncnv.openbioinformatics.org/en/latest/user-guide/annotation/#filtering-cnv-calls-by-user-specified-criteria}{cytoband extend}

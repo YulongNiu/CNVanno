@@ -108,7 +108,7 @@ filter_cnvnator <- function(rawnator, sexchrom = TRUE) {
 ##'   filter_cnvnator %>%
 ##'   Segment(gap = 10L)
 ##'
-##' ## natorf <- FilterBlacklist(nator, bl_cytoband(hg19cyto), overlaprate = 0.5, n = 1)
+##' ## natorf <- FilterBlacklist(nator, bl_cytoband(hg19cyto), overlaprate = 0.5, shortlen = 10L, n = 2)
 ##' @author Yulong Niu \email{yulong.niu@@hotmail.com}
 ##' @importFrom doParallel registerDoParallel stopImplicitCluster
 ##' @importFrom foreach foreach %dopar%
@@ -163,7 +163,7 @@ setMethod(f = 'FilterBlacklist',
 ##' @return A \code{tbl_df} of filtered fragments.
 ##' @author Yulong Niu \email{yulong.niu@@hotmail.com}
 ##' @importFrom magrittr %<>% %>%
-##' @importFrom dplyr filter mutate distinct bind_rows rename everything
+##' @importFrom dplyr filter mutate distinct bind_rows everything
 ##' @rdname filterutility
 ##' @keywords internal
 ##'
@@ -194,12 +194,12 @@ filterSeg_ <- function(regionf, rateMat, overlaprate, shortlen, chr, type) {
   ## step2: select min regions on left and right, respectively
   leftSeg <- keepRegion %>%
     filter(start == min(regionf)) %>%
-    distinct() %>%
+    distinct %>%
     filter(end == min(end))
 
   rightSeg <- keepRegion %>%
     filter(end == max(regionf)) %>%
-    distinct() %>%
+    distinct %>%
     filter(start == max(start))
 
   midSeg <- keepRegion %>%
@@ -219,21 +219,22 @@ filterSeg_ <- function(regionf, rateMat, overlaprate, shortlen, chr, type) {
 ##' @inheritParams OverlapRegionRate
 ##' @inheritParams FilterBlacklist
 ##' @importFrom magrittr %<>% %>%
-##' @importFrom dplyr filter bind_cols
+##' @importFrom dplyr filter select bind_cols
 ##' @rdname filterutility
 ##' @keywords internal
 ##'
 filterSegCover_ <- function(regionf, rateMat, overlaprate, shortlen) {
   ## step1: check the sum rate of intersection regions is larger than `overlaprate`
-  rateMat %<>% filter(tRate == 1)
 
   sumRate <- rateMat %>%
+    filter(tRate == 1) %>%
     select(fRate) %>%
+    unlist %>%
     sum
 
-  if(sumRate >= overlaprate) {
-    return(NULL)
-  } else {
+  ## sum cover region rate > overlaprate is filtered
+  ## no tRate == 1 is filtered
+  if (sumRate > 0 & sumRate < overlaprate) {
     ## step2: get gaps
     start <- (rateMat$minend + 1L) %>%
       c(min(regionf), .)
@@ -243,6 +244,8 @@ filterSegCover_ <- function(regionf, rateMat, overlaprate, shortlen) {
     coverRegion <- list(start = start, end = end) %>%
       bind_cols %>%
       filter(end - start + 1 > shortlen) ## filter too short regions
+  } else {
+    return(NULL)
   }
 
   return(coverRegion)
@@ -253,7 +256,7 @@ filterSegCover_ <- function(regionf, rateMat, overlaprate, shortlen) {
 ##' @inheritParams OverlapRegionRate
 ##' @inheritParams FilterBlacklist
 ##' @importFrom magrittr %<>% %>%
-##' @importFrom dplyr filter bind_cols
+##' @importFrom dplyr filter bind_cols select mutate
 ##' @rdname filterutility
 ##' @keywords internal
 ##'
@@ -264,12 +267,17 @@ filterSegInter_ <- function(regionf, rateMat, shortlen) {
 
   ## intersect =====~~~~~ or ~~~~==== (only these tow cases)
   ## no need to reduce
-  interRegion <- rateMat %>%
-    filter(tRate < 1) %>% ## select intersect regions
-    mutate(start = if_else(minf < maxstart, minf, minend + 1L)) %>%
-    mutate(end = if_else(maxf > minend, maxf, maxstart - 1L)) %>% ## start/end
-    select(start:end) %>%
-    filter(end - start + 1 > shortlen)
+  rateMat %<>% filter(tRate < 1)
+  ## no tRate < 1 is filtered
+  if (nrow(rateMat) == 0) {
+    return(NULL)
+  } else {
+    interRegion <- rateMat %>% ## select intersect regions
+      mutate(start = if_else(minf < maxstart, minf, minend + 1L)) %>%
+      mutate(end = if_else(maxf > minend, maxf, maxstart - 1L)) %>% ## start/end
+      select(start:end) %>%
+      filter(end - start + 1 > shortlen)
+  }
 
   return(interRegion)
 
