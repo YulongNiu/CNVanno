@@ -167,7 +167,7 @@ setMethod(f = 'FilterBlacklist',
 ##'
 filterSeg_ <- function(regionf, rateMat, chr, type) {
   # Example:
-  ## rM <- tibble(start = c(9L, 2L, 5L, 8L, 3L, 1L, 15L), end = c(15L, 6L, 6L, 9L, 20L, 4L, 32L))
+  ## rM <- tibble(start = c(9L, 2L, 5L, 8L, 3L, 1L, 15L, 10L), end = c(15L, 6L, 6L, 9L, 20L, 4L, 32L, 9L)) %>% SortRegion %>% ReduceRegion(gap = 0L)
   ## rf <- c(4L, 10L)
   ## rMf <- OverlapRegionRate(rf, rM) %>% filter(fRate > 0 & fRate <= 0.5)
   ## filterSeg_(rf, rMf, chr = 'chr6', type = 'gain')
@@ -219,6 +219,67 @@ filterSeg_ <- function(regionf, rateMat, chr, type) {
 }
 
 
+##' @inheritParams filterSeg_
+##' @inheritParams OverlapRegionRate
+##' @inheritParams FilterBlacklist
+##' @importFrom magrittr %<>% %>%
+##' @importFrom dplyr filter bind_cols
+##' @rdname filterutility
+##' @keywords internal
+##'
+filterSegCover_ <- function(regionf, rateMat, overlaprate, shortlen) {
+  ## step1: check the sum rate of intersection regions is larger than `overlaprate`
+  rateMat %<>% filter(tRate == 1)
+
+  sumRate <- rateMat %>%
+    select(fRate) %>%
+    sum
+
+  if(sumRate >= overlaprate) {
+    return(NULL)
+  } else {
+    ## step2: get gaps
+    start <- (rateMat$minend + 1L) %>%
+      c(min(regionf), .)
+    end <- (rateMat$maxstart - 1L) %>%
+      c(max(regionf))
+
+    coverRegion <- list(start = start, end = end) %>%
+      bind_cols %>%
+      filter(start - end + 1 > shortlen) ## filter too short regions
+  }
+
+  return(coverRegion)
+}
+
+
+##' @inheritParams filterSeg_
+##' @inheritParams OverlapRegionRate
+##' @inheritParams FilterBlacklist
+##' @importFrom magrittr %<>% %>%
+##' @importFrom dplyr filter bind_cols
+##' @rdname filterutility
+##' @keywords internal
+##'
+filterSegInter_ <- function(regionf, rateMat, shortlen) {
+
+  minf <- min(regionf)
+  maxf <- max(regionf)
+
+  ## intersect =====~~~~~ or ~~~~==== (only these tow cases)
+  ## no need to reduce
+  interRegion <- rateMat %>%
+    filter(tRate < 1) %>% ## select intersect regions
+    mutate(start = if_else(minf < maxstart, minf, minend)) %>%
+    mutate(end = if_else(maxf > minend, maxf, maxstart)) %>% ## start/end
+    select(star:end) %>%
+    filter(start - end + 1 > shortlen)
+
+  return(interRegion)
+
+}
+
+
 ##' @inheritParams FilterBlacklist
 ##' @param corerow A row of the CNV in a \code{tbl_df} form.
 ##' @importFrom magrittr %<>% %>%
@@ -241,9 +302,9 @@ filterRow_ <- function(corerow, blacklist, overlaprate) {
     OverlapRegionRate(select(corerow, start, end), .)
 
   frate <- rateMat$fRate
-  if (sum(frate > overlaprate) > 0) {
+  if (sum(frate >= overlaprate) > 0) {
     ## case 2: has overlap region with > overlaprate
-    return(filter(corerow, FALSE))
+    return(NULL)
   }
   else if (all(frate == 0)) {
     ## case 3: 0 overlap regions

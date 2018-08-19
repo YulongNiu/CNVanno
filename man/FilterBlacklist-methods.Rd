@@ -6,17 +6,19 @@
 \alias{FilterBlacklist,CoreCNV,tbl_df,numeric-method}
 \title{Filter \code{CoreCNV} according to a give blacklist}
 \usage{
-FilterBlacklist(core, blacklist, overlaprate, n, ...)
+FilterBlacklist(core, blacklist, overlaprate, shortlen, n, ...)
 
 \S4method{FilterBlacklist}{CoreCNV,tbl_df,numeric}(core, blacklist,
-  overlaprate, n, ...)
+  overlaprate, shortlen, n, ...)
 }
 \arguments{
 \item{core}{a \code{CoreCNV} object.}
 
 \item{blacklist}{A code{tbl_df} with at least three columns. 1st column is chromosome in the same format with \code{core}. 2nd and 3rd columns are start and end positions. Other columns can be included but will not be used. The blacklist must be reduced (use \code{ReduceRegionChr()}) and sorted (use \code{SortRegionChr()}).}
 
-\item{overlaprate}{The threshold of overlap rate (overlaplen/CNVlen).}
+\item{overlaprate}{The threshold of overlap rate (overlaplen/CNVlen). The CNVs with smaller than or equal to this rate will be filtered.}
+
+\item{shortlen}{A code{integer}. The CNVs with length shorter than or equal to this value will be filtered.}
 
 \item{n}{The number of threads for parallel computation.}
 

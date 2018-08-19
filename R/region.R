@@ -39,7 +39,14 @@
 ##' rMat <- tibble(start = c(1, 8, 14, 15, 19, 34, 40),
 ##'                end = c(12, 13, 19, 29, 24, 35, 46)) %>%
 ##'   SortRegion
-##' ReduceRegion(rMat, gap = 0L)
+##'
+##' rM <- tibble(start = as.integer(c(4, 2, 3, 5, 24, 27, 29, 28, 35)),
+##'              end = as.integer(c(1, 6, 20, 6, 25, 31, 30, 33, 37))) %>%
+##'   SortRegion
+##' ReduceRegion(rM, gap = 0L)
+##' ReduceRegion(rM, gap = 1L)
+##' ReduceRegion(rM, gap = 2L)
+##' ReduceRegion(rM, gap = 3L)
 ##' @author Yulong Niu \email{yulong.niu@@hotmail.com}
 ##' @importFrom magrittr %>% %<>%
 ##' @importFrom dplyr mutate if_else select
@@ -61,7 +68,7 @@ OverlapRegionRate <- function(regionf, regionMat) {
   regionMat %<>%
     mutate(fRate = interLen / fLen) %>%
     mutate(tRate = interLen / tLen) %>%
-    select(fRate, tRate, maxstart:minend)
+    select(fRate:tRate, maxstart:minend)
 
   return(regionMat)
 }
@@ -142,17 +149,45 @@ SortRegionChr <- function(regionMatChr) {
 ##'
 ReduceRegion <- function(regionMat, gap) {
 
+  ## Example
+  ## rM <- tibble(start = as.integer(c(1, 2, 3, 5, 24, 27, 29, 28, 35)), end = as.integer(c(4, 6, 20, 6, 25, 31, 30, 33, 37)))
+
   ## `regionMat` must be sorted by row and by column
   start <- regionMat$start
   end <- regionMat$end
+  startKeep <- integer()
+  endKeep <- integer()
 
-  inter <- c(FALSE, start[-1] - end[-length(end)] - 1 <= gap)
-  startIdx <- which(!inter)
-  endIdx <- c(startIdx[-1] - 1,
-              length(inter))
+  startKeep %<>% c(start[1])
+  searchEnd <- end[1]
+  maxEnd <- max(end)
 
-  res <- list(start = start[startIdx],
-              end = end[endIdx]) %>%
+  while(TRUE) {
+
+    ## find start with gaps
+    keepLogic <- searchEnd - start + 1 >= -gap
+
+    if(sum(keepLogic) == 0) {
+      endKeep %<>% c(searchEnd)
+
+      ## check last
+      if (searchEnd == maxEnd) {
+        break
+      } else {}
+
+      startKeep %<>% c(start[1])
+      searchEnd <- end[1]
+
+    } else {
+      searchEnd <- max(end[keepLogic])
+      ## update start and end
+      start %<>% `[`(!keepLogic)
+      end %<>% `[`(!keepLogic)
+    }
+  }
+
+  res <- list(start = startKeep,
+              end = endKeep) %>%
     bind_cols
 
   return(res)

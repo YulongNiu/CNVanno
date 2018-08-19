@@ -74,7 +74,14 @@ OverlapRegionRate(tReg, tMat)
 rMat <- tibble(start = c(1, 8, 14, 15, 19, 34, 40),
                end = c(12, 13, 19, 29, 24, 35, 46)) \%>\%
   SortRegion
-ReduceRegion(rMat, gap = 0L)
+
+rM <- tibble(start = as.integer(c(4, 2, 3, 5, 24, 27, 29, 28, 35)),
+             end = as.integer(c(1, 6, 20, 6, 25, 31, 30, 33, 37))) \%>\%
+  SortRegion
+ReduceRegion(rM, gap = 0L)
+ReduceRegion(rM, gap = 1L)
+ReduceRegion(rM, gap = 2L)
+ReduceRegion(rM, gap = 3L)
 }
 \author{
 Yulong Niu \email{yulong.niu@hotmail.com}

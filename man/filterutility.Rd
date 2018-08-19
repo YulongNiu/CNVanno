@@ -2,10 +2,16 @@
 % Please edit documentation in R/filter.R
 \name{filterSeg_}
 \alias{filterSeg_}
+\alias{filterSegCover_}
+\alias{filterSegInter_}
 \alias{filterRow_}
 \title{Internal functions for filtering}
 \usage{
 filterSeg_(regionf, rateMat, chr, type)
+
+filterSegCover_(regionf, rateMat, overlaprate, shortlen)
+
+filterSegInter_(regionf, rateMat, shortlen)
 
 filterRow_(corerow, blacklist, overlaprate)
 }
@@ -18,11 +24,13 @@ filterRow_(corerow, blacklist, overlaprate)
 
 \item{type}{A code{string} "gain", "loss", or "normal"}
 
+\item{overlaprate}{The threshold of overlap rate (overlaplen/CNVlen). The CNVs with smaller than or equal to this rate will be filtered.}
+
+\item{shortlen}{A code{integer}. The CNVs with length shorter than or equal to this value will be filtered.}
+
 \item{corerow}{A row of the CNV in a \code{tbl_df} form.}
 
 \item{blacklist}{A code{tbl_df} with at least three columns. 1st column is chromosome in the same format with \code{core}. 2nd and 3rd columns are start and end positions. Other columns can be included but will not be used. The blacklist must be reduced (use \code{ReduceRegionChr()}) and sorted (use \code{SortRegionChr()}).}
-
-\item{overlaprate}{The threshold of overlap rate (overlaplen/CNVlen).}
 }
 \value{
 A \code{tbl_df} of filtered fragments.
