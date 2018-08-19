@@ -250,7 +250,7 @@ filterSegCover_ <- function(regionf, rateMat, overlaprate, shortlen) {
       bind_cols %>%
       filter(end - start + 1 > shortlen) ## filter too short regions
   } else {
-    return(NULL)
+    return(filter(regionf, FALSE))
   }
 
   return(coverRegion)
@@ -275,7 +275,7 @@ filterSegInter_ <- function(regionf, rateMat, shortlen) {
   rateMat %<>% filter(tRate < 1 & tRate > 0)
   ## no tRate < 1 is filtered
   if (nrow(rateMat) == 0) {
-    return(NULL)
+    return(filter(regionf, FALSE))
   } else {
     interRegion <- rateMat %>% ## select intersect regions
       mutate(start = if_else(minf < maxstart, minf, minend + 1L)) %>%
@@ -313,7 +313,7 @@ filterRow_ <- function(corerow, blacklist, overlaprate, shortlen) {
   frate <- rateMat$fRate
   if (sum(frate >= overlaprate) > 0) {
     ## case 2: has overlap region with > overlaprate
-    return(NULL)
+    return(filter(corerow, FALSE))
   }
   else if (all(frate == 0)) {
     ## case 3: 0 overlap regions
