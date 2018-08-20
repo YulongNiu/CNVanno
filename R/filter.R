@@ -119,7 +119,8 @@ filter_cnvnator <- function(rawnator, sexchrom = TRUE) {
 ##' @importFrom foreach foreach %dopar%
 ##' @importFrom iterators iter
 ##' @importFrom magrittr %>%
-##' @importFrom dplyr bind_rows
+##' @importFrom dplyr bind_rows do group_by ungroup
+##' @importFrom tibble tibble
 ##' @importFrom methods new
 ##' @references \href{http://penncnv.openbioinformatics.org/en/latest/user-guide/annotation/#filtering-cnv-calls-by-user-specified-criteria}{cytoband extend}
 ##' @rdname FilterBlacklist-methods
@@ -144,14 +145,12 @@ setMethod(f = 'FilterBlacklist',
             ## stop multiple cores
             stopImplicitCluster()
 
-            ## coreFilter %<>%
-            ##   bind_rows %>%
-            ##   SortRegionChr %>% ## sort
-            ##   ReduceRegionChr(gap = 0L) %>% ## reduce again
-            ##   new('CoreCNV', coreCNV = .)
-
             coreFilter %<>%
               bind_rows %>%
+              group_by(chromosome, type, method) %>% ## sort reduce
+              do(SortRegion(tibble(start = .$start, end = .$end))) %>%
+              do(ReduceRegion(tibble(start = .$start, end = .$end), gap = 0L)) %>%
+              ungroup %>%
               new('CoreCNV', coreCNV = .)
 
             return(coreFilter)
@@ -393,11 +392,3 @@ bl_cytoband <- function(cyto, extend = 5e5L) {
 
 ## CNVanno:::filterRow_(nator@coreCNV[92, ], hg19bl, 0.5, 1000L)[2, ] %>% CNVanno:::filterRow_(bl_cytoband(hg19cyto), 0.5, 1000L)
 ## CNVanno:::filterRow_(nator@coreCNV[92, ], bl_cytoband(hg19cyto), 0.5, 1000L)
-
-
-## tmp1 <- list(hg19bl,  bl_cytoband(hg19cyto)) %>%
-##   bind_rows %>%
-##   SortRegionChr %>%
-##   ReduceRegionChr(gap = 0L) %>%
-##   FilterBlacklist(nator, ., overlaprate = 0.5, shortlen = 1000L, n = 2)
-
