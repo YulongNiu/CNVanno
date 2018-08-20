@@ -121,7 +121,7 @@ SortRegion <- function(regionMat) {
 ##' @inheritParams OverlapRegionRate
 ##' @inheritParams Segment
 ##' @rdname overlapregion
-##' @importFrom magrittr %>%
+##' @importFrom magrittr %>% %<>%
 ##' @importFrom dplyr bind_cols
 ##' @export
 ##'

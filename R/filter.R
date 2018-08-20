@@ -110,16 +110,17 @@ filter_cnvnator <- function(rawnator, sexchrom = TRUE) {
 ##'   Segment(gap = 10L)
 ##'
 ##' ## filter based on cytoband blacklist
-##' natorf <- FilterBlacklist(nator, bl_cytoband(hg19cyto), overlaprate = 0.5, shortlen = 1000L, n = 2)
+##' hg19cytobl <- bl_cytoband(hg19cyto)
+##' natorf <- FilterBlacklist(nator, hg19cytobl, overlaprate = 0.5, shortlen = 1000L, gap = 1000L, n = 2)
 ##'
 ##' ## more filter based on pre-built blacklist
-##' natorf <- FilterBlacklist(natorf, hg19bl, overlaprate = 0.5, shortlen = 1000L, n = 2)
+##' natorf <- FilterBlacklist(natorf, hg19bl, overlaprate = 0.5, shortlen = 1000L, gap = 1000L, n = 2)
 ##' @author Yulong Niu \email{yulong.niu@@hotmail.com}
 ##' @importFrom doParallel registerDoParallel stopImplicitCluster
 ##' @importFrom foreach foreach %dopar%
 ##' @importFrom iterators iter
 ##' @importFrom magrittr %>%
-##' @importFrom dplyr bind_rows do group_by ungroup
+##' @importFrom dplyr bind_rows do group_by ungroup select everything
 ##' @importFrom tibble tibble
 ##' @importFrom methods new
 ##' @references \href{http://penncnv.openbioinformatics.org/en/latest/user-guide/annotation/#filtering-cnv-calls-by-user-specified-criteria}{cytoband extend}
@@ -127,8 +128,8 @@ filter_cnvnator <- function(rawnator, sexchrom = TRUE) {
 ##' @exportMethod FilterBlacklist
 ##'
 setMethod(f = 'FilterBlacklist',
-          signature = c(core = 'CoreCNV', blacklist = 'tbl_df', overlaprate = 'numeric', shortlen = 'integer'),
-          definition = function(core, blacklist, overlaprate, shortlen, n, ...) {
+          signature = c(core = 'CoreCNV', blacklist = 'tbl_df', overlaprate = 'numeric', shortlen = 'integer', gap = 'integer'),
+          definition = function(core, blacklist, overlaprate, shortlen, gap, n, ...) {
             core <- core@coreCNV
 
             registerDoParallel(cores = n)
@@ -149,7 +150,8 @@ setMethod(f = 'FilterBlacklist',
               bind_rows %>%
               group_by(chromosome, type, method) %>% ## sort reduce
               do(SortRegion(tibble(start = .$start, end = .$end))) %>%
-              do(ReduceRegion(tibble(start = .$start, end = .$end), gap = 0L)) %>%
+              do(ReduceRegion(tibble(start = .$start, end = .$end), gap = gap)) %>%
+              select(chromosome, start:end, everything()) %>% ## colmuns in right order
               ungroup %>%
               new('CoreCNV', coreCNV = .)
 

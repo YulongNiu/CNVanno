@@ -3,13 +3,13 @@
 \docType{methods}
 \name{FilterBlacklist}
 \alias{FilterBlacklist}
-\alias{FilterBlacklist,CoreCNV,tbl_df,numeric,integer-method}
+\alias{FilterBlacklist,CoreCNV,tbl_df,numeric,integer,integer-method}
 \title{Filter \code{CoreCNV} according to a give blacklist}
 \usage{
-FilterBlacklist(core, blacklist, overlaprate, shortlen, n, ...)
+FilterBlacklist(core, blacklist, overlaprate, shortlen, gap, n, ...)
 
-\S4method{FilterBlacklist}{CoreCNV,tbl_df,numeric,integer}(core, blacklist,
-  overlaprate, shortlen, n, ...)
+\S4method{FilterBlacklist}{CoreCNV,tbl_df,numeric,integer,integer}(core,
+  blacklist, overlaprate, shortlen, gap, n, ...)
 }
 \arguments{
 \item{core}{a \code{CoreCNV} object.}
@@ -19,6 +19,8 @@ FilterBlacklist(core, blacklist, overlaprate, shortlen, n, ...)
 \item{overlaprate}{The threshold of overlap rate (overlaplen/CNVlen). The CNVs with smaller than or equal to this rate will be filtered.}
 
 \item{shortlen}{A code{integer}. The CNVs with length shorter than or equal to this value will be filtered.}
+
+\item{gap}{An \code{integer} indicate the allowed length between two regions (at same chromosome with same type).}
 
 \item{n}{The number of threads for parallel computation.}
 
@@ -44,10 +46,11 @@ nator <- system.file('extdata', 'example.cnvnator', package = 'CNVanno') \%>\%
   Segment(gap = 10L)
 
 ## filter based on cytoband blacklist
-natorf <- FilterBlacklist(nator, bl_cytoband(hg19cyto), overlaprate = 0.5, shortlen = 1000L, n = 2)
+hg19cytobl <- bl_cytoband(hg19cyto)
+natorf <- FilterBlacklist(nator, hg19cytobl, overlaprate = 0.5, shortlen = 1000L, gap = 1000L, n = 2)
 
 ## more filter based on pre-built blacklist
-natorf <- FilterBlacklist(natorf, hg19bl, overlaprate = 0.5, shortlen = 1000L, n = 2)
+natorf <- FilterBlacklist(natorf, hg19bl, overlaprate = 0.5, shortlen = 1000L, gap = 1000L, n = 2)
 }
 \references{
 \href{http://penncnv.openbioinformatics.org/en/latest/user-guide/annotation/#filtering-cnv-calls-by-user-specified-criteria}{cytoband extend}
