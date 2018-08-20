@@ -4,9 +4,7 @@
 ##'   \item \code{OverlapRegionRate()}: Check if extended regions have intersections with overlap rates.
 ##'   \item \code{OverlapRegion()}: Check regions have interactions
 ##'   \item \code{SortRegion()}: Sort the "start" and "end" columns resulting in the "start" column is less than or equal to that of the "end" column. At last, the "start" column is also sorted.
-##'   \item \code{SortRegionChr()}: Sort the input which is split by the "chromosome" column.
 ##'   \item \code{ReduceRegion()}: Merge concatenated regions.
-##'   \item \code{ReduceRegionChr()}: Merge concatenated regions by the "chromosome" column.
 ##' }
 ##' @title Overlapped regions
 ##' @param regionf A \code{numeric} vector with length two, and the value of 1st position is smaller/equal to that of 2nd position.
@@ -16,9 +14,7 @@
 ##'   \item \code{OverlapRegionRate()}: A \code{logic} value.
 ##'   \item \code{OverlapRegion()}: A \code{numeric} matrix with four columns. 1st column is the overlap rate of `regionf`, 2nd column is the overlap rate of `regionMat`, 3rd and 4th columns are intersection start and end regions.
 ##'   \item \code{SortRegion()}: The same object as the input.
-##'   \item \code{SortRegionChr()}: The same object as the input.
 ##'   \item \code{ReduceRegion()}: The same object as the input.
-##'   \item \code{ReduceRegion()}: The same object as the input but only "chromosome", "start", and "end" columns are kept.
 ##' }
 ##' @examples
 ##' require('magrittr')
@@ -122,24 +118,6 @@ SortRegion <- function(regionMat) {
   return(regionMat)
 }
 
-
-##' @param regionMatChr A \code{tbl_df} with at least columns named "chromosome", "start", and "end".
-##' @rdname overlapregion
-##' @importFrom magrittr %<>% %>%
-##' @importFrom dplyr bind_rows
-##' @export
-##'
-SortRegionChr <- function(regionMatChr) {
-
-  regionMatChr %<>%
-    split(., .$chromosome) %>%
-    lapply(SortRegion) %>%
-    bind_rows
-
-  return(regionMatChr)
-}
-
-
 ##' @inheritParams OverlapRegionRate
 ##' @inheritParams Segment
 ##' @rdname overlapregion
@@ -191,22 +169,4 @@ ReduceRegion <- function(regionMat, gap) {
     bind_cols
 
   return(res)
-}
-
-
-##' @inheritParams SortRegionChr
-##' @inheritParams Segment
-##' @rdname overlapregion
-##' @importFrom magrittr %>%
-##' @importFrom dplyr group_by do
-##' @importFrom tibble tibble
-##' @export
-##'
-ReduceRegionChr <- function(regionMatChr, gap) {
-
-  regionbl <- regionMatChr %>%
-    group_by(chromosome) %>%
-    do(ReduceRegion(tibble(start = .$start, end = .$end), gap = gap))
-
-  return(regionbl)
 }
