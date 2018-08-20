@@ -144,10 +144,14 @@ setMethod(f = 'FilterBlacklist',
             ## stop multiple cores
             stopImplicitCluster()
 
+            ## coreFilter %<>%
+            ##   bind_rows %>%
+            ##   SortRegionChr %>% ## sort
+            ##   ReduceRegionChr(gap = 0L) %>% ## reduce again
+            ##   new('CoreCNV', coreCNV = .)
+
             coreFilter %<>%
               bind_rows %>%
-              SortRegionChr %>% ## sort
-              ReduceRegionChr(gap = 0L) %>% ## reduce again
               new('CoreCNV', coreCNV = .)
 
             return(coreFilter)
@@ -164,9 +168,10 @@ setMethod(f = 'FilterBlacklist',
 ##'
 ##' @title Internal functions for filtering
 ##' @inheritParams OverlapRegionRate
-##' @inheritParams segMergeType_
 ##' @inheritParams FilterBlacklist
 ##' @param rateMat The output of \code{OverlapRegionRate()} in this package.
+##' @param chr A \code{string} indicating the chromosome, like "chr1", "chr2".
+##' @param type A code{string} "gain", "loss", or "normal"
 ##' @param method A \code{string} indicating the CNV calling method.
 ##' @return A \code{tbl_df} of filtered fragments.
 ##' @author Yulong Niu \email{yulong.niu@@hotmail.com}
@@ -224,8 +229,6 @@ filterSeg_ <- function(regionf, rateMat, overlaprate, shortlen, chr, type, metho
 
 
 ##' @inheritParams filterSeg_
-##' @inheritParams OverlapRegionRate
-##' @inheritParams FilterBlacklist
 ##' @importFrom magrittr %<>% %>%
 ##' @importFrom dplyr filter select bind_cols
 ##' @rdname filterutility
@@ -262,8 +265,6 @@ filterSegCover_ <- function(regionf, rateMat, overlaprate, shortlen) {
 
 
 ##' @inheritParams filterSeg_
-##' @inheritParams OverlapRegionRate
-##' @inheritParams FilterBlacklist
 ##' @importFrom magrittr %<>% %>%
 ##' @importFrom dplyr filter bind_cols select mutate
 ##' @rdname filterutility
@@ -353,7 +354,8 @@ filterRow_ <- function(corerow, blacklist, overlaprate, shortlen) {
 ##' bl_cytoband(hg19cyto, extend = 5e5L)
 ##' @author Yulong Niu \email{yulong.niu@@hotmail.com}
 ##' @importFrom magrittr %>%
-##' @importFrom dplyr filter mutate
+##' @importFrom dplyr filter mutate do group_by ungroup
+##' @importFrom tibble tibble
 ##' @export
 ##'
 bl_cytoband <- function(cyto, extend = 5e5L) {
@@ -365,17 +367,17 @@ bl_cytoband <- function(cyto, extend = 5e5L) {
     group_by(chromosome) %>% ## sort reduce sort by chromosome
     do(SortRegion(tibble(start = .$start, end = .$end))) %>%
     do(ReduceRegion(tibble(start = .$start, end = .$end), gap = 0L)) %>%
-    do(SortRegion(tibble(start = .$start, end = .$end)))
+    do(SortRegion(tibble(start = .$start, end = .$end))) %>%
+    ungroup
 
   return(cytobl)
 }
 
 
-
-##  nator <- system.file('extdata', 'example.cnvnator', package = 'CNVanno') %>%
-##    read_cnvnator %>%
-##    filter_cnvnator %>%
-##    Segment(gap = 10L)
+## nator <- system.file('extdata', 'example.cnvnator', package = 'CNVanno') %>%
+##   read_cnvnator %>%
+##   filter_cnvnator %>%
+##   Segment(gap = 10L)
 
 ## FilterBlacklist(nator, bl_cytoband(hg19cyto), overlaprate = 0.5, shortlen = 1000L, n = 2) %>%
 ##   FilterBlacklist(hg19bl, overlaprate = 0.5, shortlen = 1000L, n = 2) %>%
@@ -393,9 +395,9 @@ bl_cytoband <- function(cyto, extend = 5e5L) {
 ## CNVanno:::filterRow_(nator@coreCNV[92, ], bl_cytoband(hg19cyto), 0.5, 1000L)
 
 
-tmp1 <- list(hg19bl,  bl_cytoband(hg19cyto)) %>%
-  bind_rows %>%
-  SortRegionChr %>%
-  ReduceRegionChr(gap = 0L) %>%
-  FilterBlacklist(nator, ., overlaprate = 0.5, shortlen = 1000L, n = 2)
+## tmp1 <- list(hg19bl,  bl_cytoband(hg19cyto)) %>%
+##   bind_rows %>%
+##   SortRegionChr %>%
+##   ReduceRegionChr(gap = 0L) %>%
+##   FilterBlacklist(nator, ., overlaprate = 0.5, shortlen = 1000L, n = 2)
 
