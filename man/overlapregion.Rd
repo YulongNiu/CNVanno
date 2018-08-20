@@ -3,27 +3,33 @@
 \name{OverlapRegionRate}
 \alias{OverlapRegionRate}
 \alias{OverlapRegion}
-\alias{SortMat}
+\alias{SortRegion}
+\alias{ReduceRegion}
 \title{Overlapped regions}
 \usage{
 OverlapRegionRate(regionf, regionMat)
 
-OverlapRegion(regionf, regionMat, extend = 100)
+OverlapRegion(regionf, regionMat, extend = 100L)
 
-SortMat(regionMat)
+SortRegion(regionMat)
+
+ReduceRegion(regionMat, gap)
 }
 \arguments{
 \item{regionf}{A \code{numeric} vector with length two, and the value of 1st position is smaller/equal to that of 2nd position.}
 
-\item{regionMat}{A \code{numeric} matrix with 2 columns. In the \code{OverlapRegionRate()} function, the rows should have overlap with the input \code{reginf}. The 1st column should be equal or smaller than the 2nd column, otherwise use the \code{SortMat()} sort the \code{regionMat} at first.}
+\item{regionMat}{A \code{tbl_df} with at least 2 columns named "start" and "end". In the \code{OverlapRegionRate()} and \code{ReduceRegion()} function, use the \code{SortRegion()} to sort the \code{regionMat} at first.}
 
-\item{extend}{A \code{numeric} value indicates the extended length in both direction.}
+\item{extend}{A \code{integer} value indicates the extended length in both direction.}
+
+\item{gap}{An \code{integer} indicate the allowed length between two regions (at same chromosome with same type).}
 }
 \value{
 \itemize{
   \item \code{OverlapRegionRate()}: A \code{logic} value.
-  \item \code{OverlapRegion()}: A \code{numeric} matrix with two columns. 1st column is the overlap rate of `regionf`, 2nd column is the overlap rate of `regionMat`.
-  \item \code{SortMat()}: A same object as the input \code{regionMat}
+  \item \code{OverlapRegion()}: A \code{numeric} matrix with four columns. 1st column is the overlap rate of `regionf`, 2nd column is the overlap rate of `regionMat`, 3rd and 4th columns are intersection start and end regions.
+  \item \code{SortRegion()}: The same object as the input.
+  \item \code{ReduceRegion()}: The same object as the input.
 }
 }
 \description{
@@ -33,20 +39,37 @@ Find regions have intersections
 \itemize{
   \item \code{OverlapRegionRate()}: Check if extended regions have intersections with overlap rates.
   \item \code{OverlapRegion()}: Check regions have interactions
-  \item \code{SortMat()}: Sort the 1st and 2nd columns resulting in 1st column is less than or equal to that of 2nd column.
+  \item \code{SortRegion()}: Sort the "start" and "end" columns resulting in the "start" column is less than or equal to that of the "end" column. At last, the "start" column is also sorted.
+  \item \code{ReduceRegion()}: Merge concatenated regions.
 }
 }
 \examples{
 require('magrittr')
+require('tibble')
 
-tMat <- matrix(c(1, 101, 103, 112, 111, 1000, 8, 149, 10, 86), ncol = 2, byrow = TRUE)
-tReg <- c(100, 110)
+tMat <- tibble(start = c(1L, 103L, 111L, 49L, 10L),
+               end = c(101L, 112L, 1000L, 8L, 86L)) \%>\%
+  SortRegion
+tReg <- c(100L, 110L)
 
 ## overlapped regions
-inLogic <- OverlapRegion(tReg, tMat, extend = 0)
+OverlapRegion(tReg, tMat, extend = 0L)
 
 ## overlap rate
-OverlapRegionRate(tReg, tMat[inLogic, ])
+OverlapRegionRate(tReg, tMat)
+
+## reduce region
+rMat <- tibble(start = c(1, 8, 14, 15, 19, 34, 40),
+               end = c(12, 13, 19, 29, 24, 35, 46)) \%>\%
+  SortRegion
+
+rM <- tibble(start = as.integer(c(4, 2, 3, 5, 24, 27, 29, 28, 35)),
+             end = as.integer(c(1, 6, 20, 6, 25, 31, 30, 33, 37))) \%>\%
+  SortRegion
+ReduceRegion(rM, gap = 0L)
+ReduceRegion(rM, gap = 1L)
+ReduceRegion(rM, gap = 2L)
+ReduceRegion(rM, gap = 3L)
 }
 \author{
 Yulong Niu \email{yulong.niu@hotmail.com}

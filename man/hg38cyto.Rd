@@ -4,7 +4,7 @@
 \name{hg38cyto}
 \alias{hg38cyto}
 \title{Cytobands of hg38 genome from the UCSC goldenpath}
-\format{A \code{data.frame}}
+\format{A \code{tbl_df}}
 \description{
 The default hg38 cytobands.
 }
