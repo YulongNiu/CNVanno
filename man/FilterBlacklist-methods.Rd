@@ -47,7 +47,7 @@ nator <- system.file('extdata', 'example.cnvnator', package = 'CNVanno') \%>\%
 
 ## filter based on cytoband blacklist
 hg19cytobl <- bl_cytoband(hg19cyto)
-natorf <- FilterBlacklist(nator, hg19cytobl, overlaprate = 0.5, shortlen = 10L, gap = 1000L, n = 2)
+natorf <- FilterBlacklist(nator, hg19cytobl, overlaprate = 0.5, shortlen = 10L, gap = 0L, n = 2)
 
 ## more filter based on pre-built blacklist
 natorf <- FilterBlacklist(natorf, hg19bl, overlaprate = 0.5, shortlen = 10L, gap = 1000L, n = 2)

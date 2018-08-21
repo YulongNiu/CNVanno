@@ -34,5 +34,6 @@ Collate:
     'dataDef.R'
     'filter.R'
     'gloableChkVar.R'
+    'merge.R'
     'rw.R'
     'segment.R'

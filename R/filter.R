@@ -111,7 +111,7 @@ filter_cnvnator <- function(rawnator, sexchrom = TRUE) {
 ##'
 ##' ## filter based on cytoband blacklist
 ##' hg19cytobl <- bl_cytoband(hg19cyto)
-##' natorf <- FilterBlacklist(nator, hg19cytobl, overlaprate = 0.5, shortlen = 10L, gap = 1000L, n = 2)
+##' natorf <- FilterBlacklist(nator, hg19cytobl, overlaprate = 0.5, shortlen = 10L, gap = 0L, n = 2)
 ##'
 ##' ## more filter based on pre-built blacklist
 ##' natorf <- FilterBlacklist(natorf, hg19bl, overlaprate = 0.5, shortlen = 10L, gap = 1000L, n = 2)
@@ -381,14 +381,13 @@ bl_cytoband <- function(cyto, extend = 5e5L) {
 ##   Segment(gap = 10L)
 
 
-
-## FilterBlacklist(nator, bl_cytoband(hg19cyto), overlaprate = 0.5, shortlen = 1000L, gap = 100000L, n = 2) %>%
+## FilterBlacklist(nator, bl_cytoband(hg19cyto), overlaprate = 0.5, shortlen = 1000L, gap = 0L, n = 2) %>%
 ##   FilterBlacklist(hg19bl, overlaprate = 0.5, shortlen = 1000L, gap = 100000L, n = 2) %>%
 ##   slot('coreCNV') %>%
 ##   write.csv('tmp1.csv')
 
 
-## FilterBlacklist(nator, hg19bl, overlaprate = 0.5, shortlen = 1000L, gap = 100000L, n = 2) %>%
+## FilterBlacklist(nator, hg19bl, overlaprate = 0.5, shortlen = 1000L, gap = 0L, n = 2) %>%
 ##   FilterBlacklist(bl_cytoband(hg19cyto), overlaprate = 0.5, shortlen = 1000L, gap = 100000L, n = 2) %>%
 ##   slot('coreCNV') %>%
 ##   write.csv('tmp2.csv')
@@ -403,8 +402,8 @@ bl_cytoband <- function(cyto, extend = 5e5L) {
 ##   Segment(gap = 10L)
 
 
-## FilterBlacklist(kit, bl_cytoband(hg19cyto), overlaprate = 0.5, shortlen = 1000L, gap = 100000L, n = 2) %>%
-##   FilterBlacklist(hg19bl, overlaprate = 0.5, shortlen = 1000L, gap = 100000L, n = 2)
+## FilterBlacklist(kit, bl_cytoband(hg19cyto), overlaprate = 0.5, shortlen = 1000L, gap = 0L, n = 2) %>%
+##   FilterBlacklist(hg19bl, overlaprate = 0.5, shortlen = 1000L, gap = 1000000L, n = 2)
 
-## FilterBlacklist(kit, hg19bl, overlaprate = 0.5, shortlen = 1000L, gap = 100000L, n = 2) %>%
-##   FilterBlacklist(bl_cytoband(hg19cyto), overlaprate = 0.5, shortlen = 1000L, gap = 100000L, n = 2)
+## FilterBlacklist(kit, hg19bl, overlaprate = 0.5, shortlen = 1000L, gap = 0L, n = 2) %>%
+##   FilterBlacklist(bl_cytoband(hg19cyto), overlaprate = 0.5, shortlen = 1000L, gap = 1000000L, n = 2)
