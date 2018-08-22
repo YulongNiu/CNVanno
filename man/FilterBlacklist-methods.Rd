@@ -12,7 +12,7 @@ FilterBlacklist(core, blacklist, overlaprate, shortlen, gap, n, ...)
   blacklist, overlaprate, shortlen, gap, n, ...)
 }
 \arguments{
-\item{core}{a \code{CoreCNV} object.}
+\item{core}{A \code{CoreCNV} object.}
 
 \item{blacklist}{A code{tbl_df} with at least three columns. 1st column is chromosome in the same format with \code{core}. 2nd and 3rd columns are start and end positions. Other columns can be included but will not be used. The blacklist must be reduced (use \code{ReduceRegionChr()}) and sorted (use \code{SortRegionChr()}).}
 
@@ -33,7 +33,7 @@ A \code{CoreCNV} object.
 Filtering \code{CoreCNV}.
 }
 \details{
-Filer the \code{CoreCNV} according black lists. Multiple black lists can be applied as the example show below. q
+Filer the \code{CoreCNV} according black lists. Multiple black lists can be applied as the example show below.
 }
 \examples{
 library('magrittr')
@@ -53,7 +53,7 @@ natorf <- FilterBlacklist(nator, hg19cytobl, overlaprate = 0.5, shortlen = 10L, 
 natorf <- FilterBlacklist(natorf, hg19bl, overlaprate = 0.5, shortlen = 10L, gap = 1000L, n = 2)
 }
 \references{
-\href{http://penncnv.openbioinformatics.org/en/latest/user-guide/annotation/#filtering-cnv-calls-by-user-specified-criteria}{cytoband extend}
+\href{https://jmg.bmj.com/content/early/2018/07/30/jmedgenet-2018-105272}{filter methods}
 }
 \author{
 Yulong Niu \email{yulong.niu@hotmail.com}

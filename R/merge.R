@@ -14,13 +14,10 @@ NULL
 ##' data(nator)
 ##' data(kit)
 ##'
-##' ## Merge(nator, kit, reciprate = 0.5, n = 2)
+##' Merge(list(nator, kit), reciprate = 0.5, n = 2)
 ##' @author Yulong Niu \email{yulong.niu@@hotmail.com}
-##' @importFrom doParallel registerDoParallel stopImplicitCluster
-##' @importFrom foreach foreach %dopar%
-##' @importFrom iterators iter
 ##' @importFrom magrittr %>%
-##' @importFrom dplyr bind_rows do group_by ungroup select everything
+##' @importFrom dplyr do group_by ungroup select everything
 ##' @importFrom tibble tibble
 ##' @importFrom methods new
 ##' @rdname Merge-methods
@@ -29,7 +26,15 @@ NULL
 setMethod(f = 'Merge',
           signature = c(corelist = 'list', reciprate = 'numeric'),
           definition = function(corelist, reciprate, n, ...) {
+            res <- corelist %>%
+              mergePrepare_ %>%
+              group_by(chromosome, type) %>%
+              do(mergeSearch_(tibble(start = .$start, end = .$end, method = .$method), reciprate = reciprate, n = n)) %>%
+              ungroup %>%
+              select(chromosome, start:end, everything()) %>%
+              new('CoreCNV', coreCNV = .)
 
+            return(res)
             })
 
 
@@ -43,7 +48,7 @@ setMethod(f = 'Merge',
 ##' }
 ##'
 ##' @title Internal functions for merge
-##' @inheritParams merge
+##' @inheritParams Merge
 ##' @return
 ##' \itemize{
 ##'   \item \code{mergePrepare_()}: A \code{tbl_df} merged CNV.
@@ -61,11 +66,7 @@ mergePrepare_ <- function(corelist) {
 
   core <- corelist %>%
     lapply(function(x) {return(x@coreCNV)}) %>%
-    bind_rows %>% ## row bind CNVs
-    group_by(chromosome, type) %>% ## sort
-    do(SortRegion(tibble(start = .$start, end = .$end, method = .$method))) %>%
-    select(chromosome, start:end, everything()) %>% ## order columns
-    ungroup()
+    bind_rows ## row bind
 
   return(core)
 }

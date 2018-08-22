@@ -123,7 +123,7 @@ filter_cnvnator <- function(rawnator, sexchrom = TRUE) {
 ##' @importFrom dplyr bind_rows do group_by ungroup select everything
 ##' @importFrom tibble tibble
 ##' @importFrom methods new
-##' @references \href{http://penncnv.openbioinformatics.org/en/latest/user-guide/annotation/#filtering-cnv-calls-by-user-specified-criteria}{cytoband extend}
+##' @references \href{https://jmg.bmj.com/content/early/2018/07/30/jmedgenet-2018-105272}{filter methods}
 ##' @rdname FilterBlacklist-methods
 ##' @exportMethod FilterBlacklist
 ##'
