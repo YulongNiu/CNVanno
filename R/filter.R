@@ -94,7 +94,7 @@ filter_cnvnator <- function(rawnator, sexchrom = TRUE) {
 
 ##' Filtering \code{CoreCNV}.
 ##'
-##' Filer the \code{CoreCNV} according black lists. Multiple black lists can be applied as the example show below. q
+##' Filer the \code{CoreCNV} according black lists. Multiple black lists can be applied as the example show below.
 ##'
 ##' @title Filter \code{CoreCNV} according to a give blacklist
 ##' @inheritParams FilterBlacklist
@@ -220,8 +220,8 @@ filterSeg_ <- function(regionf, rateMat, overlaprate, shortlen, chr, type, metho
     filter(start != min(regionf) & end != max(regionf))
 
   seg <- bind_rows(list(leftSeg, rightSeg, midSeg)) %>%
-    mutate(chromosome = chr, type = type, method = method) %>%
-    SortRegion %>%
+    SortRegion %>% ## sort
+    mutate(chromosome = chr, type = type, method = method) %>% ## other columns
     select(chromosome, everything())
 
   return(seg)
@@ -357,6 +357,7 @@ filterRow_ <- function(corerow, blacklist, overlaprate, shortlen) {
 ##' @importFrom magrittr %>%
 ##' @importFrom dplyr filter mutate do group_by ungroup
 ##' @importFrom tibble tibble
+##' @references \href{http://penncnv.openbioinformatics.org/en/latest/user-guide/annotation/#filtering-cnv-calls-by-user-specified-criteria}{cytoband extend}
 ##' @export
 ##'
 bl_cytoband <- function(cyto, extend = 5e5L) {

@@ -8,7 +8,7 @@
 ##' }
 ##' @title Overlapped regions
 ##' @param regionf A \code{numeric} vector with length two, and the value of 1st position is smaller/equal to that of 2nd position.
-##' @param regionMat A \code{tbl_df} with at least 2 columns named "start" and "end". In the \code{OverlapRegionRate()} and \code{ReduceRegion()} function, use the \code{SortRegion()} to sort the \code{regionMat} at first.
+##' @param regionMat A \code{tbl_df} with at least 2 columns named "start" and "end". In the \code{OverlapRegionRate()} and \code{ReduceRegion()} function, use the \code{SortRegion()} to sort the \code{regionMat} at first. In \code{SortRegion()}, the `regionMat` may contain other columns.
 ##' @return
 ##' \itemize{
 ##'   \item \code{OverlapRegionRate()}: A \code{logic} value.
