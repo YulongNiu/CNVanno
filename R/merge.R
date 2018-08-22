@@ -10,7 +10,7 @@ NULL
 ##' @inheritParams Merge
 ##' @return A \code{CoreCNV} object.
 ##' @examples
-##' library('magrittr')
+##' require('magrittr')
 ##' data(nator)
 ##' data(kit)
 ##'

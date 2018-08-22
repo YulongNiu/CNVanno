@@ -29,7 +29,7 @@ Merge two \code{CoreCNV}.
 Merge CNVs with reciprocal overlap regions.
 }
 \examples{
-library('magrittr')
+require('magrittr')
 data(nator)
 data(kit)
 
