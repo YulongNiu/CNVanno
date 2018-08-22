@@ -94,7 +94,7 @@ filter_cnvnator <- function(rawnator, sexchrom = TRUE) {
 
 ##' Filtering \code{CoreCNV}.
 ##'
-##' Filer the \code{CoreCNV} according black lists. Multiple black lists can be applied as the example show below. q
+##' Filer the \code{CoreCNV} according black lists. Multiple black lists can be applied as the example show below.
 ##'
 ##' @title Filter \code{CoreCNV} according to a give blacklist
 ##' @inheritParams FilterBlacklist
@@ -110,25 +110,26 @@ filter_cnvnator <- function(rawnator, sexchrom = TRUE) {
 ##'   Segment(gap = 10L)
 ##'
 ##' ## filter based on cytoband blacklist
-##' natorf <- FilterBlacklist(nator, bl_cytoband(hg19cyto), overlaprate = 0.5, shortlen = 1000L, n = 2)
+##' hg19cytobl <- bl_cytoband(hg19cyto)
+##' natorf <- FilterBlacklist(nator, hg19cytobl, overlaprate = 0.5, shortlen = 10L, gap = 0L, n = 2)
 ##'
 ##' ## more filter based on pre-built blacklist
-##' natorf <- FilterBlacklist(natorf, hg19bl, overlaprate = 0.5, shortlen = 1000L, n = 2)
+##' natorf <- FilterBlacklist(natorf, hg19bl, overlaprate = 0.5, shortlen = 10L, gap = 1000L, n = 2)
 ##' @author Yulong Niu \email{yulong.niu@@hotmail.com}
 ##' @importFrom doParallel registerDoParallel stopImplicitCluster
 ##' @importFrom foreach foreach %dopar%
 ##' @importFrom iterators iter
 ##' @importFrom magrittr %>%
-##' @importFrom dplyr bind_rows do group_by ungroup
+##' @importFrom dplyr bind_rows do group_by ungroup select everything
 ##' @importFrom tibble tibble
 ##' @importFrom methods new
-##' @references \href{http://penncnv.openbioinformatics.org/en/latest/user-guide/annotation/#filtering-cnv-calls-by-user-specified-criteria}{cytoband extend}
+##' @references \href{https://jmg.bmj.com/content/early/2018/07/30/jmedgenet-2018-105272}{filter methods}
 ##' @rdname FilterBlacklist-methods
 ##' @exportMethod FilterBlacklist
 ##'
 setMethod(f = 'FilterBlacklist',
-          signature = c(core = 'CoreCNV', blacklist = 'tbl_df', overlaprate = 'numeric', shortlen = 'integer'),
-          definition = function(core, blacklist, overlaprate, shortlen, n, ...) {
+          signature = c(core = 'CoreCNV', blacklist = 'tbl_df', overlaprate = 'numeric', shortlen = 'integer', gap = 'integer'),
+          definition = function(core, blacklist, overlaprate, shortlen, gap, n, ...) {
             core <- core@coreCNV
 
             registerDoParallel(cores = n)
@@ -149,7 +150,8 @@ setMethod(f = 'FilterBlacklist',
               bind_rows %>%
               group_by(chromosome, type, method) %>% ## sort reduce
               do(SortRegion(tibble(start = .$start, end = .$end))) %>%
-              do(ReduceRegion(tibble(start = .$start, end = .$end), gap = 0L)) %>%
+              do(ReduceRegion(tibble(start = .$start, end = .$end), gap = gap)) %>%
+              select(chromosome, start:end, everything()) %>% ## colmuns in right order
               ungroup %>%
               new('CoreCNV', coreCNV = .)
 
@@ -218,8 +220,8 @@ filterSeg_ <- function(regionf, rateMat, overlaprate, shortlen, chr, type, metho
     filter(start != min(regionf) & end != max(regionf))
 
   seg <- bind_rows(list(leftSeg, rightSeg, midSeg)) %>%
-    mutate(chromosome = chr, type = type, method = method) %>%
-    SortRegion %>%
+    SortRegion %>% ## sort
+    mutate(chromosome = chr, type = type, method = method) %>% ## other columns
     select(chromosome, everything())
 
   return(seg)
@@ -355,6 +357,7 @@ filterRow_ <- function(corerow, blacklist, overlaprate, shortlen) {
 ##' @importFrom magrittr %>%
 ##' @importFrom dplyr filter mutate do group_by ungroup
 ##' @importFrom tibble tibble
+##' @references \href{http://penncnv.openbioinformatics.org/en/latest/user-guide/annotation/#filtering-cnv-calls-by-user-specified-criteria}{cytoband extend}
 ##' @export
 ##'
 bl_cytoband <- function(cyto, extend = 5e5L) {
@@ -378,17 +381,30 @@ bl_cytoband <- function(cyto, extend = 5e5L) {
 ##   filter_cnvnator %>%
 ##   Segment(gap = 10L)
 
-## FilterBlacklist(nator, bl_cytoband(hg19cyto), overlaprate = 0.5, shortlen = 1000L, n = 2) %>%
-##   FilterBlacklist(hg19bl, overlaprate = 0.5, shortlen = 1000L, n = 2) %>%
+
+## FilterBlacklist(nator, bl_cytoband(hg19cyto), overlaprate = 0.5, shortlen = 1000L, gap = 0L, n = 2) %>%
+##   FilterBlacklist(hg19bl, overlaprate = 0.5, shortlen = 1000L, gap = 100000L, n = 2) %>%
 ##   slot('coreCNV') %>%
 ##   write.csv('tmp1.csv')
 
 
-## FilterBlacklist(nator, hg19bl, overlaprate = 0.5, shortlen = 1000L, n = 2) %>%
-##   FilterBlacklist(bl_cytoband(hg19cyto), overlaprate = 0.5, shortlen = 1000L, n = 2) %>%
+## FilterBlacklist(nator, hg19bl, overlaprate = 0.5, shortlen = 1000L, gap = 0L, n = 2) %>%
+##   FilterBlacklist(bl_cytoband(hg19cyto), overlaprate = 0.5, shortlen = 1000L, gap = 100000L, n = 2) %>%
 ##   slot('coreCNV') %>%
 ##   write.csv('tmp2.csv')
 
 
 ## CNVanno:::filterRow_(nator@coreCNV[92, ], hg19bl, 0.5, 1000L)[2, ] %>% CNVanno:::filterRow_(bl_cytoband(hg19cyto), 0.5, 1000L)
 ## CNVanno:::filterRow_(nator@coreCNV[92, ], bl_cytoband(hg19cyto), 0.5, 1000L)
+
+## kit <- system.file('extdata', 'example.cnvkit', package = 'CNVanno') %>%
+##   read_cnvkit %>%
+##   filter_cnvkit %>%
+##   Segment(gap = 10L)
+
+
+## FilterBlacklist(kit, bl_cytoband(hg19cyto), overlaprate = 0.5, shortlen = 1000L, gap = 0L, n = 2) %>%
+##   FilterBlacklist(hg19bl, overlaprate = 0.5, shortlen = 1000L, gap = 1000000L, n = 2)
+
+## FilterBlacklist(kit, hg19bl, overlaprate = 0.5, shortlen = 1000L, gap = 0L, n = 2) %>%
+##   FilterBlacklist(bl_cytoband(hg19cyto), overlaprate = 0.5, shortlen = 1000L, gap = 1000000L, n = 2)

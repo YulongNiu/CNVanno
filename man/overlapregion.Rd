@@ -18,7 +18,7 @@ ReduceRegion(regionMat, gap)
 \arguments{
 \item{regionf}{A \code{numeric} vector with length two, and the value of 1st position is smaller/equal to that of 2nd position.}
 
-\item{regionMat}{A \code{tbl_df} with at least 2 columns named "start" and "end". In the \code{OverlapRegionRate()} and \code{ReduceRegion()} function, use the \code{SortRegion()} to sort the \code{regionMat} at first.}
+\item{regionMat}{A \code{tbl_df} with at least 2 columns named "start" and "end". In the \code{OverlapRegionRate()} and \code{ReduceRegion()} function, use the \code{SortRegion()} to sort the \code{regionMat} at first. In \code{SortRegion()}, the `regionMat` may contain other columns.}
 
 \item{extend}{A \code{integer} value indicates the extended length in both direction.}
 

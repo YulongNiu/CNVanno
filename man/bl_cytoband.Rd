@@ -25,6 +25,9 @@ data(hg19cyto)
 
 bl_cytoband(hg19cyto, extend = 5e5L)
 }
+\references{
+\href{http://penncnv.openbioinformatics.org/en/latest/user-guide/annotation/#filtering-cnv-calls-by-user-specified-criteria}{cytoband extend}
+}
 \author{
 Yulong Niu \email{yulong.niu@hotmail.com}
 }

@@ -11,7 +11,7 @@ Segment(raw, gap, ...)
 \S4method{Segment}{RawCNV,integer}(raw, gap, ...)
 }
 \arguments{
-\item{raw}{a \code{RawCNV} object.}
+\item{raw}{A \code{RawCNV} object.}
 
 \item{gap}{An \code{integer} indicate the allowed length between two regions (at same chromosome with same type).}
 
