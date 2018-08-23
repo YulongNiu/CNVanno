@@ -1,4 +1,4 @@
-##' @param raw A \code{RawCNV} object.
+##' @param raw A \code{RawCNV}/\code{CoreCNV} object.
 ##' @param gap An \code{integer} indicate the allowed length between two regions (at same chromosome with same type).
 ##' @param ... Additional parameters.
 ##' @rdname Segment-methods

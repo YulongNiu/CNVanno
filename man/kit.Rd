@@ -10,8 +10,8 @@
 kit <- system.file('extdata', 'example.cnvkit', package = 'CNVanno') %>%
   read_cnvkit %>%
   filter_cnvkit %>%
-  Segment(gap = 10L)
-  FilterBlacklist(kit, bl_cytoband(hg19cyto), overlaprate = 0.5, shortlen = 1000L, gap = 0L, n = 2) %>%
+  Segment(gap = 10L)%>%
+  FilterBlacklist(bl_cytoband(hg19cyto), overlaprate = 0.5, shortlen = 1000L, gap = 0L, n = 2) %>%
   FilterBlacklist(hg19bl, overlaprate = 0.5, shortlen = 1000L, gap = 1000000L, n = 2)
 }
 \author{
