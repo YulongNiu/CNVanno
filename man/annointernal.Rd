@@ -12,7 +12,7 @@ AnnoCNVType_(corerow, annodb, typerate = 0.7)
 \arguments{
 \item{corerow}{A row of the CNV in a \code{tbl_df} form.}
 
-\item{annodb}{A \code{tbl_df} indicating a single annotation database. In \code{AnnoCNVClinCore()}, it should at least contains "chromosome", "start", "end", "type" (gain or loss), and "clinical_significance" columns.}
+\item{annodb}{A \code{tbl_df} indicating a single annotation database. In \code{AnnoCNVClinCore()}, it should at least contains "chromosome", "start", "end", "type" (gain or loss), and "clinical_significance" columns. In \code{AnnoCNVPopuCore()}, it should at least contains "chromosome", "start", "end", "type" (gain or loss), may contain "gain_frequency"and "loss_frequency".}
 
 \item{reciprate}{The reciprocal overlap rate between two CNVs.}
 
