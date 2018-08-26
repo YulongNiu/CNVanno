@@ -29,6 +29,8 @@ VignetteBuilder: knitr
 Collate: 
     'AllClasses.R'
     'AllGenerics.R'
+    'anno_clin.R'
+    'anno_utilities.R'
     'region.R'
     'cyto.R'
     'dataDef.R'

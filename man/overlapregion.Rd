@@ -16,7 +16,7 @@ SortRegion(regionMat)
 ReduceRegion(regionMat, gap)
 }
 \arguments{
-\item{regionf}{A \code{numeric} vector with length two, and the value of 1st position is smaller/equal to that of 2nd position.}
+\item{regionf}{A row of \code{tbl_df} with at least two columns: "start" (integer) and "end" (integer).}
 
 \item{regionMat}{A \code{tbl_df} with at least 2 columns named "start" and "end". In the \code{OverlapRegionRate()} and \code{ReduceRegion()} function, use the \code{SortRegion()} to sort the \code{regionMat} at first. In \code{SortRegion()}, the `regionMat` may contain other columns.}
 
@@ -26,7 +26,7 @@ ReduceRegion(regionMat, gap)
 }
 \value{
 \itemize{
-  \item \code{OverlapRegionRate()}: A \code{logic} value.
+  \item \code{OverlapRegionRate()}: A \code{tbl_df}.
   \item \code{OverlapRegion()}: A \code{numeric} matrix with four columns. 1st column is the overlap rate of `regionf`, 2nd column is the overlap rate of `regionMat`, 3rd and 4th columns are intersection start and end regions.
   \item \code{SortRegion()}: The same object as the input.
   \item \code{ReduceRegion()}: The same object as the input.
@@ -50,7 +50,8 @@ require('tibble')
 tMat <- tibble(start = c(1L, 103L, 111L, 49L, 10L),
                end = c(101L, 112L, 1000L, 8L, 86L)) \%>\%
   SortRegion
-tReg <- c(100L, 110L)
+
+tReg <- tibble(chromosome = 'chr1', start = 100L, end = 110L)
 
 ## overlapped regions
 OverlapRegion(tReg, tMat, extend = 0L)

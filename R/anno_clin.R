@@ -4,9 +4,6 @@
 ##'   \item \code{AnnoCNVClinCore()}: Annotation of single CNV to the ClinGen and ClinVar database.
 ##' }
 ##' @title The ClinGen and ClinVar database annotation
-##' @param annoClin A \code{data.frame} of the ClinGen and ClinVar database.
-##' @param sigColName A \code{character} string indicating the benign and pathogentic column name.
-
 ##' @inheritParams AnnoCNVOverlap_
 ##' @inheritParams AnnoCNVType_
 ##' @return
@@ -15,31 +12,22 @@
 ##' }
 ##'
 ##' @examples
-##' require('magrittr')
-##' data(CNVdb)
-##'
-##' cnsFile <- system.file('extdata', 'example.cnvkit', package = 'CNVanno')
-##' cns <- cnsFile %>% read.cnvkit %>% filter.cnvkit
+##' data(kit)
 ##'
 ##' ## ClinGen
-##' AnnoCNVClinCore(cns[1, ], CNVdb$ClinGenGRCh38)
+##' AnnoCNVClinCore(kit@coreCNV[3, ], CNVdb$ClinGenGRCh37)
 ##'
 ##' ## ClinVar
-##' AnnoCNVClinCore(cns[1, ],
-##'                 CNVdb$ClinVarGRCh38,
-##'                 typeColName = 'Type',
-##'                 sigColName = 'ClinicalSignificance')
+##' AnnoCNVClinCore(kit@coreCNV[3, ], CNVdb$ClinVarGRCh37)
 ##' @author Yulong Niu \email{yulong.niu@@hotmail.com}
 ##' @importFrom magrittr %>%
 ##' @rdname clin
 ##' @export
 ##'
-AnnoCNVClinCore <- function(cnsSingle,
-                            annoClin,
-                            typeColName = 'variant_call_type',
-                            sigColName = 'clinical_significance',
-                            mutualRate = 0.5,
-                            typeRate = 0.7) {
+AnnoCNVClinCore <- function(corerow,
+                            annodb,
+                            reciprate = 0.5,
+                            typerate = 0.7) {
 
   res <- vector('list', 3)
   res[2:3] <- NA
@@ -47,14 +35,14 @@ AnnoCNVClinCore <- function(cnsSingle,
 
   ## step 1: if the cns is mapped ClinGen/ClinVar database
   ## step 2: gain and loss of the 'TYPE' column
-  anno <-  annoClin %>%
-    AnnoCNVOverlap_(cnsSingle, ., mutualRate) %>%
-    AnnoCNVType_(cnsSingle, ., typeColName, typeRate)
+  anno <-  annodb %>%
+    AnnoCNVOverlap_(corerow, ., reciprate) %>%
+    AnnoCNVType_(corerow, ., typerate)
   res[[1]] <- anno
 
   if (nrow(anno) > 0) {
     ## step 3: benign/pathogenic
-    bpList <- AnnoBenignPathoCheck_(anno[, sigColName])
+    bpList <- AnnoBenignPathoCheck_(anno$clinical_significance)
     res[[2]] <- bpList[[1]]
     res[[3]] <- bpList[[2]]
   } else {}
@@ -89,7 +77,7 @@ AnnoBenignPathoCheck_ <- function(annoSig) {
 
 
   res <- list(conflict = conflict,
-              sumSig = sumSig)
+              summary = sumSig)
 
   return(res)
 }

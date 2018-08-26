@@ -16,7 +16,7 @@ filterSegInter_(regionf, rateMat, shortlen)
 filterRow_(corerow, blacklist, overlaprate, shortlen)
 }
 \arguments{
-\item{regionf}{A \code{numeric} vector with length two, and the value of 1st position is smaller/equal to that of 2nd position.}
+\item{regionf}{A row of \code{tbl_df} with at least two columns: "start" (integer) and "end" (integer).}
 
 \item{rateMat}{The output of \code{OverlapRegionRate()} in this package.}
 
