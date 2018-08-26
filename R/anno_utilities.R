@@ -6,7 +6,7 @@
 ##'   \item \code{AnnoGainLossRateCheck_()}: Check the gain/loss annotation.
 ##' }
 ##' @title Annotation utilities
-##' @param annodb A \code{tbl_df} indicating a single annotation database. In \code{AnnoCNVClinCore()}, it should at least contains "chromosome", "start", "end", "type" (gain or loss), and "clinical_significance" columns. In \code{AnnoCNVPopuCore()}, it should at least contains "chromosome", "start", "end", "type" (gain or loss), may contain "gain_frequency"and "loss_frequency".
+##' @param annodb A \code{tbl_df} indicating a single annotation database. In \code{AnnoCNVClinCore()}, it should at least contains "chromosome", "start", "end", "type" (gain or loss), and "clinical_significance" columns. In \code{AnnoCNVPopuCore()}, it should at least contains "chromosome", "start", "end", "type" (gain or loss), may contain "gain_frequency"and "loss_frequency". In \code{AnnoCNVGeneCore()}, it should at least contains "chromosome", "start" and "end" columns.
 ##' @inheritParams filterRow_
 ##' @inheritParams Merge
 ##' @return

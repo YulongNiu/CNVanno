@@ -11,6 +11,7 @@
 ##'   \item \code{AnnoCNVPopuCore()}: A \code{list}
 ##' }
 ##' @examples
+##' data(CNVdb)
 ##' data(kit)
 ##'
 ##' ## DECIPHER_POPULATION

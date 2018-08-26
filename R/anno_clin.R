@@ -12,6 +12,7 @@
 ##' }
 ##'
 ##' @examples
+##' data(CNVdb)
 ##' data(kit)
 ##'
 ##' ## ClinGen

@@ -12,7 +12,7 @@ AnnoBenignPathoCheck_(annoSig)
 \arguments{
 \item{corerow}{A row of the CNV in a \code{tbl_df} form.}
 
-\item{annodb}{A \code{tbl_df} indicating a single annotation database. In \code{AnnoCNVClinCore()}, it should at least contains "chromosome", "start", "end", "type" (gain or loss), and "clinical_significance" columns. In \code{AnnoCNVPopuCore()}, it should at least contains "chromosome", "start", "end", "type" (gain or loss), may contain "gain_frequency"and "loss_frequency".}
+\item{annodb}{A \code{tbl_df} indicating a single annotation database. In \code{AnnoCNVClinCore()}, it should at least contains "chromosome", "start", "end", "type" (gain or loss), and "clinical_significance" columns. In \code{AnnoCNVPopuCore()}, it should at least contains "chromosome", "start", "end", "type" (gain or loss), may contain "gain_frequency"and "loss_frequency". In \code{AnnoCNVGeneCore()}, it should at least contains "chromosome", "start" and "end" columns.}
 
 \item{reciprate}{The reciprocal overlap rate between two CNVs.}
 
@@ -36,6 +36,7 @@ CNV ClinGen and ClinVar database annotation
 }
 }
 \examples{
+data(CNVdb)
 data(kit)
 
 ## ClinGen

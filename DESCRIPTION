@@ -30,6 +30,7 @@ Collate:
     'AllClasses.R'
     'AllGenerics.R'
     'anno_clin.R'
+    'anno_gene.R'
     'anno_population.R'
     'anno_utilities.R'
     'region.R'
