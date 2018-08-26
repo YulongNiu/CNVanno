@@ -92,7 +92,7 @@ mergeHasOverlap_ <- function(regf, regt, reciprate, n) {
   itx <- iter(regf, by = 'row')
 
   resLogic <- foreach(i = itx, .combine = `|`) %dopar% {
-    eachRate <- OverlapRegionRate(select(i, start, end), select(regt, start, end))
+    eachRate <- OverlapRegionRate(i, regt)
     return(eachRate$fRate > reciprate & eachRate$tRate > reciprate)
   }
 

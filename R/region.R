@@ -7,11 +7,11 @@
 ##'   \item \code{ReduceRegion()}: Merge concatenated regions.
 ##' }
 ##' @title Overlapped regions
-##' @param regionf A \code{numeric} vector with length two, and the value of 1st position is smaller/equal to that of 2nd position.
+##' @param regionf A row of \code{tbl_df} with at least two columns: "start" (integer) and "end" (integer).
 ##' @param regionMat A \code{tbl_df} with at least 2 columns named "start" and "end". In the \code{OverlapRegionRate()} and \code{ReduceRegion()} function, use the \code{SortRegion()} to sort the \code{regionMat} at first. In \code{SortRegion()}, the `regionMat` may contain other columns.
 ##' @return
 ##' \itemize{
-##'   \item \code{OverlapRegionRate()}: A \code{logic} value.
+##'   \item \code{OverlapRegionRate()}: A \code{tbl_df}.
 ##'   \item \code{OverlapRegion()}: A \code{numeric} matrix with four columns. 1st column is the overlap rate of `regionf`, 2nd column is the overlap rate of `regionMat`, 3rd and 4th columns are intersection start and end regions.
 ##'   \item \code{SortRegion()}: The same object as the input.
 ##'   \item \code{ReduceRegion()}: The same object as the input.
@@ -23,7 +23,8 @@
 ##' tMat <- tibble(start = c(1L, 103L, 111L, 49L, 10L),
 ##'                end = c(101L, 112L, 1000L, 8L, 86L)) %>%
 ##'   SortRegion
-##' tReg <- c(100L, 110L)
+##'
+##' tReg <- tibble(chromosome = 'chr1', start = 100L, end = 110L)
 ##'
 ##' ## overlapped regions
 ##' OverlapRegion(tReg, tMat, extend = 0L)
@@ -51,12 +52,15 @@
 ##'
 OverlapRegionRate <- function(regionf, regionMat) {
 
+  maxv <- select(regionf, start, end) %>% max
+  minv <- select(regionf, start, end) %>% min
+
   ## step1: calculate inter length
   regionMat %<>%
-    mutate(fLen = max(regionf) - min(regionf) + 1) %>%
+    mutate(fLen = maxv - minv + 1) %>%
     mutate(tLen = end - start + 1) %>%
-    mutate(maxstart = if_else(start > min(regionf), start, min(regionf))) %>%
-    mutate(minend = if_else(end < max(regionf), end, max(regionf))) %>%
+    mutate(maxstart = if_else(start > minv, start, minv)) %>%
+    mutate(minend = if_else(end < maxv, end, maxv)) %>%
     mutate(interLen = minend - maxstart + 1) %>%
     mutate(interLen = if_else(interLen < 0, 0, interLen))
 
@@ -79,12 +83,15 @@ OverlapRegionRate <- function(regionf, regionMat) {
 ##'
 OverlapRegion <- function(regionf, regionMat, extend = 100L) {
 
+  maxv <- select(regionf, start, end) %>% max
+  minv <- select(regionf, start, end) %>% min
+
   regionMat %<>%
     mutate(start = if_else(start > extend, start - extend, 0L)) %>%
     mutate(end = end + extend)
 
   olLogic <- regionMat %>%
-    transmute(start > max(regionf) | end < min(regionf)) %>%
+    transmute(start > maxv | end < minv) %>%
     unlist %>%
     unname
 

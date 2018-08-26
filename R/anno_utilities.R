@@ -6,9 +6,9 @@
 ##'   \item \code{AnnoGainLossRateCheck_()}: Check the gain/loss annotation.
 ##' }
 ##' @title Annotation utilities
-##' @param cnsSingle A \code{character} vector indicating a single CNV.
-##' @param annoSingle A \code{data.frame} indicating a single database.
-##' @param mutualRate A \code{numeric} value indicating the mutual overlap rate.
+##' @param annodb A \code{data.frame} indicating a single annotation database.
+##' @inheritParams filterRow_
+##' @inheritParams Merge
 ##' @return
 ##' \itemize{
 ##'   \item \code{AnnoCNVOverlap_()}: A \code{data.frame} with selected rows. The row number may be zero.
@@ -16,71 +16,54 @@
 ##'  \item \code{AnnoGainLossRateCheck_()}: A \code{logic} vector.
 ##' }
 ##' @author Yulong Niu \email{yulong.niu@@hotmail.com}
-##' @importFrom magrittr %>% is_greater_than equals
+##' @importFrom magrittr %>%
+##' @importFrom dplyr filter
 ##' @rdname annointernal
 ##' @keywords internal
 ##'
-AnnoCNVOverlap_ <- function(cnsSingle,
-                            annoSingle,
-                            mutualRate = 0.5) {
+AnnoCNVOverlap_ <- function(corerow,
+                            annodb,
+                            reciprate = 0.5) {
 
-  regionf <- as.numeric(cnsSingle[2:3])
-  anno <- annoSingle[annoSingle[, 1] %in% cnsSingle[1], ]
-
-  anno <- regionf %>%
-    OverlapRegion(anno[, 2:3, drop = FALSE]) %>%
-    anno[., , drop = FALSE]
-
-  if (nrow(anno) > 0) {
-    ## step 2: overlap rate
-    anno <- regionf %>%
-      OverlapRegionRate(anno[, 2:3, drop = FALSE]) %>%
-      is_greater_than(mutualRate) %>%
-      rowSums %>%
-      equals(2) %>%
-      anno[., , drop = FALSE]
+  ## step1: filter annodb
+  annodb %<>% filter(chromosome == corerow$chromosome)
+  if (nrow(annodb) == 0) {
+    return(filter(annodb, FALSE))
   } else {}
+
+  ## step2: select > reciprate anno
+  anno <- OverlapRegionRate(corerow, annodb) %>%
+    transmute(fRate > reciprate & tRate > reciprate) %>%
+    unlist %>%
+    filter(annodb, .)
 
   return(anno)
 }
 
 
-##' @param typeColName A \code{character} string indicating the gain/loss column name.
-##' @param typeRate A \code{numeric} value indicating the gain/loss rate.
+##' @param typerate A \code{numeric} value indicating the gain/loss rate.
 ##' @inheritParams AnnoCNVOverlap_
+##' @importFrom magrittr %>%
+##' @importFrom dplyr filter
 ##' @rdname annointernal
 ##' @keywords internal
 ##'
-AnnoCNVType_ <- function(cnsSingle,
-                         annoSingle,
-                         typeColName,
-                         typeRate = 0.7) {
+AnnoCNVType_ <- function(corerow,
+                         annodb,
+                         typerate = 0.7) {
 
-  if (nrow(annoSingle) > 0) {
-    tLogic <- cnsSingle[5] %>%
-      is_greater_than(0) %>%
-      ifelse('gain', 'loss') %>%
-      AnnoGainLossRateCheck_(annoSingle[, typeColName])
-
-    if (sum(tLogic) / nrow(annoSingle) >= typeRate) {
-      annoSingle <- annoSingle[tLogic, ,drop = FALSE]
-    } else {
-      annoSingle <- annoSingle[0, ]
-    }
-
+  ## step1: check `annodb`. No need to check chromosome as AnnoCNVType_ is after AnnoCNVOverlap_
+  if (nrow(annodb) == 0) {
+    return(filter(annodb, FALSE))
   } else {}
 
-  return(annoSingle)
-}
+  ## step2: select typerate
+  anno <- annodb %>%
+    filter(type == corerow$type)
 
-##' @param detectType A \code{character} string, either "gain" or "loss".
-##' @param annoType A \code{character} vector containing "gain" and "loss".
-##' @importFrom stringr str_detect
-##' @rdname annointernal
-##' @keywords internal
-##'
-AnnoGainLossRateCheck_ <- function(detectType, annoType) {
-
-  return(str_detect(annoType, detectType))
-
+  if (nrow(anno) / nrow(annodb) > typerate) {
+    return(anno)
+  } else {
+    return(filter(annodb, FALSE))
+  }
 }
