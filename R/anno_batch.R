@@ -16,19 +16,24 @@ NULL
 ##' data(kit)
 ##'
 ##' ## ClinGenGRCh37
-##' AnnoCNVBatch(kit, AnnoCNVClinCore, CNVdb$ClinGenGRCh37, reciprate = 0.5, typerate = 0.7, n = 2)
+##' AnnoCNVBatch(kit, AnnoCNVClinCore, CNVdb$ClinGenGRCh37,
+##'              reciprate = 0.5, typerate = 0.7, n = 2)
 ##'
 ##' ## ClinVarGRCh37
-##' AnnoCNVBatch(kit, AnnoCNVClinCore, CNVdb$ClinVarGRCh38, reciprate = 0.5, typerate = 0.7, n = 2)
+##' AnnoCNVBatch(kit, AnnoCNVClinCore, CNVdb$ClinVarGRCh38,
+##'              reciprate = 0.5, typerate = 0.7, n = 2)
 ##'
 ##' ## DGVGRCh37
-##' AnnoCNVBatch(kit, AnnoCNVPopuCore, CNVdb$DGVGRCh37, reciprate = 0.5, typerate = 0.7, n = 2)
+##' AnnoCNVBatch(kit, AnnoCNVPopuCore, CNVdb$DGVGRCh37,
+##'              reciprate = 0.5, typerate = 0.7, n = 2)
 ##'
 ##' ## DECIPHER_POPULATION
-##' AnnoCNVBatch(kit, AnnoCNVPopuCore, CNVdb$DECIPHER_POPULATION, reciprate = 0.5, typerate = 0.7, n = 2)
+##' AnnoCNVBatch(kit, AnnoCNVPopuCore, CNVdb$DECIPHER_POPULATION,
+##'              reciprate = 0.5, typerate = 0.7, n = 2)
 ##'
 ##' ## ExAC_POPULATION
-##' AnnoCNVBatch(kit, AnnoCNVPopuCore, CNVdb$ExAC_POPULATION, reciprate = 0.5, typerate = 0.7, n = 2)
+##' AnnoCNVBatch(kit, AnnoCNVPopuCore, CNVdb$ExAC_POPULATION,
+##'              reciprate = 0.5, typerate = 0.7, n = 2)
 ##'
 ##' ## OMIM
 ##' AnnoCNVBatch(kit, AnnoCNVGeneCore, CNVdb$OMIMGRCh38, n = 2)
@@ -42,6 +47,8 @@ NULL
 ##' ## ExAC_pLI
 ##' AnnoCNVBatch(kit, AnnoCNVGeneCore, CNVdb$ExAC_pLI, n = 2)
 ##'
+##' ## RefGeneGRCh37
+##' AnnoCNVBatch(kit, AnnoCNVGeneCore, CNVdb$RefGeneGRCh37, n = 2)
 ##' @rdname AnnoCNVBatch-methods
 ##' @exportMethod AnnoCNVBatch
 ##'
