@@ -42,7 +42,7 @@ AnnoCNVGeneCore <- function(corerow,
 ##' @importFrom stringr str_detect
 ##' @importFrom magrittr %>%
 ##' @rdname cnvgene
-##' @return A \code{data.frame} summary annotated genes/regions.
+##' @return A \code{tbl_df} summary annotated genes/regions.
 ##' @keywords internal
 ##'
 AnnoGeneOverlap_ <- function(corerow,

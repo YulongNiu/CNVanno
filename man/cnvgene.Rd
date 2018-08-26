@@ -19,7 +19,7 @@ AnnoGeneOverlap_(corerow, annodb)
 \value{
 A \code{list}
 
-A \code{data.frame} summary annotated genes/regions.
+A \code{tbl_df} summary annotated genes/regions.
 }
 \description{
 Annotation core function for the OMIM, ClinGen_TriHaplo, ExAC_plI, and DECIPHER_Haplo

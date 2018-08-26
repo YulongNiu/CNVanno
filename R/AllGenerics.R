@@ -44,3 +44,14 @@ setGeneric(name = 'FilterBlacklist',
 setGeneric(name = 'Merge',
            def = function(corelist, reciprate, n, ...){standardGeneric('Merge')})
 
+
+
+##' @param FUN \code{AnnoCNVClinCore()}, \code{AnnoCNVPopuCore()}, or \code{ANnoCNVGeneCore()} in this package.
+##' @param ... Additional parameters passed to \code{FUN}.
+##' @inheritParams Cytoband
+##' @rdname AnnoCNVBatch-methods
+##' @keywords internal
+##'
+setGeneric(name = 'AnnoCNVBatch',
+           def = function(core, FUN, ..., n){standardGeneric('AnnoCNVBatch')})
+
