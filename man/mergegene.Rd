@@ -43,9 +43,7 @@ The CNV summary genes table.
 }
 
 \itemize{
-  \item gene.mim
   \item disease.name
-  \item disease.mim
   \item DDD.category
   \item allelic.requirement
   \item mutation.consequence

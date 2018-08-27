@@ -91,9 +91,7 @@
 ##'
 ## column names for DDG2P
 ##' \itemize{
-##'   \item gene.mim
 ##'   \item disease.name
-##'   \item disease.mim
 ##'   \item DDD.category
 ##'   \item allelic.requirement
 ##'   \item mutation.consequence
@@ -160,13 +158,21 @@ SunMergeGenedb <- function(gdbList) {
 
   gdbList[[5]] %<>%
     rename(gene_symbol = gene.symbol) %>%
-    select(CNV:overlap_relation, gene_symbol, gene.mim:phenotypes) %>%
+    select(CNV:overlap_relation, gene_symbol, disease.name:phenotypes) %>%
+    select(-disease.mim) %>%
     group_by(CNV) %>%
     distinct(gene_symbol, .keep_all = TRUE) %>%
     ungroup
 
-  ## res %<>% GenedbPost
+  ## merge
   gdb <- Reduce(mergeTwoGenedb_, gdbList)
+
+  ## order
+  ocnv <- gdb$chromosome %>%
+    str_extract('\\d+') %>%
+    as.numeric %>%
+    order
+  gdb %<>% slice(ocnv)
 
   return(gdb)
 }
@@ -201,35 +207,10 @@ mergeTwoGenedb_ <- function(gdb1, gdb2) {
     mutate(overlap_relation = overlap_relation %>% {if_else(is.na(.), overlap_relation.y, .)}) %>%
     select(-(chromosome.y:overlap_relation.y))
 
+  gdb[] <- lapply(gdb, function(x){return(ifelse(is.na(x), '', x))})
+
   return(gdb)
 }
-
-
-## ##' @param mergeTable A \code{data.frame} of processed gene table.
-## ##' @return \code{NULL} or the index
-## ##' @author Yulong Niu \email{yulong.niu@@hotmail.com}
-## ##' @importFrom stringr str_extract
-## ##' @importFrom magrittr %<>% %>%
-## ##' @rdname mergegene
-## ##' @keywords internal
-## ##'
-## GenedbPost <- function(mergeTable) {
-##   ## step1: sort chromosomes
-##   oGenes <- mergeTable[, 'Chromosome'] %>%
-##     str_extract('\\d+') %>%
-##     as.numeric %>%
-##     order
-##   mergeTable <- mergeTable[oGenes, ]
-
-##   ## step2: select genes
-##   mergeTable[, 'Type'] %<>% ifelse(. == '', 'gene', .)
-##   mergeTable <- mergeTable[mergeTable[, 'Type'] == 'gene', , drop = FALSE]
-
-##   ## step3: remove column 'Gene.Name' and 'Type'
-##   mergeTable <- mergeTable[, c(-7, -12)]
-
-##   return(mergeTable)
-## }
 
 
 ## ##' @param regionTable A \code{data.frame} of processed region table, which often comes from the \code{SunCNVTable} functions.
@@ -376,4 +357,4 @@ AnnoCNVGeneRefGene2DDG2P <- function(refgeneTable, DDG2Pdb) {
 ## gdbList[[4]] <- AnnoCNVBatch(kit, AnnoCNVGeneCore, CNVdb$ExAC_pLI, n = 2)[[1]]
 ## gdbList[[5]] <- AnnoCNVGeneRefGene2DDG2P(refGene[[1]], CNVdb$DECIPHER_DDG2P)
 
-## geneTable <- SunMergeGenesdb(gdbList)
+## geneTable <- SunMergeGenedb(gdbList)
