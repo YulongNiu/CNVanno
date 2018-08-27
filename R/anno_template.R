@@ -1,67 +1,53 @@
-## ##' The CNV summary table from Sun.
-## ##'
-## ##' \itemize{
-## ##'   \item REGION
-## ##'   \item SIZE
-## ##'   \item RATIO
-## ##'   \item COPY
-## ##'   \item TYPE
-## ##'   \item CYTOBAND
-## ##'   \item SAMPLE
-## ##'   \item DERIVED
-## ##' }
-## ##'
-## ##' @title Sun's summary CNV table
-## ##' @inheritParams filter.cnvkit
-## ##' @inheritParams Cytoband
-## ##' @param sampleType The sample type, like "proband", "mother", "father".
-## ##' @importFrom foreach foreach %do%
-## ##' @importFrom iterators iter
-## ##' @return A \code{data.frame} of Sun's cns format.
-## ##' @examples
-## ##' require('magrittr')
-## ##' data(hg38cyto)
-## ##'
-## ##' cnsFile <- system.file('extdata', 'example.cnvkit', package = 'CNVanno')
-## ##' cnsSummarySun <- cnsFile %>% read.cnvkit %>% filter.cnvkit %>% SunCNVTable(hg38cyto)
-## ##' @author Yulong Niu \email{yulong.niu@@hotmail.com}
-## ##' @export
-## ##'
-## SunCNVTable <- function(cns, cyto, sampleType = 'proband', n = 2) {
+##' The CNV region summary table according to Sun's format.
+##'
+##' \itemize{
+##'   \item CNV
+##'   \item size(100kb)
+##'   \item type
+##'   \item method
+##'   \item cytoband
+##'   \item sample
+##' }
+##'
+##' @title Sun's summary CNV table
+##' @inheritParams Cytoband
+##' @param sampleType The sample type, like "proband", "mother", "father".
+##' @param ... Parameters passed to the \code{Cytoband()} in this package.
+##' @return A \code{tbl_df} contains Sun's CNV region format.
+##' @examples
+##' require('magrittr')
+##' data(hg19cyto)
+##' data(kit)
+##'
+##' SunCNVregion(kit, hg19cyto, n = 2)
+##' @author Yulong Niu \email{yulong.niu@@hotmail.com}
+##' @importFrom magrittr %>% %<>%
+##' @importFrom stringr str_extract
+##' @importFrom dplyr mutate select slice
+##' @export
+##'
+SunCNVregion <- function(core, cyto, sampleType = 'proband', ...) {
 
-##   itx <- iter(cns, by = 'row')
-##   REGION <- foreach(i = itx, .combine = c) %do% {
-##     return(paste0(c(i[1], ':', i[2], '-', i[3]), collapse = ''))
-##   }
+  cnv  <- core@coreCNV %>%
+    mutate(CNV = paste(chromosome, paste(start, end, sep = '-'), sep = ':')) %>% ## CNV
+    mutate(`size(100kb)` = round((end - start) / 100000, 1)) %>% ## size
+    mutate(cytoband = Cytoband(core, cyto, ...)) %>% ## cytoband
+    mutate(sample = sampleType) %>%
+    select(CNV, `size(100kb)`, type, method, cytoband, sample)
 
-##   itx <- iter(cns, by = 'row')
-##   SIZE <- foreach(i = itx, .combine = c) %do% {
-##     return(round((i[3] - i[2]) / 100000, 1))
-##   } %>% unlist
+  ## order
+  ocnv <- core@coreCNV$chromosome %>%
+    str_extract('\\d+') %>%
+    as.numeric %>%
+    order
+  cnv %<>% slice(ocnv)
 
-##   CYTOBAND <- FindCyto(cns, cyto, n = n)
-
-##   cnvTable <- data.frame(CNV = REGION,
-##                          SIZE = SIZE,
-##                          RATIO = cns[, 5],
-##                          COPYNUM = cns[, 6],
-##                          TYPE = ifelse(cns[, 6] > 2, 'gain', 'loss'),
-##                          CYTOBAND = CYTOBAND,
-##                          GENE = cns[, 4],
-##                          SAMPLE = rep(sampleType, nrow(cns)),
-##                          DEPTH = cns[, 7],
-##                          PROBES = cns[, 8],
-##                          WEIGHT = cns[, 9],
-##                          stringsAsFactors = FALSE)
-
-##   colnames(cnvTable)[2] <- 'SIZE(100kb)'
-
-##   return(cnvTable)
-## }
+  return(cnv)
+}
 
 
 
-##' The CNV summary genes table.
+##' The CNV gene summary table according to Sun's format.
 ##'
 ##' ## column names for OMIM
 ##' \itemize{
@@ -114,17 +100,18 @@
 ##' gdbList[[4]] <- AnnoCNVBatch(kit, AnnoCNVGeneCore, CNVdb$ExAC_pLI, n = 2)[[1]]
 ##' gdbList[[5]] <- AnnoCNVGeneRefGene2DDG2P(refGene[[1]], CNVdb$DECIPHER_DDG2P)
 ##'
-##' geneTable <- SunMergeGenedb(gdbList)
+##' geneTable <- SunCNVgene(gdbList)
 ##'
 ##' ## cnsTable <- cns %>% SunCNVTable(hg38cyto, sampleType = 'proband', n = CORENUM)
 ##' ## CrossRegionGeneTable(cnsTable, geneTable)
 ##' @author Yulong Niu \email{yulong.niu@@hotmail.com}
 ##' @importFrom magrittr %<>% %>%
-##' @importFrom dplyr rename select group_by distinct ungroup mutate
+##' @importFrom dplyr rename select group_by distinct ungroup mutate slice
+##' @importFrom stringr str_extract
 ##' @rdname mergegene
 ##' @export
 ##'
-SunMergeGenedb <- function(gdbList) {
+SunCNVgene <- function(gdbList) {
 
   ## step1: process dbs
   gdbList[[1]] %<>%
