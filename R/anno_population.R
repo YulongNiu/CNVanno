@@ -24,6 +24,8 @@
 ##' AnnoCNVPopuCore(kit@coreCNV[3, ], CNVdb$ExAC_POPULATION)
 ##'
 ##' @author Yulong Niu \email{yulong.niu@@hotmail.com}
+##' @importFrom magrittr %>%
+##' @importFrom dplyr mutate select everything
 ##' @rdname popu
 ##' @export
 ##'
@@ -40,7 +42,9 @@ AnnoCNVPopuCore <- function(corerow,
 
   anno <-  annodb %>%
     AnnoCNVOverlap_(corerow, ., reciprate)  %>%
-    AnnoCNVType_(corerow, ., typerate)
+    AnnoCNVType_(corerow, ., typerate) %>%
+    mutate(CNV = FormatCorerow_(corerow)) %>%
+    select(CNV, everything())
   res[[1]] <- anno
 
   ## step3: gain/loss percentage

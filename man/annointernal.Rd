@@ -3,11 +3,14 @@
 \name{AnnoCNVOverlap_}
 \alias{AnnoCNVOverlap_}
 \alias{AnnoCNVType_}
+\alias{FormatCorerow_}
 \title{Annotation utilities}
 \usage{
 AnnoCNVOverlap_(corerow, annodb, reciprate = 0.5)
 
 AnnoCNVType_(corerow, annodb, typerate = 0.7)
+
+FormatCorerow_(corerow)
 }
 \arguments{
 \item{corerow}{A row of the CNV in a \code{tbl_df} form.}
@@ -22,7 +25,7 @@ AnnoCNVType_(corerow, annodb, typerate = 0.7)
 \itemize{
   \item \code{AnnoCNVOverlap_()}: A \code{data.frame} with selected rows. The row number may be zero.
   \item \code{AnnoCNVType_()}: Same as the \code{AnnoCNVOverlap_()} function.
- \item \code{AnnoGainLossRateCheck_()}: A \code{logic} vector.
+ \item \code{FormatCorerow_()}: A \code{string}.
 }
 }
 \description{
@@ -32,7 +35,7 @@ Internal annotation functions
 \itemize{
   \item \code{AnnoCNVOverlap_()}: Annotation of single CNV with one database with mutual overlap rate.
   \item \code{AnnoCNVType_()}: Annotation of single CNV with one database with gain and loss percentage. The input database should be the output of \code{AnnoCNVOverlap_()} function.
-  \item \code{AnnoGainLossRateCheck_()}: Check the gain/loss annotation.
+  \item \code{FormatCorerow_()}: Format single CNV.
 }
 }
 \author{

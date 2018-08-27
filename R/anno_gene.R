@@ -41,6 +41,7 @@ AnnoCNVGeneCore <- function(corerow,
 ##' @inheritParams AnnoCNVType_
 ##' @importFrom stringr str_detect
 ##' @importFrom magrittr %>%
+##' @importFrom dplyr bind_cols transmute mutate filter everything
 ##' @rdname cnvgene
 ##' @return A \code{tbl_df} summary annotated genes/regions.
 ##' @keywords internal
@@ -63,7 +64,8 @@ AnnoGeneOverlap_ <- function(corerow,
     (fRate == 0 & tRate == 0) ~ 'nooverlap',
     TRUE ~ 'Overlap')) %>%
     bind_cols(annodb) %>%
-    select(chromosome:end, overlap_relation, everything()) %>%
+    mutate(CNV = FormatCorerow_(corerow)) %>%
+    select(CNV, chromosome:end, overlap_relation, everything()) %>%
     filter(overlap_relation != 'nooverlap')
 
   return(anno)

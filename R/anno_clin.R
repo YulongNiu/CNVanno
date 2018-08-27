@@ -22,6 +22,7 @@
 ##' AnnoCNVClinCore(kit@coreCNV[3, ], CNVdb$ClinVarGRCh37)
 ##' @author Yulong Niu \email{yulong.niu@@hotmail.com}
 ##' @importFrom magrittr %>%
+##' @importFrom dplyr mutate select everything
 ##' @rdname clin
 ##' @export
 ##'
@@ -38,7 +39,9 @@ AnnoCNVClinCore <- function(corerow,
   ## step 2: gain and loss of the 'TYPE' column
   anno <-  annodb %>%
     AnnoCNVOverlap_(corerow, ., reciprate) %>%
-    AnnoCNVType_(corerow, ., typerate)
+    AnnoCNVType_(corerow, ., typerate) %>%
+    mutate(CNV = FormatCorerow_(corerow)) %>%
+    select(CNV, everything())
   res[[1]] <- anno
 
   if (nrow(anno) > 0) {

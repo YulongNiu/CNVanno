@@ -3,7 +3,7 @@
 ##' \itemize{
 ##'   \item \code{AnnoCNVOverlap_()}: Annotation of single CNV with one database with mutual overlap rate.
 ##'   \item \code{AnnoCNVType_()}: Annotation of single CNV with one database with gain and loss percentage. The input database should be the output of \code{AnnoCNVOverlap_()} function.
-##'   \item \code{AnnoGainLossRateCheck_()}: Check the gain/loss annotation.
+##'   \item \code{FormatCorerow_()}: Format single CNV.
 ##' }
 ##' @title Annotation utilities
 ##' @param annodb A \code{tbl_df} indicating a single annotation database. In \code{AnnoCNVClinCore()}, it should at least contains "chromosome", "start", "end", "type" (gain or loss), and "clinical_significance" columns. In \code{AnnoCNVPopuCore()}, it should at least contains "chromosome", "start", "end", "type" (gain or loss), may contain "gain_frequency"and "loss_frequency". In \code{AnnoCNVGeneCore()}, it should at least contains "chromosome", "start" and "end" columns.
@@ -13,7 +13,7 @@
 ##' \itemize{
 ##'   \item \code{AnnoCNVOverlap_()}: A \code{data.frame} with selected rows. The row number may be zero.
 ##'   \item \code{AnnoCNVType_()}: Same as the \code{AnnoCNVOverlap_()} function.
-##'  \item \code{AnnoGainLossRateCheck_()}: A \code{logic} vector.
+##'  \item \code{FormatCorerow_()}: A \code{string}.
 ##' }
 ##' @author Yulong Niu \email{yulong.niu@@hotmail.com}
 ##' @importFrom magrittr %>%
@@ -67,4 +67,18 @@ AnnoCNVType_ <- function(corerow,
   } else {
     return(filter(annodb, FALSE))
   }
+}
+
+
+##' @inheritParams AnnoCNVOverlap_
+##' @rdname annointernal
+##' @keywords internal
+##'
+FormatCorerow_ <- function(corerow) {
+
+  res <- corerow[2:3] %>%
+    paste(collapse = '-') %>%
+    paste(corerow[1], ., sep = ':')
+
+  return(res)
 }
