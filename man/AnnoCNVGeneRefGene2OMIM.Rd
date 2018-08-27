@@ -23,12 +23,13 @@ Step1: Normal annotation CNV with the RefGene (GRCh37) database.
 Step2: Use Entrez Gene ID as keys to combine RefGene and OMIM database.
 }
 \examples{
-require('magrittr')
 data(CNVdb)
 data(kit)
 
 refGene <- AnnoCNVBatch(kit, AnnoCNVGeneCore, CNVdb$RefGeneGRCh37, n = 2)
-cnvOMIM <- AnnoCNVGeneRefGene2OMIM(refGene[[1]], CNVdb$OMIMGRCh38)
+
+## cross OMIM database
+crossOMIM <- AnnoCNVGeneRefGene2OMIM(refGene[[1]], CNVdb$OMIMGRCh38)
 }
 \author{
 Yulong Niu \email{yulong.niu@hotmail.com}

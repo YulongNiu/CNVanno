@@ -2,6 +2,7 @@
 
 export(AnnoCNVClinCore)
 export(AnnoCNVGeneCore)
+export(AnnoCNVGeneRefGene2DDG2P)
 export(AnnoCNVGeneRefGene2OMIM)
 export(AnnoCNVPopuCore)
 export(OverlapRegion)
