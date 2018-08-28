@@ -78,6 +78,8 @@ setMethod(f = 'AnnoCNVBatch',
 ##' @param annoList A \code{list} containing CNV annotation for each called CNV. The 1st element is a \code{data.frame} or \code{NULL}. The 2nd element and the rest are \code{character} vectors.
 ##' @importFrom foreach foreach %do%
 ##' @importFrom dplyr bind_rows
+##' @importFrom stringr str_extract
+##' @importFrom magrittr %<>% %>%
 ##' @return A merged \code{list}.
 ##' @author Yulong Niu \email{yulong.niu@@hotmail.com}
 ##' @keywords internal
@@ -87,9 +89,16 @@ mergeAnno_ <- function(annoList) {
   annoLen <- length(annoList[[1]])
   res <- vector('list', annoLen)
 
-  res[[1]] <- foreach(i = seq_along(annoList), .combine = bind_rows) %do% {
+  annoMat <- foreach(i = seq_along(annoList), .combine = bind_rows) %do% {
     return(annoList[[i]][[1]])
   }
+
+  ## oder
+  ocnv <- annoMat$chromosome %>%
+    str_extract('\\d+') %>%
+    as.numeric %>%
+    order
+  res[[1]] <- annoMat %>% slice(ocnv)
 
   for (i in seq_len(annoLen)[-1]) {
     res[[i]] <- sapply(annoList, function(x){return(x[[i]])})

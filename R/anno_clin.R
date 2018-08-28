@@ -35,8 +35,8 @@ AnnoCNVClinCore <- function(corerow,
   res[2:3] <- NA
   names(res) <- c('ClinAnno', 'conflict', 'summary')
 
-  ## step 1: if the cns is mapped ClinGen/ClinVar database
-  ## step 2: gain and loss of the 'TYPE' column
+  ## step1: if the cns is mapped ClinGen/ClinVar database
+  ## step2: gain and loss of the 'TYPE' column
   anno <-  annodb %>%
     AnnoCNVOverlap_(corerow, ., reciprate) %>%
     AnnoCNVType_(corerow, ., typerate) %>%
@@ -45,7 +45,7 @@ AnnoCNVClinCore <- function(corerow,
   res[[1]] <- anno
 
   if (nrow(anno) > 0) {
-    ## step 3: benign/pathogenic
+    ## step3: benign/pathogenic
     bpList <- AnnoBenignPathoCheck_(anno$clinical_significance)
     res[[2]] <- bpList[[1]]
     res[[3]] <- bpList[[2]]
