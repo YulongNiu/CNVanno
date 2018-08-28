@@ -1,4 +1,4 @@
-##' @param raw A \code{RawCNV} object.
+##' @param raw A \code{RawCNV}/\code{CoreCNV} object.
 ##' @param gap An \code{integer} indicate the allowed length between two regions (at same chromosome with same type).
 ##' @param ... Additional parameters.
 ##' @rdname Segment-methods
@@ -43,4 +43,15 @@ setGeneric(name = 'FilterBlacklist',
 ##'
 setGeneric(name = 'Merge',
            def = function(corelist, reciprate, n, ...){standardGeneric('Merge')})
+
+
+
+##' @param FUN \code{AnnoCNVClinCore()}, \code{AnnoCNVPopuCore()}, or \code{ANnoCNVGeneCore()} in this package.
+##' @param ... Additional parameters passed to \code{FUN}.
+##' @inheritParams Cytoband
+##' @rdname AnnoCNVBatch-methods
+##' @keywords internal
+##'
+setGeneric(name = 'AnnoCNVBatch',
+           def = function(core, FUN, ..., n){standardGeneric('AnnoCNVBatch')})
 

@@ -4,14 +4,17 @@
 \name{Segment}
 \alias{Segment}
 \alias{Segment,RawCNV,integer-method}
+\alias{Segment,CoreCNV,integer-method}
 \title{Segmentation}
 \usage{
 Segment(raw, gap, ...)
 
 \S4method{Segment}{RawCNV,integer}(raw, gap, ...)
+
+\S4method{Segment}{CoreCNV,integer}(raw, gap, ...)
 }
 \arguments{
-\item{raw}{A \code{RawCNV} object.}
+\item{raw}{A \code{RawCNV}/\code{CoreCNV} object.}
 
 \item{gap}{An \code{integer} indicate the allowed length between two regions (at same chromosome with same type).}
 
@@ -33,6 +36,7 @@ kit <- system.file('extdata', 'exampleseg.cnvkit', package = 'CNVanno') \%>\%
   read_cnvkit \%>\%
   filter_cnvkit
 kitseg <- Segment(kit, gap = 10L)
+kitsegmore <- Segment(kitseg, gap = 2000000L)
 }
 \author{
 Yulong Niu \email{yulong.niu@hotmail.com}

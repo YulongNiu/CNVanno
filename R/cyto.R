@@ -42,7 +42,7 @@ setMethod(f = 'Cytoband',
 
               eachCyto <- filter(cyto, chromosome == i$chromosome)
               eachLogic <- eachCyto %>%
-                OverlapRegion(select(i, start:end), ., 0L)
+                OverlapRegion(i, ., 0L)
               eachCyto %<>%
                 filter(eachLogic) %>%
                 select(cytoband) %>%

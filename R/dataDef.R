@@ -70,14 +70,15 @@ NULL
 ##'
 NULL
 
+
 ##' CNVkit filtered example file
 ##'
 ##' ## CNVanno version 0.2.0
 ##' kit <- system.file('extdata', 'example.cnvkit', package = 'CNVanno') %>%
 ##'   read_cnvkit %>%
 ##'   filter_cnvkit %>%
-##'   Segment(gap = 10L)
-##'   FilterBlacklist(kit, bl_cytoband(hg19cyto), overlaprate = 0.5, shortlen = 1000L, gap = 0L, n = 2) %>%
+##'   Segment(gap = 10L)%>%
+##'   FilterBlacklist(bl_cytoband(hg19cyto), overlaprate = 0.5, shortlen = 1000L, gap = 0L, n = 2) %>%
 ##'   FilterBlacklist(hg19bl, overlaprate = 0.5, shortlen = 1000L, gap = 1000000L, n = 2)
 ##'
 ##' @docType data
@@ -94,17 +95,18 @@ NULL
 ##'   \item ClinGenGRCh38 2017-04-01
 ##'   \item ClinGenGRCh37 2017-04-01
 ##'   \item ClinGenNCBI36 2017-04-01
-##'   \item ClinVarGRCh38
-##'   \item ClinVarGRCh37
-##'   \item ClinVarNCBI36
-##'   \item ClinGen_TriHaploGRCh38 2018-07-14
-##'   \item ClinGen_TriHaploGRCh37 2018-07-14
-##'   \item DECIPHER_Haplo
-##'   \item DECIPHER_POPULATION
-##'   \item DECIPHER_DDG2P 2018-07-14
-##'   \item DGV
-##'   \item ExAC_POPULATION
-##'   \item ExAC_pLI
+##'   \item ClinVarGRCh38 2018-08-21
+##'   \item ClinVarGRCh37 2018-08-21
+##'   \item ClinVarNCBI36 2018-08-21
+##'   \item ClinGen_TriHaploGRCh38 2018-08-24
+##'   \item ClinGen_TriHaploGRCh37 2018-08-24
+##'   \item DECIPHER_Haplo GRCh37
+##'   \item DECIPHER_POPULATION GRCh37
+##'   \item DECIPHER_DDG2P 2018-07-14 GRCh37
+##'   \item DGVGRCh38 2016-08-31
+##'   \item DGVGRCh37 2016-05-15
+##'   \item ExAC_POPULATION GRCh37
+##'   \item ExAC_pLI GRCh37
 ##'   \item OMIMGRCh38 2018-07-13
 ##'   \item RefGeneGRCh37
 ##' }
