@@ -64,9 +64,6 @@ gdbList[[4]] <- AnnoCNVBatch(kit, AnnoCNVGeneCore, CNVdb$ExAC_pLI, n = 2)[[1]]
 gdbList[[5]] <- AnnoCNVGeneRefGene2DDG2P(refGene[[1]], CNVdb$DECIPHER_DDG2P)
 
 geneTable <- SunCNVgene(gdbList)
-
-## cnsTable <- cns \%>\% SunCNVTable(hg38cyto, sampleType = 'proband', n = CORENUM)
-## CrossRegionGeneTable(cnsTable, geneTable)
 }
 \author{
 Yulong Niu \email{yulong.niu@hotmail.com}

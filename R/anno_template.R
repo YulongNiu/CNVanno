@@ -101,14 +101,10 @@ SunCNVregion <- function(core, cyto, sampleType = 'proband', ...) {
 ##' gdbList[[5]] <- AnnoCNVGeneRefGene2DDG2P(refGene[[1]], CNVdb$DECIPHER_DDG2P)
 ##'
 ##' geneTable <- SunCNVgene(gdbList)
-##'
-##' ## cnsTable <- cns %>% SunCNVTable(hg38cyto, sampleType = 'proband', n = CORENUM)
-##' ## CrossRegionGeneTable(cnsTable, geneTable)
 ##' @author Yulong Niu \email{yulong.niu@@hotmail.com}
 ##' @importFrom magrittr %<>% %>%
 ##' @importFrom dplyr rename select group_by distinct ungroup mutate slice
 ##' @importFrom stringr str_extract
-##' @rdname mergegene
 ##' @export
 ##'
 SunCNVgene <- function(gdbList) {
@@ -151,10 +147,10 @@ SunCNVgene <- function(gdbList) {
     distinct(gene_symbol, .keep_all = TRUE) %>%
     ungroup
 
-  ## merge
+  ## step2: merge
   gdb <- Reduce(mergeTwoGenedb_, gdbList)
 
-  ## order
+  ## step3: order
   ocnv <- gdb$chromosome %>%
     str_extract('\\d+') %>%
     as.numeric %>%
@@ -170,6 +166,7 @@ SunCNVgene <- function(gdbList) {
 ##' \itemize{
 ##'   \item \code{mergeTwoGenedb_()}: Merge two gene results.
 ##' }
+##'
 ##' @title Internal Sun annotation functions
 ##' @param gdb1, gdb2: Annotated gene databases.
 ##' @return \itemize{
@@ -199,61 +196,63 @@ mergeTwoGenedb_ <- function(gdb1, gdb2) {
   return(gdb)
 }
 
+##' Combine CNVregion and CNVgene tables according to Sun's format.
+##'
+##' \itemize{
+##'   \item \code{CrossRegionGeneTable()}: Merge region and gene tables.
+##' }
+##'
+##' @title Combine CNVregion and CNVgene tables.
+##' @param regionTable A \code{tbl_df} of processed region table, which often comes from the \code{SunCNVregion()} in this package.
+##' @param geneTable A \code{tbl_df} of gene table, which often comes from the \code{SunCNVgene()} in this package.
+##' @return A list containing two \code{tbl_df} represents the processed \code{regionTable} and \code{geneTable} respectively.
+##' @examples
+##' require('magrittr')
+##' data(CNVdb)
+##' data(kit)
+##' data(hg19cyto)
+##'
+##' refGene <- AnnoCNVBatch(kit, AnnoCNVGeneCore, CNVdb$RefGeneGRCh37, n = 2)
+##' gdbList <- list()
+##' gdbList[[1]] <- AnnoCNVGeneRefGene2OMIM(refGene[[1]], CNVdb$OMIMGRCh38)
+##' gdbList[[2]] <- AnnoCNVBatch(kit, AnnoCNVGeneCore, CNVdb$ClinGen_TriHaploGRCh37, n = 2)[[1]]
+##' gdbList[[3]] <- AnnoCNVBatch(kit, AnnoCNVGeneCore, CNVdb$DECIPHER_Haplo, n = 2)[[1]]
+##' gdbList[[4]] <- AnnoCNVBatch(kit, AnnoCNVGeneCore, CNVdb$ExAC_pLI, n = 2)[[1]]
+##' gdbList[[5]] <- AnnoCNVGeneRefGene2DDG2P(refGene[[1]], CNVdb$DECIPHER_DDG2P)
+##'
+##' geneTable <- SunCNVgene(gdbList)
+##' regionTable <- SunCNVregion(kit, hg19cyto, n = 2)
+##' grList <- CrossRegionGeneTable(regionTable, geneTable)
+##' @author Yulong Niu \email{yulong.niu@@hotmail.com}
+##' @importFrom magrittr %>%
+##' @importFrom stringr str_detect
+##' @importFrom dplyr filter rename select group_by summarise_all funs left_join
+##' @export
+##'
+CrossRegionGeneTable <- function(regionTable, geneTable) {
 
-## ##' @param regionTable A \code{data.frame} of processed region table, which often comes from the \code{SunCNVTable} functions.
-## ##' @param geneTable A \code{data.frame} of gene table, which often comes from the \code{SunMergeGenesdb} functions.
-## ##' @return A list containing two \code{data.frame} represents the processed \code{regionTable} and \code{geneTable} respectively.
-## ##' @author Yulong Niu \email{yulong.niu@@hotmail.com}
-## ##' @importFrom magrittr %<>%
-## ##' @importFrom stats aggregate
-## ##' @importFrom stringr str_detect
-## ##' @rdname mergegene
-## ##' @export
-## ##'
-## CrossRegionGeneTable <- function(regionTable, geneTable) {
+  ## step1: separate `geneTable`
+  rT <- geneTable %>%
+    filter(!str_detect(gene_symbol, 'ISCA-\\d+'))
 
-##   ## step 1 initial `regionTable`
-##   regionTable <- cbind.data.frame(regionTable,
-##                                   matrix('',
-##                                          nrow = nrow(regionTable),
-##                                          ncol = 24),
-##                                   stringsAsFactors = FALSE)
-##   colnames(regionTable)[-1:-11] <- colnames(geneTable)[-1:-5]
-##   colnames(regionTable)[12] <- 'ISCA-ID'
+  rTisca <- geneTable %>%
+    filter(str_detect(gene_symbol, 'ISCA-\\d+')) %>%
+    rename(ISCA_ID = gene_symbol) %>%
+    select(-(chromosome:overlap_relation)) %>%
+    group_by(CNV) %>%
+    summarise_all(funs(paste(unique(.), collapse = '|')))
 
-##   ## step 2 select 'ISCA-37488' and merge gene symbols
-##   iscaLog <- str_detect(geneTable[, 'Gene.Symbols'], 'ISCA-')
-##   iscaMat <- geneTable[iscaLog, -2:-5, drop = FALSE]
-##   colnames(iscaMat)[2] <- 'ISCA-ID'
-##   geneTable <- geneTable[!iscaLog, , drop = FALSE]
+  ## step2: merge ICSA to `regionTable`
+  gT <- regionTable %>%
+    left_join(rTisca, by = 'CNV')
+  gT[] <- lapply(gT, function(x){return(ifelse(is.na(x), '', x))})
 
-##   unCNV <- aggregate(geneTable[, 'Gene.Symbols'],
-##                      by = list(geneTable[, 'CNV']),
-##                      function(x) {
-##                        return(paste(unique(x), collapse = '|'))
-##                      },
-##                      drop = FALSE)
-##   ## process gene
-##   regionTable[, 'GENE'] <- unCNV[match(regionTable[, 'CNV'], unCNV[, 1]), 2]
-##   regionTable[, 'GENE'] %<>% ifelse(is.na(.), '', .)
+  res <- list(regionTable = rT,
+              geneTable = gT)
 
-##   ## step3 process isca mat
-##   if (sum(iscaLog) > 0) {
-##     iscaMat <- aggregate(iscaMat[, -1],
-##                          by = list(iscaMat[, 1]),
-##                          paste, collapse = '|',
-##                          drop = FALSE)
+  return(res)
+}
 
-##     iscaIdx <- match(iscaMat[, 1], regionTable[, 1])
-##     regionTable[iscaIdx, -1:-11] <- iscaMat[, -1]
-##   } else {}
-
-##   res <- list(regionTable = regionTable,
-##               geneTable = geneTable)
-
-##   return(res)
-
-## }
 
 ##' Annotation CNV with the OMIM (GRCh38) database from the RefGene (GRCh37)
 ##'
