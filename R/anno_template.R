@@ -232,10 +232,10 @@ mergeTwoGenedb_ <- function(gdb1, gdb2) {
 CrossRegionGeneTable <- function(regionTable, geneTable) {
 
   ## step1: separate `geneTable`
-  rT <- geneTable %>%
+  gT <- geneTable %>%
     filter(!str_detect(gene_symbol, 'ISCA-\\d+'))
 
-  rTisca <- geneTable %>%
+  gTisca <- geneTable %>%
     filter(str_detect(gene_symbol, 'ISCA-\\d+')) %>%
     rename(ISCA_ID = gene_symbol) %>%
     select(-(chromosome:overlap_relation)) %>%
@@ -243,9 +243,9 @@ CrossRegionGeneTable <- function(regionTable, geneTable) {
     summarise_all(funs(paste(unique(.), collapse = '|')))
 
   ## step2: merge ICSA to `regionTable`
-  gT <- regionTable %>%
-    left_join(rTisca, by = 'CNV')
-  gT[] <- lapply(gT, function(x){return(ifelse(is.na(x), '', x))})
+  rT <- regionTable %>%
+    left_join(gTisca, by = 'CNV')
+  rT[] <- lapply(rT, function(x){return(ifelse(is.na(x), '', x))})
 
   res <- list(regionTable = rT,
               geneTable = gT)
