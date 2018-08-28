@@ -19,6 +19,7 @@ NULL
 ##' @title CNV filter
 ##' @param cngain A \code{numeric} value as the gain copy number threshold, and the default value is 2.
 ##' @param cnloss A \code{numeric} value as the loss copy number threshold, and the default value is 2.
+##' @param log2value A \code{numeric} value as the absolute log2value threshold, and the default value is absolute 0.5.
 ##' @param dep A \code{numeric} value as the sequence depth, and the default value is 0.01
 ##' @param sexchrom A \code{logic} value whether filter sex chromosomes (X and Y), the default value is \code{TRUE}.
 ##' @param rawkit The standard \code{CNVkit} output as an \code{RawCNV} object.
@@ -39,21 +40,21 @@ NULL
 ##' @rdname filterraw
 ##' @export
 ##'
-filter_cnvkit <- function(rawkit, cngain = 2, cnloss = 2, dep = 0.01, sexchrom = TRUE) {
+filter_cnvkit <- function(rawkit, cngain = 2, cnloss = 2, log2value = 0.5, dep = 0.01, sexchrom = TRUE) {
 
   ## step1: filter gain and loss cnv
   ## step2: filter low depth
-
+  ## step3: filter log2
   l <- rawkit@params %>%
-    transmute((cn > cngain | cn < cnloss) & depth > dep) %>%
+    transmute((cn > cngain | cn < cnloss) & depth > dep & abs(log2) > log2value) %>%
     unlist
 
-  ## step3: filter sex chromosomes
+  ## step4: filter sex chromosomes
   if (sexchrom) {
     lsex <- rawkit@rawCNV %>%
       transmute(chromosome != 'chrX' & chromosome != 'chrY') %>%
       unlist
-    l %<>% `&`(lsex)
+    l  <- l & lsex
   } else {}
 
   cnvkitf <- new('RawCNV',
