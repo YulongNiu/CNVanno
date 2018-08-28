@@ -343,4 +343,4 @@ AnnoCNVGeneRefGene2DDG2P <- function(refgeneTable, DDG2Pdb) {
 ## gdbList[[4]] <- AnnoCNVBatch(kit, AnnoCNVGeneCore, CNVdb$ExAC_pLI, n = 2)[[1]]
 ## gdbList[[5]] <- AnnoCNVGeneRefGene2DDG2P(refGene[[1]], CNVdb$DECIPHER_DDG2P)
 
-## geneTable <- SunMergeGenedb(gdbList)
+## geneTable <- SunCNVgene(gdbList)
