@@ -5,8 +5,8 @@
 \alias{filter_cnvnator}
 \title{CNV filter}
 \usage{
-filter_cnvkit(rawkit, cngain = 2, cnloss = 2, dep = 0.01,
-  sexchrom = TRUE)
+filter_cnvkit(rawkit, cngain = 2, cnloss = 2, log2value = 0.5,
+  dep = 0.01, sexchrom = TRUE)
 
 filter_cnvnator(rawnator, sexchrom = TRUE)
 }
@@ -16,6 +16,8 @@ filter_cnvnator(rawnator, sexchrom = TRUE)
 \item{cngain}{A \code{numeric} value as the gain copy number threshold, and the default value is 2.}
 
 \item{cnloss}{A \code{numeric} value as the loss copy number threshold, and the default value is 2.}
+
+\item{log2value}{A \code{numeric} value as the absolute log2value threshold, and the default value is absolute 0.5.}
 
 \item{dep}{A \code{numeric} value as the sequence depth, and the default value is 0.01}
 
