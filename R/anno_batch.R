@@ -89,7 +89,7 @@ mergeAnno_ <- function(annoList) {
   annoLen <- length(annoList[[1]])
   res <- vector('list', annoLen)
 
-  annoMat <- foreach(i = seq_along(annoList), .combine = bind_rows) %do% {
+  res[[1]] <- foreach(i = seq_along(annoList), .combine = bind_rows) %do% {
     return(annoList[[i]][[1]])
   }
 
