@@ -35,13 +35,6 @@ SunCNVregion <- function(core, cyto, sampleType = 'proband', ...) {
     mutate(sample = sampleType) %>%
     select(CNV, `size(100kb)`, type, method, cytoband, sample)
 
-  ## order
-  ocnv <- core@coreCNV$chromosome %>%
-    str_extract('\\d+') %>%
-    as.numeric %>%
-    order
-  cnv %<>% slice(ocnv)
-
   return(cnv)
 }
 
@@ -149,13 +142,6 @@ SunCNVgene <- function(gdbList) {
 
   ## step2: merge
   gdb <- Reduce(mergeTwoGenedb_, gdbList)
-
-  ## step3: order
-  ocnv <- gdb$chromosome %>%
-    str_extract('\\d+') %>%
-    as.numeric %>%
-    order
-  gdb %<>% slice(ocnv)
 
   return(gdb)
 }

@@ -93,13 +93,6 @@ mergeAnno_ <- function(annoList) {
     return(annoList[[i]][[1]])
   }
 
-  ## oder
-  ocnv <- annoMat$chromosome %>%
-    str_extract('\\d+') %>%
-    as.numeric %>%
-    order
-  res[[1]] <- annoMat %>% slice(ocnv)
-
   for (i in seq_len(annoLen)[-1]) {
     res[[i]] <- sapply(annoList, function(x){return(x[[i]])})
   }
