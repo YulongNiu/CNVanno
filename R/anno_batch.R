@@ -89,16 +89,9 @@ mergeAnno_ <- function(annoList) {
   annoLen <- length(annoList[[1]])
   res <- vector('list', annoLen)
 
-  annoMat <- foreach(i = seq_along(annoList), .combine = bind_rows) %do% {
+  res[[1]] <- foreach(i = seq_along(annoList), .combine = bind_rows) %do% {
     return(annoList[[i]][[1]])
   }
-
-  ## oder
-  ocnv <- annoMat$chromosome %>%
-    str_extract('\\d+') %>%
-    as.numeric %>%
-    order
-  res[[1]] <- annoMat %>% slice(ocnv)
 
   for (i in seq_len(annoLen)[-1]) {
     res[[i]] <- sapply(annoList, function(x){return(x[[i]])})
