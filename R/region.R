@@ -103,21 +103,28 @@ OverlapRegion <- function(regionf, regionMat, extend = 100L) {
 ##' @inheritParams OverlapRegionRate
 ##' @rdname overlapregion
 ##' @importFrom magrittr %<>%
-##' @importFrom dplyr mutate select rename arrange
+##' @importFrom dplyr transmute if_else arrange
 ##' @export
 ##'
 SortRegion <- function(regionMat) {
 
-  regionMat %<>%
-    mutate(startr = if_else(start < end, start, end),
-           endr = if_else(end > start, end, start)) %>% ## swtich
-    select(-start, -end) %>% ## remove old start and end
-    rename(start = startr, end = endr) %>%
-    select(start:end, everything()) %>% ## column: start end ...
-    arrange(start) ## arrange by start
+  startr <- regionMat %>%
+    transmute(start = if_else(start < end, start, end)) %>%
+    unlist
+
+  endr <- regionMat %>%
+    transmute(end = if_else(end > start, end, start)) %>%
+    unlist
+
+  ## replace start and end
+  regionMat$start <- startr
+  regionMat$end <- endr
+
+  regionMat %<>% arrange(start)
 
   return(regionMat)
 }
+
 
 ##' @inheritParams OverlapRegionRate
 ##' @inheritParams Segment
