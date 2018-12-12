@@ -110,7 +110,7 @@ NULL
 ##'   \item DGVGRCh37 2016-05-15
 ##'   \item ExAC_POPULATION GRCh37 2017-06-22
 ##'   \item ExAC_pLI GRCh37 2017-06-22
-##'   \item OMIMGRCh38 2018-07-13
+##'   \item OMIMGRCh38 2018-12-12
 ##'   \item RefGeneGRCh37 2018-12-11
 ##'
 ##' }
