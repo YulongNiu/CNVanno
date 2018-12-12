@@ -3,7 +3,7 @@
 ##' Annotation of single CNV to one gene database
 ##' @title The CNV gene database annotation
 ##' @param annoGene A \code{data.frame} of the OMIM, ClinGen_HaploTriplo, ExAC_plI, and DECIPHER_Haplo databases.
-##' @inheritParams AnnoCNVClinCore
+##' @inheritParams AnnoSVCore
 ##' @return A \code{list}
 ##' @examples
 ##' data(CNVdb)
