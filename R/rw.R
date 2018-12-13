@@ -28,14 +28,16 @@ NULL
 ##' }
 ##'
 ##' @author Yulong Niu \email{yulong.niu@@hotmail.com}
-##' @importFrom readr read_tsv
+##' @importFrom readr read_tsv col_integer
 ##' @importFrom dplyr select mutate case_when
 ##' @importFrom methods new
 ##' @rdname rwcnv
 ##' @export
 ##'
 read_cnvkit <- function(cnvpath) {
-  cnvin <- read_tsv(cnvpath)
+  cnvin <- read_tsv(cnvpath,
+                    col_types = list(start = col_integer(),
+                                     end = col_integer()))
 
   cnv <- cnvin %>%
     mutate(type = case_when(cn > 2 ~ 'gain',
