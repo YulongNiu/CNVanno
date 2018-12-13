@@ -23,13 +23,13 @@ Suggests:
     rmarkdown
 ByteCompile: true
 License: GPL
-LazyData: true
+LazyData: false
 RoxygenNote: 6.1.1
 VignetteBuilder: knitr
 Collate: 
     'AllClasses.R'
     'AllGenerics.R'
-    'anno_clin.R'
+    'anno_sv.R'
     'anno_gene.R'
     'anno_population.R'
     'anno_utilities.R'

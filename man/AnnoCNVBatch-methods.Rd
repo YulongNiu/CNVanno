@@ -30,11 +30,11 @@ data(CNVdb)
 data(kit)
 
 ## ClinGenGRCh37
-AnnoCNVBatch(kit, AnnoCNVClinCore, CNVdb$ClinGenGRCh37,
+AnnoCNVBatch(kit, AnnoSVCore, CNVdb$ClinGenGRCh37,
              reciprate = 0.5, typerate = 0.7, n = 2)
 
 ## ClinVarGRCh37
-AnnoCNVBatch(kit, AnnoCNVClinCore, CNVdb$ClinVarGRCh38,
+AnnoCNVBatch(kit, AnnoSVCore, CNVdb$ClinVarGRCh38,
              reciprate = 0.5, typerate = 0.7, n = 2)
 
 ## DGVGRCh37

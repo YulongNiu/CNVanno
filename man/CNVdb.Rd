@@ -7,23 +7,25 @@
 \format{A \code{list}}
 \description{
 \itemize{
+  \item dbvarGRCh37 2018-08-02
+  \item dbvarGRCh38 2017-08-02
   \item ClinGenGRCh38 2017-04-01
   \item ClinGenGRCh37 2017-04-01
   \item ClinGenNCBI36 2017-04-01
-  \item ClinVarGRCh38 2018-08-21
-  \item ClinVarGRCh37 2018-08-21
-  \item ClinVarNCBI36 2018-08-21
-  \item ClinGen_TriHaploGRCh38 2018-08-24
-  \item ClinGen_TriHaploGRCh37 2018-08-24
+  \item ClinVarGRCh38 2018-12-10
+  \item ClinVarGRCh37 2018-12-10
+  \item ClinVarNCBI36 2018-12-10
+  \item ClinGen_TriHaploGRCh38 2018-12-11
+  \item ClinGen_TriHaploGRCh37 2018-12-11
   \item DECIPHER_Haplo GRCh37
   \item DECIPHER_POPULATION GRCh37
   \item DECIPHER_DDG2P 2018-07-14 GRCh37
   \item DGVGRCh38 2016-08-31
   \item DGVGRCh37 2016-05-15
-  \item ExAC_POPULATION GRCh37
-  \item ExAC_pLI GRCh37
-  \item OMIMGRCh38 2018-07-13
-  \item RefGeneGRCh37
+  \item ExAC_POPULATION GRCh37 2017-06-22
+  \item ExAC_pLI GRCh37 2017-06-22
+  \item OMIMGRCh38 2018-12-12
+  \item RefGeneGRCh37 2018-12-11
 }
 }
 \author{

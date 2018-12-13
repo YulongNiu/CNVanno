@@ -1,4 +1,4 @@
-##' @include AllClasses.R AllGenerics.R region.R anno_utilities.R anno_population.R anno_gene.R anno_clin.R
+##' @include AllClasses.R AllGenerics.R region.R anno_utilities.R anno_population.R anno_gene.R anno_sv.R
 NULL
 
 ##' Batch annotation of CNVs

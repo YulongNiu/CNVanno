@@ -36,8 +36,7 @@ AnnoCNVOverlap_ <- function(corerow,
     mutate(l = fRate > reciprate & tRate > reciprate) %>%
     bind_cols(annodb, .) %>%
     filter(l) %>% ## filter by reciprate
-    select(-maxstart, -minend, -l) %>% ## remove redundant columns
-    select(chromosome:clinical_significance, fRate, tRate, everything()) ## re-arrange columns
+    select(-maxstart, -minend, -l) ## remove redundant columns
 
   return(anno)
 }

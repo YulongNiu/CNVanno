@@ -78,8 +78,7 @@ NULL
 ##'   read_cnvkit %>%
 ##'   filter_cnvkit %>%
 ##'   Segment(gap = 10L)%>%
-##'   FilterBlacklist(bl_cytoband(hg19cyto), overlaprate = 0.5, shortlen = 1000L, ga
-##' p = 0L, n = 2) %>%
+##'   FilterBlacklist(bl_cytoband(hg19cyto), overlaprate = 0.5, shortlen = 1000L, gap = 0L, n = 2) %>%
 ##'   FilterBlacklist(hg19bl, overlaprate = 0.5, shortlen = 1000L, gap = 1000000L, n = 2)
 ##'
 ##' @docType data
@@ -112,7 +111,6 @@ NULL
 ##'   \item ExAC_pLI GRCh37 2017-06-22
 ##'   \item OMIMGRCh38 2018-12-12
 ##'   \item RefGeneGRCh37 2018-12-11
-##'
 ##' }
 ##'
 ##' @docType data
