@@ -33,9 +33,11 @@ AnnoCNVOverlap_ <- function(corerow,
 
   ## step2: select > reciprate anno
   anno <- OverlapRegionRate(corerow, annodb) %>%
-    transmute(fRate > reciprate & tRate > reciprate) %>%
-    unlist %>%
-    filter(annodb, .)
+    mutate(l = fRate > reciprate & tRate > reciprate) %>%
+    bind_cols(annodb, .) %>%
+    filter(l) %>% ## filter by reciprate
+    select(-maxstart, -minend, -l) %>% ## remove redundant columns
+    select(chromosome:clinical_significance, fRate, tRate, everything()) ## re-arrange columns
 
   return(anno)
 }

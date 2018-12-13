@@ -69,10 +69,10 @@ AnnoBenignPathoCheck_ <- function(annoSig) {
 
   bNum <- annoSig %>%
     str_detect('[b|B]enign') %>%
-    sum
+    sum(na.rm = TRUE) ## may contained NA
   pNum <- annoSig %>%
     str_detect('[p|P]athogenic') %>%
-    sum
+    sum(na.rm = TRUE) ## may contained NA
 
   conflict <- ifelse(bNum == 0 | pNum ==0, 'No', 'Yes')
 
