@@ -15,7 +15,8 @@ Imports:
     stringr,
     readr,
     tibble,
-    dplyr
+    dplyr,
+    tidyr
 Suggests:
     testthat,
     BiocStyle,
