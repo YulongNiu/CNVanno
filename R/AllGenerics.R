@@ -65,4 +65,4 @@ setGeneric(name = 'AnnoCNVBatch',
 ##' @keywords internal
 ##'
 setGeneric(name = 'CombinePara',
-           def = function(core, raw, reciprate, ...){standardGeneric('CombinePara')})
+           def = function(core, raw, reciprate, n, ...){standardGeneric('CombinePara')})

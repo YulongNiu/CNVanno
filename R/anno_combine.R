@@ -1,4 +1,4 @@
-x##' @include AllClasses.R AllGenerics.R
+##' @include AllClasses.R AllGenerics.R region.R
 NULL
 
 
@@ -7,7 +7,7 @@ NULL
 ##' Merge the parameters from the raw CNV outpus.
 ##' @title Combine parameters from \code{RawCNV}
 ##' @inheritParams CombinePara
-##' @return A \code{tbl_df} object.
+##' @return A \code{CoreCNV} object.
 ##' @examples
 ##' require('magrittr')
 ##' require('dplyr')
@@ -15,23 +15,53 @@ NULL
 ##' data(kit)
 ##'
 ##' mergecnv <- Merge(list(nator, kit), reciprate = 0.5, n = 2)
-##' kitraw <- system.file('extdata', 'example.cnvkit', package = 'CNVanno') %>% read_cnvkit
-##' kitraw@params %<>% select(log2, cn)
 ##'
-##' tmp1 <- compressPara_(kitraw)
+##' kitraw <- system.file('extdata', 'example.cnvkit', package = 'CNVanno') %>% read_cnvkit
+##' kitraw@params %<>% select(log2 : depth)
+##'
+##' natorraw <- system.file('extdata', 'example.cnvnator', package = 'CNVanno') %>% read_cnvnator
+##' natorraw@params %<>% select(normalized_RD, q0) %>% rename(nordepth = normalized_RD)
+##'
+##' mergecnv %>% CombinePara(kitraw, 1e-05, n = 2) %>% CombinePara(natorraw, 1e-05, n = 2)
 ##'
 ##' @author Yulong Niu \email{yulong.niu@@hotmail.com}
-##' @importFrom magrittr %>%
-##' @importFrom dplyr do group_by ungroup select everything
-##' @importFrom tibble tibble
-##' @importFrom methods new
+##' @importFrom stringr str_detect
+##' @importFrom doParallel registerDoParallel stopImplicitCluster
+##' @importFrom foreach foreach %dopar%
+##' @importFrom iterators iter
 ##' @rdname CombinePara-methods
 ##' @exportMethod CombinePara
 ##'
-SetMethod(f = 'CombinePara',
+setMethod(f = 'CombinePara',
           signature = c(core = 'CoreCNV', raw = 'RawCNV', reciprate = 'numeric'),
-          definition = function(core, raw, reciprate, ...) {
+          definition = function(core, raw, reciprate, n, ...) {
 
+            ## step1: preprocess raw
+            rawp <- compressPara_(raw)
+
+            ## step2: combine params
+            registerDoParallel(cores = n)
+
+            itx <- iter(core@coreCNV, by = 'row')
+
+            cnvp <- foreach(i = itx, .combine = c) %dopar% {
+
+              ## different method return ''
+              if (!str_detect(i$method, raw@method)) {
+                return('')
+              } else {}
+
+              eachpara  <- combineRow_(corerow = i, rawpara = rawp, reciprate = reciprate)
+
+              return(eachpara)
+            }
+
+            ## stop multiple cores
+            stopImplicitCluster()
+
+            core@coreCNV %<>% mutate(!!raw@method := cnvp)
+
+            return(core)
           })
 
 
@@ -77,7 +107,9 @@ compressPara_ <- function(raw) {
 ##'
 combineRow_ <- function(corerow, rawpara, reciprate) {
 
-  rawpara %<>% filter(chromosome == corerow$chromosome)
+  ## check chromosome and CNV type
+  rawpara %<>% filter(chromosome == corerow$chromosome,
+                      type == corerow$type)
   if (nrow(rawpara) == 0) {
     return('')
   } else {}

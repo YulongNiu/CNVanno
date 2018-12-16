@@ -16,7 +16,7 @@ setClass(Class = 'RawCNV',
 
 ##' This class represents the CNV structure used for further analysis.
 ##'
-##' @slot coreCNV An \code{tbl_df} from the \code{tibble} package. It contains five columns: 1st is the chromosome, 2nd is the CNV start position, 3rd is the CNV end position, 4th is the CNV type ("gain", "loss", "normal"), 5th is the CNV calling method.
+##' @slot coreCNV An \code{tbl_df} from the \code{tibble} package. It contains at least five columns: 1st is the chromosome, 2nd is the CNV start position, 3rd is the CNV end position, 4th is the CNV type ("gain", "loss", "normal"), 5th is the CNV calling method. Other columns such as the parameters of CNV calling methods are allowed.
 ##' @author Yulong Niu \email{yulong.niu@@hotmail.com}
 ##' @exportClass CoreCNV
 ##'

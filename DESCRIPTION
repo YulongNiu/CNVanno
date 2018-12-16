@@ -36,6 +36,7 @@ Collate:
     'anno_utilities.R'
     'region.R'
     'anno_batch.R'
+    'anno_combine.R'
     'anno_template.R'
     'cyto.R'
     'dataDef.R'
