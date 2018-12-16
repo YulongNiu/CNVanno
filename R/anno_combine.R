@@ -18,7 +18,8 @@ NULL
 ##' kitraw <- system.file('extdata', 'example.cnvkit', package = 'CNVanno') %>% read_cnvkit
 ##' kitraw@params %<>% select(log2, cn)
 ##'
-##' tmp1 <- 
+##' tmp1 <- compressPara_(kitraw)
+##'
 ##' @author Yulong Niu \email{yulong.niu@@hotmail.com}
 ##' @importFrom magrittr %>%
 ##' @importFrom dplyr do group_by ungroup select everything
@@ -57,15 +58,38 @@ SetMethod(f = 'CombinePara',
 compressPara_ <- function(raw) {
 
   res <- raw@params %>%
-    mutate_if(is.numeric, round, 2) %>%
-    transmute_all(.funs = funs(paste(expr(.), ., sep = '='))) %>%
-    unite(params, 1 : ncol(.), sep = ',') %>%
+    mutate_if(is.numeric, round, 2) %>% ## round numeric columns
+    transmute_all(.funs = funs(paste(expr(.), ., sep = '='))) %>% ## paste column names
+    unite(params, 1 : ncol(.), sep = ',') %>% ## compress all columns
     bind_cols(raw@rawCNV, .)
 
   return(res)
 }
 
 
+##' @param rawpara A \code{tbl_df}
+##' @inheritParams Merge
+##' @inheritParams filterRow_
+##' @importFrom dplyr transmute filter
+##' @importFrom magrittr %<>% %>%
+##' @rdname combineparautility
+##' @keywords internal
+##'
 combineRow_ <- function(corerow, rawpara, reciprate) {
 
+  rawpara %<>% filter(chromosome == corerow$chromosome)
+  if (nrow(rawpara) == 0) {
+    return('')
+  } else {}
+
+  res <- corerow %>%
+    OverlapRegionRate(rawpara) %>%
+    transmute(l = fRate > reciprate & tRate > reciprate) %>% ## select by reciprate
+    unlist %>%
+    filter(rawpara, .) %>%
+    .$params %>% ## extract params
+    paste(collapse = ';') %>%
+    ifelse(nchar(.) > 0, ., '') ## empty params to ''
+
+  return(res)
 }
