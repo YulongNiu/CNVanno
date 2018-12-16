@@ -55,3 +55,14 @@ setGeneric(name = 'Merge',
 setGeneric(name = 'AnnoCNVBatch',
            def = function(core, FUN, ..., n){standardGeneric('AnnoCNVBatch')})
 
+
+
+##' @param raw A \code{RawCNV} object.
+##' @param ... Additional parameters.
+##' @inheritParams Cytoband
+##' @inheritParams Merge
+##' @rdname CombinePara-methods
+##' @keywords internal
+##'
+setGeneric(name = 'CombinePara',
+           def = function(core, raw, reciprate, n, ...){standardGeneric('CombinePara')})

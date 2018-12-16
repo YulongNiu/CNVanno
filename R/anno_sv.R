@@ -1,39 +1,42 @@
-##' CNV ClinGen and ClinVar database annotation
+##' CNV dbVar, ClinGen, and ClinVar databases annotation
 ##'
 ##' \itemize{
-##'   \item \code{AnnoCNVClinCore()}: Annotation of single CNV to the ClinGen and ClinVar database.
+##'   \item \code{AnnoSVCore()}: Annotation of single CNV to the dbVar,  ClinGen, and ClinVar databases.
 ##' }
-##' @title The ClinGen and ClinVar database annotation
+##' @title The dbVar, ClinGen, and ClinVar databases annotation
 ##' @inheritParams AnnoCNVOverlap_
 ##' @inheritParams AnnoCNVType_
 ##' @return
 ##' \itemize{
-##'    \item \code{AnnoCNVClinCore()}: A \code{list}
+##'    \item \code{AnnoSVCore()}: A \code{list}
 ##' }
 ##'
 ##' @examples
 ##' data(CNVdb)
 ##' data(kit)
 ##'
+##' ## dbVar
+##' AnnoSVCore(kit@coreCNV[3, ], CNVdb$dbVarGRCh37)
+##'
 ##' ## ClinGen
-##' AnnoCNVClinCore(kit@coreCNV[3, ], CNVdb$ClinGenGRCh37)
+##' AnnoSVCore(kit@coreCNV[3, ], CNVdb$ClinGenGRCh37)
 ##'
 ##' ## ClinVar
-##' AnnoCNVClinCore(kit@coreCNV[3, ], CNVdb$ClinVarGRCh37)
+##' AnnoSVCore(kit@coreCNV[3, ], CNVdb$ClinVarGRCh37)
 ##' @author Yulong Niu \email{yulong.niu@@hotmail.com}
 ##' @importFrom magrittr %>%
 ##' @importFrom dplyr mutate select everything
 ##' @rdname clin
 ##' @export
 ##'
-AnnoCNVClinCore <- function(corerow,
-                            annodb,
-                            reciprate = 0.5,
-                            typerate = 0.7) {
+AnnoSVCore <- function(corerow,
+                       annodb,
+                       reciprate = 0.5,
+                       typerate = 0.7) {
 
   res <- vector('list', 3)
   res[2:3] <- NA
-  names(res) <- c('ClinAnno', 'conflict', 'summary')
+  names(res) <- c('SVanno', 'conflict', 'summary')
 
   ## step1: if the cns is mapped ClinGen/ClinVar database
   ## step2: gain and loss of the 'TYPE' column
@@ -66,10 +69,10 @@ AnnoBenignPathoCheck_ <- function(annoSig) {
 
   bNum <- annoSig %>%
     str_detect('[b|B]enign') %>%
-    sum
+    sum(na.rm = TRUE) ## may contained NA
   pNum <- annoSig %>%
     str_detect('[p|P]athogenic') %>%
-    sum
+    sum(na.rm = TRUE) ## may contained NA
 
   conflict <- ifelse(bNum == 0 | pNum ==0, 'No', 'Yes')
 

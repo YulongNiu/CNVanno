@@ -17,13 +17,13 @@
 ##' @examples
 ##' require('magrittr')
 ##' data(hg19cyto)
-##' data(kit)
+##' data(mergecnv)
 ##'
-##' SunCNVregion(kit, hg19cyto, n = 2)
+##' SunCNVregion(mergecnv, hg19cyto, n = 2)
 ##' @author Yulong Niu \email{yulong.niu@@hotmail.com}
 ##' @importFrom magrittr %>% %<>%
 ##' @importFrom stringr str_extract
-##' @importFrom dplyr mutate select slice
+##' @importFrom dplyr mutate select everything
 ##' @export
 ##'
 SunCNVregion <- function(core, cyto, sampleType = 'proband', ...) {
@@ -33,7 +33,8 @@ SunCNVregion <- function(core, cyto, sampleType = 'proband', ...) {
     mutate(`size(100kb)` = round((end - start) / 100000, 1)) %>% ## size
     mutate(cytoband = Cytoband(core, cyto, ...)) %>% ## cytoband
     mutate(sample = sampleType) %>%
-    select(CNV, `size(100kb)`, type, method, cytoband, sample)
+    select(-chromosome : -end) %>%
+    select(CNV, `size(100kb)`, type, method, cytoband, sample, everything())
 
   return(cnv)
 }
@@ -83,14 +84,14 @@ SunCNVregion <- function(core, cyto, sampleType = 'proband', ...) {
 ##' @examples
 ##' require('magrittr')
 ##' data(CNVdb)
-##' data(kit)
+##' data(mergecnv)
 ##'
-##' refGene <- AnnoCNVBatch(kit, AnnoCNVGeneCore, CNVdb$RefGeneGRCh37, n = 2)
+##' refGene <- AnnoCNVBatch(mergecnv, AnnoCNVGeneCore, CNVdb$RefGeneGRCh37, n = 2)
 ##' gdbList <- list()
 ##' gdbList[[1]] <- AnnoCNVGeneRefGene2OMIM(refGene[[1]], CNVdb$OMIMGRCh38)
-##' gdbList[[2]] <- AnnoCNVBatch(kit, AnnoCNVGeneCore, CNVdb$ClinGen_TriHaploGRCh37, n = 2)[[1]]
-##' gdbList[[3]] <- AnnoCNVBatch(kit, AnnoCNVGeneCore, CNVdb$DECIPHER_Haplo, n = 2)[[1]]
-##' gdbList[[4]] <- AnnoCNVBatch(kit, AnnoCNVGeneCore, CNVdb$ExAC_pLI, n = 2)[[1]]
+##' gdbList[[2]] <- AnnoCNVBatch(mergecnv, AnnoCNVGeneCore, CNVdb$ClinGen_TriHaploGRCh37, n = 2)[[1]]
+##' gdbList[[3]] <- AnnoCNVBatch(mergecnv, AnnoCNVGeneCore, CNVdb$DECIPHER_Haplo, n = 2)[[1]]
+##' gdbList[[4]] <- AnnoCNVBatch(mergecnv, AnnoCNVGeneCore, CNVdb$ExAC_pLI, n = 2)[[1]]
 ##' gdbList[[5]] <- AnnoCNVGeneRefGene2DDG2P(refGene[[1]], CNVdb$DECIPHER_DDG2P)
 ##'
 ##' geneTable <- SunCNVgene(gdbList)
@@ -195,19 +196,19 @@ mergeTwoGenedb_ <- function(gdb1, gdb2) {
 ##' @examples
 ##' require('magrittr')
 ##' data(CNVdb)
-##' data(kit)
+##' data(mergecnv)
 ##' data(hg19cyto)
 ##'
-##' refGene <- AnnoCNVBatch(kit, AnnoCNVGeneCore, CNVdb$RefGeneGRCh37, n = 2)
+##' refGene <- AnnoCNVBatch(mergecnv, AnnoCNVGeneCore, CNVdb$RefGeneGRCh37, n = 2)
 ##' gdbList <- list()
 ##' gdbList[[1]] <- AnnoCNVGeneRefGene2OMIM(refGene[[1]], CNVdb$OMIMGRCh38)
-##' gdbList[[2]] <- AnnoCNVBatch(kit, AnnoCNVGeneCore, CNVdb$ClinGen_TriHaploGRCh37, n = 2)[[1]]
-##' gdbList[[3]] <- AnnoCNVBatch(kit, AnnoCNVGeneCore, CNVdb$DECIPHER_Haplo, n = 2)[[1]]
-##' gdbList[[4]] <- AnnoCNVBatch(kit, AnnoCNVGeneCore, CNVdb$ExAC_pLI, n = 2)[[1]]
+##' gdbList[[2]] <- AnnoCNVBatch(mergecnv, AnnoCNVGeneCore, CNVdb$ClinGen_TriHaploGRCh37, n = 2)[[1]]
+##' gdbList[[3]] <- AnnoCNVBatch(mergecnv, AnnoCNVGeneCore, CNVdb$DECIPHER_Haplo, n = 2)[[1]]
+##' gdbList[[4]] <- AnnoCNVBatch(mergecnv, AnnoCNVGeneCore, CNVdb$ExAC_pLI, n = 2)[[1]]
 ##' gdbList[[5]] <- AnnoCNVGeneRefGene2DDG2P(refGene[[1]], CNVdb$DECIPHER_DDG2P)
 ##'
 ##' geneTable <- SunCNVgene(gdbList)
-##' regionTable <- SunCNVregion(kit, hg19cyto, n = 2)
+##' regionTable <- SunCNVregion(mergecnv, hg19cyto, n = 2)
 ##' grList <- CrossRegionGeneTable(regionTable, geneTable)
 ##' @author Yulong Niu \email{yulong.niu@@hotmail.com}
 ##' @importFrom magrittr %>%

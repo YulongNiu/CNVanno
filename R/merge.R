@@ -26,6 +26,7 @@ NULL
 setMethod(f = 'Merge',
           signature = c(corelist = 'list', reciprate = 'numeric'),
           definition = function(corelist, reciprate, n, ...) {
+
             res <- corelist %>%
               mergePrepare_ %>%
               group_by(chromosome, type) %>%

@@ -6,7 +6,7 @@
 ##'   \item \code{FormatCorerow_()}: Format single CNV.
 ##' }
 ##' @title Annotation utilities
-##' @param annodb A \code{tbl_df} indicating a single annotation database. In \code{AnnoCNVClinCore()}, it should at least contains "chromosome", "start", "end", "type" (gain or loss), and "clinical_significance" columns. In \code{AnnoCNVPopuCore()}, it should at least contains "chromosome", "start", "end", "type" (gain or loss), may contain "gain_frequency"and "loss_frequency". In \code{AnnoCNVGeneCore()}, it should at least contains "chromosome", "start" and "end" columns.
+##' @param annodb A \code{tbl_df} indicating a single annotation database. In \code{AnnoSVCore()}, it should at least contains "chromosome", "start", "end", "type" (gain or loss), and "clinical_significance" columns. In \code{AnnoCNVPopuCore()}, it should at least contains "chromosome", "start", "end", "type" (gain or loss), may contain "gain_frequency"and "loss_frequency". In \code{AnnoCNVGeneCore()}, it should at least contains "chromosome", "start" and "end" columns.
 ##' @inheritParams filterRow_
 ##' @inheritParams Merge
 ##' @return
@@ -33,9 +33,10 @@ AnnoCNVOverlap_ <- function(corerow,
 
   ## step2: select > reciprate anno
   anno <- OverlapRegionRate(corerow, annodb) %>%
-    transmute(fRate > reciprate & tRate > reciprate) %>%
-    unlist %>%
-    filter(annodb, .)
+    mutate(l = fRate > reciprate & tRate > reciprate) %>%
+    bind_cols(annodb, .) %>%
+    filter(l) %>% ## filter by reciprate
+    select(-maxstart, -minend, -l) ## remove redundant columns
 
   return(anno)
 }

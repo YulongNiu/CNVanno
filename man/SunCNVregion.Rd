@@ -34,9 +34,9 @@ The CNV region summary table according to Sun's format.
 \examples{
 require('magrittr')
 data(hg19cyto)
-data(kit)
+data(mergecnv)
 
-SunCNVregion(kit, hg19cyto, n = 2)
+SunCNVregion(mergecnv, hg19cyto, n = 2)
 }
 \author{
 Yulong Niu \email{yulong.niu@hotmail.com}

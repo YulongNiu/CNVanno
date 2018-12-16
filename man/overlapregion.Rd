@@ -60,8 +60,8 @@ OverlapRegion(tReg, tMat, extend = 0L)
 OverlapRegionRate(tReg, tMat)
 
 ## reduce region
-rMat <- tibble(start = c(1, 8, 14, 15, 19, 34, 40),
-               end = c(12, 13, 19, 29, 24, 35, 46)) \%>\%
+rMat <- tibble(start = c(1, 20, 13, 14, 15, 19, 34, 46),
+               end = c(12, 21, 8, 19, 29, 24, 35, 40)) \%>\%
   SortRegion
 
 rM <- tibble(start = as.integer(c(4, 2, 3, 5, 24, 27, 29, 28, 35)),

@@ -3,7 +3,7 @@
 ##' Annotation of single CNV to one gene database
 ##' @title The CNV gene database annotation
 ##' @param annoGene A \code{data.frame} of the OMIM, ClinGen_HaploTriplo, ExAC_plI, and DECIPHER_Haplo databases.
-##' @inheritParams AnnoCNVClinCore
+##' @inheritParams AnnoSVCore
 ##' @return A \code{list}
 ##' @examples
 ##' data(CNVdb)
@@ -58,15 +58,16 @@ AnnoGeneOverlap_ <- function(corerow,
   ## step2: evaluate the relationship of gene and called CNV.
   anno <- corerow %>%
     OverlapRegionRate(annodb) %>%
-    transmute(overlap_relation = case_when((fRate < 1 & tRate == 1) ~ 'GeneinCNV',
+    mutate(overlap_relation = case_when((fRate < 1 & tRate == 1) ~ 'GeneinCNV',
     (fRate == 1 & tRate < 1) ~ 'CNVinGene',
     (fRate == 1 & tRate == 1) ~ 'CNVeqGene',
     (fRate == 0 & tRate == 0) ~ 'nooverlap',
     TRUE ~ 'Overlap')) %>%
-    bind_cols(annodb) %>%
+    bind_cols(annodb, .) %>%
     mutate(CNV = FormatCorerow_(corerow)) %>%
     select(CNV, chromosome:end, overlap_relation, everything()) %>%
-    filter(overlap_relation != 'nooverlap')
+    select(-maxstart, -minend) %>% ## remove redundant columns
+    filter(overlap_relation != 'nooverlap') ## filter nooverlap CNVs
 
   return(anno)
 }
