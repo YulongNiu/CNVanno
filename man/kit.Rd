@@ -6,7 +6,7 @@
 \title{CNVkit filtered example file}
 \format{A \code{coreCNV} object}
 \description{
-## CNVanno version 0.2.0
+## CNVkit version 0.9.3
 kit <- system.file('extdata', 'example.cnvkit', package = 'CNVanno') %>%
   read_cnvkit %>%
   filter_cnvkit %>%

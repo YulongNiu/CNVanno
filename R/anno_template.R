@@ -23,7 +23,7 @@
 ##' @author Yulong Niu \email{yulong.niu@@hotmail.com}
 ##' @importFrom magrittr %>% %<>%
 ##' @importFrom stringr str_extract
-##' @importFrom dplyr mutate select slice
+##' @importFrom dplyr mutate select everything
 ##' @export
 ##'
 SunCNVregion <- function(core, cyto, sampleType = 'proband', ...) {
@@ -33,7 +33,8 @@ SunCNVregion <- function(core, cyto, sampleType = 'proband', ...) {
     mutate(`size(100kb)` = round((end - start) / 100000, 1)) %>% ## size
     mutate(cytoband = Cytoband(core, cyto, ...)) %>% ## cytoband
     mutate(sample = sampleType) %>%
-    select(CNV, `size(100kb)`, type, method, cytoband, sample)
+    select(-chromosome : -end) %>%
+    select(CNV, `size(100kb)`, type, method, cytoband, sample, everything())
 
   return(cnv)
 }

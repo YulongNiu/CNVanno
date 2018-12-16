@@ -73,7 +73,7 @@ NULL
 
 ##' CNVkit filtered example file
 ##'
-##' ## CNVanno version 0.2.0
+##' ## CNVkit version 0.9.3
 ##' kit <- system.file('extdata', 'example.cnvkit', package = 'CNVanno') %>%
 ##'   read_cnvkit %>%
 ##'   filter_cnvkit %>%
@@ -83,6 +83,23 @@ NULL
 ##'
 ##' @docType data
 ##' @name kit
+##' @format A \code{coreCNV} object
+##' @author Yulong Niu \email{yulong.niu@@hotmail.com}
+##'
+NULL
+
+
+##' Merged CNVkit and CNVnator with parameters annotation
+##'
+##' mergecnv <- Merge(list(nator, kit), reciprate = 0.5, n = 2)
+##' kitraw <- system.file('extdata', 'example.cnvkit', package = 'CNVanno') %>% read_cnvkit
+##' kitraw@params %<>% select(log2 : depth)
+##' natorraw <- system.file('extdata', 'example.cnvnator', package = 'CNVanno') %>% read_cnvnator
+##' natorraw@params %<>% select(normalized_RD, q0) %>% rename(nordepth = normalized_RD)
+##' mergecnv %<>% CombinePara(kitraw, 1e-05, n = 2) %>% CombinePara(natorraw, 1e-05, n = 2)
+##'
+##' @docType data
+##' @name mergecnv
 ##' @format A \code{coreCNV} object
 ##' @author Yulong Niu \email{yulong.niu@@hotmail.com}
 ##'
