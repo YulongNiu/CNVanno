@@ -25,19 +25,19 @@ Combine CNVregion and CNVgene tables according to Sun's format.
 \examples{
 require('magrittr')
 data(CNVdb)
-data(kit)
+data(mergecnv)
 data(hg19cyto)
 
-refGene <- AnnoCNVBatch(kit, AnnoCNVGeneCore, CNVdb$RefGeneGRCh37, n = 2)
+refGene <- AnnoCNVBatch(mergecnv, AnnoCNVGeneCore, CNVdb$RefGeneGRCh37, n = 2)
 gdbList <- list()
 gdbList[[1]] <- AnnoCNVGeneRefGene2OMIM(refGene[[1]], CNVdb$OMIMGRCh38)
-gdbList[[2]] <- AnnoCNVBatch(kit, AnnoCNVGeneCore, CNVdb$ClinGen_TriHaploGRCh37, n = 2)[[1]]
-gdbList[[3]] <- AnnoCNVBatch(kit, AnnoCNVGeneCore, CNVdb$DECIPHER_Haplo, n = 2)[[1]]
-gdbList[[4]] <- AnnoCNVBatch(kit, AnnoCNVGeneCore, CNVdb$ExAC_pLI, n = 2)[[1]]
+gdbList[[2]] <- AnnoCNVBatch(mergecnv, AnnoCNVGeneCore, CNVdb$ClinGen_TriHaploGRCh37, n = 2)[[1]]
+gdbList[[3]] <- AnnoCNVBatch(mergecnv, AnnoCNVGeneCore, CNVdb$DECIPHER_Haplo, n = 2)[[1]]
+gdbList[[4]] <- AnnoCNVBatch(mergecnv, AnnoCNVGeneCore, CNVdb$ExAC_pLI, n = 2)[[1]]
 gdbList[[5]] <- AnnoCNVGeneRefGene2DDG2P(refGene[[1]], CNVdb$DECIPHER_DDG2P)
 
 geneTable <- SunCNVgene(gdbList)
-regionTable <- SunCNVregion(kit, hg19cyto, n = 2)
+regionTable <- SunCNVregion(mergecnv, hg19cyto, n = 2)
 grList <- CrossRegionGeneTable(regionTable, geneTable)
 }
 \author{
