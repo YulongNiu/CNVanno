@@ -81,7 +81,9 @@ filter_cnvnator <- function(rawnator, sexchrom = TRUE) {
     l <- rawnator@rawCNV %>%
       transmute(chromosome != 'chrX' & chromosome != 'chrY') %>%
       unlist
-  } else {}
+  } else {
+    l <- TRUE
+  }
 
   cnvnatorf <- new('RawCNV',
                    rawCNV = filter(rawnator@rawCNV, l),
